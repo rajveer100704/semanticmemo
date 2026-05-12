@@ -1,0 +1,52 @@
+from __future__ import annotations
+
+from collections.abc import Generator
+from decimal import Decimal
+from pathlib import Path
+
+import numpy as np
+import pytest
+
+from equivcache import CacheConfig, EquivCache
+from equivcache.types import FloatVector
+
+
+class ToyEmbeddingProvider:
+    dim = 4
+
+    def embed(self, text: str) -> FloatVector:
+        match text:
+            case "alpha":
+                return np.array([1, 0, 0, 0], dtype=np.float32)
+            case "alpha duplicate":
+                return np.array([1, 0, 0, 0], dtype=np.float32)
+            case "near alpha":
+                return np.array([0.8, 0.2, 0, 0], dtype=np.float32)
+            case "beta":
+                return np.array([0, 1, 0, 0], dtype=np.float32)
+            case _:
+                return np.array([0, 0, 1, 0], dtype=np.float32)
+
+
+@pytest.fixture
+def cache_config(tmp_path: Path) -> CacheConfig:
+    return CacheConfig(
+        db_path=tmp_path / "equivcache.db",
+        embedding_dim=ToyEmbeddingProvider.dim,
+        cosine_threshold=0.95,
+        candidate_k=3,
+        max_entries=10,
+        estimated_llm_cost_usd=Decimal("0.003"),
+    )
+
+
+@pytest.fixture
+def cache(cache_config: CacheConfig) -> Generator[EquivCache]:
+    instance = EquivCache(
+        domain="test",
+        config=cache_config,
+        embedding_provider=ToyEmbeddingProvider(),
+        use_faiss=False,
+    )
+    yield instance
+    instance.close()
