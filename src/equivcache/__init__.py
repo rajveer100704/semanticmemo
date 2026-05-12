@@ -6,6 +6,7 @@ from equivcache.models import (
     CacheEntry,
     CacheResult,
     CacheStats,
+    ClassifierConfig,
     EvictionPolicy,
 )
 
@@ -14,6 +15,7 @@ __all__ = [
     "CacheEntry",
     "CacheResult",
     "CacheStats",
+    "ClassifierConfig",
     "EquivCache",
     "EvictionPolicy",
 ]

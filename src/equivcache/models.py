@@ -45,6 +45,16 @@ class CacheConfig(BaseModel):
         return value
 
 
+class ClassifierConfig(BaseModel):
+    """Configuration for a learned equivalence classifier."""
+
+    model_config = ConfigDict(frozen=True)
+
+    model_path: Path | None = None
+    device: str = "cpu"
+    threshold: float = Field(default=0.85, ge=0.0, le=1.0)
+
+
 class CacheEntry(BaseModel):
     """A persisted prompt/response pair."""
 

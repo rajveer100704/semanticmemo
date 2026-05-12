@@ -13,10 +13,11 @@ This first implementation deliberately ships the baseline first:
 - FAISS-backed vector search when `equivcache[ml]` is installed
 - dependency-light in-memory search for tests and smoke demos
 - measured cosine-baseline benchmark fixtures for customer-support prompts
+- classifier training and evaluation scaffolding for the next phase
 
 The classifier fields are present in the public result shape, but `classifier_score` is
-`None` in this milestone. That keeps the API ready for the learned judge without pretending
-the classifier has been trained.
+`None` in the cache path. That keeps the API ready for the learned judge without pretending
+a production classifier has been trained or integrated.
 
 ## Install
 
@@ -63,3 +64,19 @@ uv run python benchmarks/cosine_baseline_customer_support.py
 ```
 
 The numbers from that benchmark are the only performance claims this implementation makes.
+
+## Classifier Pipeline
+
+Phase 2 adds a trainable pair classifier over prompt embeddings:
+
+```bash
+uv run equivcache train-classifier \
+  --data data/fixtures/customer_support_pairs.jsonl \
+  --out models/classifier-smoke.pt \
+  --embedding-provider hash \
+  --embedding-dim 64 \
+  --epochs 2
+```
+
+Use the hash provider only for smoke checks. Real experiments should install
+`equivcache[ml]` and use the SentenceTransformers embedding provider.

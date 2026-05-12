@@ -9,4 +9,5 @@ def test_public_api_exports() -> None:
     assert equivcache.CacheResult is not None
     assert equivcache.CacheStats is not None
     assert equivcache.CacheEntry is not None
+    assert equivcache.ClassifierConfig is not None
     assert equivcache.EvictionPolicy is not None
