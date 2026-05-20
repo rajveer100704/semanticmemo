@@ -182,6 +182,39 @@ class SQLiteCacheStore:
         ).fetchone()
         return self._row_to_lookup(row) if row is not None else None
 
+    def find_implicit_bad_hit(
+        self,
+        *,
+        domain: str,
+        prompt: str,
+        within_seconds: float,
+    ) -> LookupRecord | None:
+        """Return the most recent un-flagged cache-hit lookup matching ``prompt``.
+
+        Used by implicit-feedback detection: if the same prompt was already a
+        cache hit within ``within_seconds`` and carries no feedback yet, that
+        earlier hit is the candidate to auto-flag as a bad hit. ``lookup_records``
+        holds cache hits only, so a prior cache *miss* correctly yields no match.
+        The ``fe.id IS NULL`` join condition skips lookups that already have a
+        feedback event -- this both prevents double-flagging and lets an explicit
+        good/bad report take precedence over implicit detection.
+        """
+        cutoff = _serialize_time(_now() - timedelta(seconds=within_seconds))
+        row = self._connection.execute(
+            """
+            SELECT lr.* FROM lookup_records lr
+            LEFT JOIN feedback_events fe ON fe.query_id = lr.query_id
+            WHERE lr.domain = ?
+              AND lr.query_prompt = ?
+              AND lr.created_at >= ?
+              AND fe.id IS NULL
+            ORDER BY lr.created_at DESC
+            LIMIT 1
+            """,
+            (domain, prompt, cutoff),
+        ).fetchone()
+        return self._row_to_lookup(row) if row is not None else None
+
     def lookup_count(self) -> int:
         row = self._connection.execute("SELECT COUNT(*) AS count FROM lookup_records").fetchone()
         return int(row["count"])

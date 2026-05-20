@@ -33,6 +33,9 @@ CREATE TABLE IF NOT EXISTS lookup_records (
 CREATE INDEX IF NOT EXISTS idx_lookup_records_cache_entry_id
 ON lookup_records(cache_entry_id);
 
+CREATE INDEX IF NOT EXISTS idx_lookup_records_domain_prompt_created
+ON lookup_records(domain, query_prompt, created_at);
+
 CREATE TABLE IF NOT EXISTS feedback_events (
     id TEXT PRIMARY KEY,
     query_id TEXT NOT NULL,

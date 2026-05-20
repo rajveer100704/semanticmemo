@@ -9,7 +9,7 @@ Evaluate a checkpoint with:
 ```bash
 uv run smartmemo eval-classifier \
   --data data/fixtures/customer_support_pairs.jsonl \
-  --model models/classifier-v1.pt \
+  --model models/classifier-v2.pt \
   --domain customer-support \
   --split test
 ```
@@ -29,7 +29,17 @@ uv run python benchmarks/classifier_vs_cosine.py
 
 Both methods are scored on the same embeddings, and precision is compared *at equal
 recall* — a fair comparison, since either method can trade recall for precision by moving
-its threshold. The acceptance gate for `classifier-v1` is precision at least 10 points
-above the cosine baseline at equal recall; it currently clears that by +32 points. Results
+its threshold. The acceptance gate for `classifier-v2` is precision at least 10 points
+above the cosine baseline at equal recall; it currently clears that by +30 points. Results
 are written to `benchmarks/results/classifier_vs_cosine.json`, and the shipped model card
-is `smartmemo/_models/classifier-v1.report.json`.
+is `smartmemo/_models/classifier-v2.report.json`.
+
+## The high-stakes benchmark
+
+`benchmarks/false_positive_eval.py` runs a small, hand-authored set of medical, legal,
+and finance opposite-action prompt pairs — the kind of confusion that is genuinely
+dangerous to get wrong. It is deliberately adversarial and partly out of the training
+distribution. On it, the cosine baseline wrongly serves 8 of 16 opposite-action pairs
+from cache and `classifier-v2` wrongly serves 6: better than cosine, but an honest
+reminder that a generic classifier is not infallible and that domain retraining matters.
+The set is illustrative, not a production traffic sample.

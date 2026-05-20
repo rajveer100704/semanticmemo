@@ -5,18 +5,18 @@ own when you want a domain-specialized model or want to reproduce the shipped on
 
 ## Reproducing the bundled classifier
 
-The shipped `classifier-v1` is fully reproducible from committed data:
+The shipped `classifier-v2` is fully reproducible from committed data:
 
 ```bash
 # Optional: regenerate the dataset from the prompt corpus (requires a local Ollama model)
 python scripts/generate_training_data.py
 
 # Train and package the classifier from the committed dataset
-uv run python scripts/train_classifier_v1.py
+uv run python scripts/train_classifier.py
 ```
 
-`train_classifier_v1.py` writes the checkpoint to `src/smartmemo/_models/classifier-v1.pt`
-and an auditable model card next to it.
+`train_classifier.py` writes the checkpoint to `src/smartmemo/_models/classifier-v2.pt`
+and an auditable model card next to it (gold-set and high-stakes metrics included).
 
 ## Dataset format
 
@@ -34,7 +34,7 @@ Run a local training job:
 ```bash
 uv run smartmemo train-classifier \
   --data data/fixtures/customer_support_pairs.jsonl \
-  --out models/classifier-v1.pt \
+  --out models/classifier-custom.pt \
   --domain customer-support \
   --epochs 5
 ```

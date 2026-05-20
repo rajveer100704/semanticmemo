@@ -71,3 +71,39 @@
 {"domain": "general-qa", "object": "the job offer", "action_a": "Draft a response accepting", "action_b": "Draft a response declining"}
 {"domain": "general-qa", "object": "the loan application", "action_a": "Compose a letter approving", "action_b": "Compose a letter rejecting"}
 {"domain": "general-qa", "object": "the merger", "action_a": "Give reasons to support", "action_b": "Give reasons to oppose"}
+{"domain": "medical", "object": "the patient", "action_a": "Discharge", "action_b": "Admit"}
+{"domain": "medical", "object": "the antibiotics course", "action_a": "Extend", "action_b": "Shorten"}
+{"domain": "medical", "object": "the physical therapy sessions", "action_a": "Begin", "action_b": "End"}
+{"domain": "medical", "object": "the medication dosage on the chart", "action_a": "Double", "action_b": "Halve"}
+{"domain": "medical", "object": "the patient's prescription", "action_a": "Renew", "action_b": "Discontinue"}
+{"domain": "medical", "object": "to the patient", "action_a": "Report the screening result as positive", "action_b": "Report the screening result as negative"}
+{"domain": "medical", "object": "to the patient", "action_a": "Report the X-ray as showing a fracture", "action_b": "Report the X-ray as showing no fracture"}
+{"domain": "medical", "object": "the lab result", "action_a": "Tell the patient to be concerned about", "action_b": "Tell the patient not to be concerned about"}
+{"domain": "medical", "object": "for the procedure", "action_a": "Inform the patient that they need to fast", "action_b": "Inform the patient that they do not need to fast"}
+{"domain": "medical", "object": "resume driving after surgery", "action_a": "Advise the patient that they should", "action_b": "Advise the patient that they should not"}
+{"domain": "medical", "object": "the medication with food", "action_a": "Instruct the patient to take", "action_b": "Instruct the patient not to take"}
+{"domain": "medical", "object": "a specialist referral", "action_a": "Recommend", "action_b": "Advise against"}
+{"domain": "legal", "object": "the appeal", "action_a": "File", "action_b": "Withdraw"}
+{"domain": "legal", "object": "the motion", "action_a": "Grant", "action_b": "Deny"}
+{"domain": "legal", "object": "the plea deal", "action_a": "Advise the client to accept", "action_b": "Advise the client to reject"}
+{"domain": "legal", "object": "the lawsuit", "action_a": "Proceed with", "action_b": "Drop"}
+{"domain": "legal", "object": "the confidentiality clause", "action_a": "Add", "action_b": "Remove"}
+{"domain": "legal", "object": "the settlement amount", "action_a": "Increase", "action_b": "Reduce"}
+{"domain": "legal", "object": "the deposition", "action_a": "Schedule", "action_b": "Postpone"}
+{"domain": "legal", "object": "sue for damages", "action_a": "Advise the client that they can", "action_b": "Advise the client that they cannot"}
+{"domain": "legal", "object": "liable for the breach", "action_a": "Tell the client they are", "action_b": "Tell the client they are not"}
+{"domain": "legal", "object": "enforceable in court", "action_a": "Tell the client the clause is", "action_b": "Tell the client the clause is not"}
+{"domain": "legal", "object": "before the deadline", "action_a": "Tell the client the claim can still be filed", "action_b": "Tell the client the claim can no longer be filed"}
+{"domain": "legal", "object": "in the hearing", "action_a": "Argue that the testimony is reliable", "action_b": "Argue that the testimony is unreliable"}
+{"domain": "finance", "object": "the client's credit limit", "action_a": "Raise", "action_b": "Lower"}
+{"domain": "finance", "object": "the quarterly budget", "action_a": "Approve", "action_b": "Reject"}
+{"domain": "finance", "object": "the expense claim", "action_a": "Approve", "action_b": "Decline"}
+{"domain": "finance", "object": "in the system", "action_a": "Record the vendor invoice as paid", "action_b": "Record the vendor invoice as unpaid"}
+{"domain": "finance", "object": "the interest rate on the account", "action_a": "Increase", "action_b": "Decrease"}
+{"domain": "finance", "object": "the subscription charge", "action_a": "Refund", "action_b": "Uphold"}
+{"domain": "finance", "object": "the underperforming position", "action_a": "Recommend that the client hold", "action_b": "Recommend that the client liquidate"}
+{"domain": "finance", "object": "the new investment", "action_a": "Recommend", "action_b": "Advise against"}
+{"domain": "finance", "object": "afford the monthly payments", "action_a": "Tell the client they can", "action_b": "Tell the client they cannot"}
+{"domain": "finance", "object": "meet the savings goal this year", "action_a": "Tell the client they are on track to", "action_b": "Tell the client they are not on track to"}
+{"domain": "finance", "object": "discrepancies in the accounts", "action_a": "Report that the audit found", "action_b": "Report that the audit did not find"}
+{"domain": "finance", "object": "to the client", "action_a": "Report the account as active", "action_b": "Report the account as dormant"}

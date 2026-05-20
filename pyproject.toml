@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "smartmemo"
-version = "0.1.0"
+version = "0.2.0"
 description = "Semantic memory for LLM agent calls with an equivalence-first cache architecture."
 readme = "README.md"
 requires-python = ">=3.11,<3.15"
@@ -59,7 +59,7 @@ packages = ["src/smartmemo"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "src/smartmemo/store/schema.sql" = "smartmemo/store/schema.sql"
-"src/smartmemo/_models/classifier-v1.pt" = "smartmemo/_models/classifier-v1.pt"
+"src/smartmemo/_models/classifier-v2.pt" = "smartmemo/_models/classifier-v2.pt"
 
 [tool.ruff]
 line-length = 100

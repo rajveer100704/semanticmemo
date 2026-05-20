@@ -4,10 +4,11 @@ This directory holds the corpora, generated datasets, and evaluation fixtures us
 build and measure the SmartMemo equivalence classifier.
 
 - `corpus/` — hand-authored source material. `base_prompts.jsonl` is a diverse set of
-  agent prompts across six domains; `action_templates.jsonl` defines same-object,
-  opposite-action pairs used to mint guaranteed-correct hard negatives.
-- `training/` — the generated labeled prompt-pair dataset (`pairs_v1.train.jsonl`,
-  `pairs_v1.validation.jsonl`) plus a `manifest.json` recording how it was produced.
+  agent prompts across nine domains; `action_templates.jsonl` defines same-object,
+  opposite-action pairs (including negation) used to mint guaranteed-correct hard
+  negatives.
+- `training/` — the generated labeled prompt-pair dataset (`pairs_v2.train.jsonl`,
+  `pairs_v2.validation.jsonl`) plus a `manifest.json` recording how it was produced.
   Regenerate it with `python scripts/generate_training_data.py` (requires a local
   Ollama model). The committed dataset is the source of truth, so retraining the
   classifier does not require Ollama.

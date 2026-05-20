@@ -6,7 +6,7 @@ from datetime import datetime
 from decimal import Decimal
 from enum import StrEnum
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -18,6 +18,23 @@ class EvictionPolicy(StrEnum):
     LRU = "lru"
     TTL = "ttl"
     HYBRID = "hybrid"
+
+
+class ImplicitFeedbackConfig(BaseModel):
+    """Configuration for implicit (re-issue) feedback detection.
+
+    When a cache instance is configured with this, SmartMemo treats re-issuing
+    the *same* prompt shortly after a cache hit as an implicit signal that the
+    cached answer was unsatisfactory, and auto-records a bad-hit feedback event
+    for the earlier hit. The feature is opt-in: pass an instance to
+    ``CacheConfig(implicit_feedback=ImplicitFeedbackConfig())``; the default
+    ``CacheConfig`` leaves it disabled.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    window_seconds: float = Field(default=30.0, gt=0)
+    match: Literal["exact"] = "exact"
 
 
 class CacheConfig(BaseModel):
@@ -35,6 +52,7 @@ class CacheConfig(BaseModel):
     eviction_policy: EvictionPolicy = EvictionPolicy.LRU
     ttl_seconds: int | None = Field(default=None, gt=0)
     estimated_llm_cost_usd: Decimal = Decimal("0")
+    implicit_feedback: ImplicitFeedbackConfig | None = None
 
     @field_validator("estimated_llm_cost_usd")
     @classmethod
@@ -138,6 +156,7 @@ class CacheResult(BaseModel):
     classifier_score: float | None = None
     cost_saved_usd: Decimal = Decimal("0")
     latency_ms: float = Field(ge=0)
+    implicit_bad_hit_recorded: bool = False
 
 
 class CacheStats(BaseModel):

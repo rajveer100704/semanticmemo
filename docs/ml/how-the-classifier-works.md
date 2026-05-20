@@ -17,17 +17,17 @@ probability in `[0, 1]`. A higher probability means the model believes both prom
 should produce the same useful response. The model implementation lives in
 `src/smartmemo/classifier/model.py`.
 
-## The bundled classifier (`classifier-v1`)
+## The bundled classifier (`classifier-v2`)
 
 SmartMemo ships a pretrained checkpoint inside the package at
-`smartmemo/_models/classifier-v1.pt`. Load it with `ClassifierConfig.bundled()`.
+`smartmemo/_models/classifier-v2.pt`. Load it with `ClassifierConfig.bundled()`.
 
-`classifier-v1` is a **generic cold-start model**. Its training data was built locally:
-a hand-authored prompt corpus across six domains is expanded into ~10,800 labeled pairs
+`classifier-v2` is a **generic cold-start model**. Its training data was built locally:
+a hand-authored prompt corpus across nine domains is expanded into 16,576 labeled pairs
 by a local LLM (paraphrases for positives) and by templated same-object/opposite-action
-swaps (guaranteed-correct hard negatives). The full pipeline is
+swaps, including negation (guaranteed-correct hard negatives). The full pipeline is
 `scripts/generate_training_data.py`; the auditable model card is
-`smartmemo/_models/classifier-v1.report.json`.
+`smartmemo/_models/classifier-v2.report.json`.
 
 Two limitations are worth knowing:
 

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Train and package the shipped equivalence classifier (``classifier-v1``).
+"""Train and package the shipped equivalence classifier (``classifier-v2``).
 
 Reads the generated pair dataset under ``data/training/``, trains a
 ``PairClassifier`` over SentenceTransformers embeddings, writes the checkpoint
-to the location bundled inside the package, and emits an auditable model card.
+to the location bundled inside the package, and emits an auditable model card
+covering both the held-out gold set and the high-stakes evaluation set.
 
-    uv run python scripts/train_classifier_v1.py
+    uv run python scripts/train_classifier.py
 """
 
 from __future__ import annotations
@@ -22,6 +23,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 sys.path.insert(0, str(REPO_ROOT / "benchmarks"))
 
 from classifier_vs_cosine import run_comparison  # noqa: E402
+from false_positive_eval import score_high_stakes  # noqa: E402
 
 from smartmemo.classifier import (  # noqa: E402
     ClassifierService,
@@ -34,11 +36,12 @@ from smartmemo.classifier import (  # noqa: E402
 from smartmemo.embedding import SentenceTransformerEmbeddingProvider  # noqa: E402
 from smartmemo.embedding.service import normalize  # noqa: E402
 
-DEFAULT_TRAIN = REPO_ROOT / "data" / "training" / "pairs_v1.train.jsonl"
-DEFAULT_VALIDATION = REPO_ROOT / "data" / "training" / "pairs_v1.validation.jsonl"
+DEFAULT_TRAIN = REPO_ROOT / "data" / "training" / "pairs_v2.train.jsonl"
+DEFAULT_VALIDATION = REPO_ROOT / "data" / "training" / "pairs_v2.validation.jsonl"
 DEFAULT_MANIFEST = REPO_ROOT / "data" / "training" / "manifest.json"
 DEFAULT_GOLD = REPO_ROOT / "data" / "gold" / "equivalence_gold.jsonl"
-DEFAULT_OUT = REPO_ROOT / "src" / "smartmemo" / "_models" / "classifier-v1.pt"
+DEFAULT_HIGH_STAKES = REPO_ROOT / "benchmarks" / "data" / "high_stakes_pairs.jsonl"
+DEFAULT_OUT = REPO_ROOT / "src" / "smartmemo" / "_models" / "classifier-v2.pt"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 EMBEDDING_DIM = 384
 SWEEP_THRESHOLDS = [0.5, 0.7, 0.8, 0.85, 0.9, 0.95]
@@ -80,6 +83,7 @@ def main() -> int:
     parser.add_argument("--train", type=Path, default=DEFAULT_TRAIN)
     parser.add_argument("--validation", type=Path, default=DEFAULT_VALIDATION)
     parser.add_argument("--gold", type=Path, default=DEFAULT_GOLD)
+    parser.add_argument("--high-stakes", type=Path, default=DEFAULT_HIGH_STAKES)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--epochs", type=int, default=15)
     parser.add_argument("--batch-size", type=int, default=64)
@@ -145,18 +149,27 @@ def main() -> int:
         f"({'PASS' if comparison['gate_passed'] else 'FAIL'})"
     )
 
+    high_stakes = score_high_stakes(model_path=args.out, data_path=args.high_stakes)
+    high_stakes_summary = {key: value for key, value in high_stakes.items() if key != "pairs"}
+    print(
+        f"high-stakes set: cosine wrongly serves "
+        f"{high_stakes['cosine_false_positives']}/{high_stakes['negatives']} "
+        f"opposite-action pairs, classifier "
+        f"{high_stakes['classifier_false_positives']}/{high_stakes['negatives']}"
+    )
+
     manifest: dict[str, Any] = {}
     if DEFAULT_MANIFEST.is_file():
         manifest = json.loads(DEFAULT_MANIFEST.read_text())
 
     report = {
-        "model": "classifier-v1",
+        "model": "classifier-v2",
         "created_at": datetime.now(UTC).isoformat(),
         "architecture": "PairClassifier MLP over [a, b, |a-b|, a*b] -> 128 -> 64 -> 1",
         "embedding_model": EMBEDDING_MODEL,
         "embedding_dim": EMBEDDING_DIM,
         "operating_threshold": args.threshold,
-        "scope": "generic cross-domain cold-start classifier",
+        "scope": "generic cross-domain cold-start classifier (nine domains)",
         "training": {
             "epochs": args.epochs,
             "batch_size": args.batch_size,
@@ -175,9 +188,12 @@ def main() -> int:
         "gold_metrics": gold_metrics.to_dict(),
         "gold_threshold_sweep": gold_sweep,
         "gold_vs_cosine": comparison,
+        "high_stakes": high_stakes_summary,
         "limitations": (
-            "Trained on LLM-paraphrased and templated data across six domains. It is "
-            "a generic cold-start model: per-domain accuracy improves with the "
+            "Trained on LLM-paraphrased and templated data across nine domains "
+            "(customer-support, software-engineering, scheduling, data-analysis, "
+            "devops, general-qa, medical, legal, finance). It is a generic "
+            "cold-start model: per-domain accuracy improves with the "
             "`smartmemo retrain` feedback loop. Bound to the all-MiniLM-L6-v2 "
             "embedding space (384-dim)."
         ),

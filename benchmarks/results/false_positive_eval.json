@@ -1,0 +1,323 @@
+{
+  "classifier": {
+    "accuracy": 0.6785714285714286,
+    "auc_roc": 0.7239583333333334,
+    "examples": 28,
+    "expected_calibration_error": 0.3770394833700834,
+    "f1": 0.6666666666666665,
+    "false_negatives": 3,
+    "false_positives": 6,
+    "precision": 0.6,
+    "recall": 0.75,
+    "threshold": 0.95,
+    "true_negatives": 10,
+    "true_positives": 9
+  },
+  "classifier_false_positives": 6,
+  "classifier_threshold": 0.95,
+  "cosine": {
+    "accuracy": 0.42857142857142855,
+    "auc_roc": 0.328125,
+    "examples": 28,
+    "expected_calibration_error": 0.5026936094675745,
+    "f1": 0.3333333333333333,
+    "false_negatives": 8,
+    "false_positives": 8,
+    "precision": 0.3333333333333333,
+    "recall": 0.3333333333333333,
+    "threshold": 0.9,
+    "true_negatives": 8,
+    "true_positives": 4
+  },
+  "cosine_false_positives": 8,
+  "cosine_threshold": 0.9,
+  "dangerous_hits_blocked_by_classifier": 4,
+  "data_path": "/Users/abhinandan/Desktop/smartcache/benchmarks/data/high_stakes_pairs.jsonl",
+  "examples": 28,
+  "model_name": "classifier-v2",
+  "model_path": "/Users/abhinandan/Desktop/smartcache/src/smartmemo/_models/classifier-v2.pt",
+  "negatives": 16,
+  "pairs": [
+    {
+      "classifier": 0.0037577408365905285,
+      "classifier_hit": false,
+      "cosine": 0.9475659728050232,
+      "cosine_hit": true,
+      "domain": "medical",
+      "label": 0,
+      "prompt_a": "Increase the patient's insulin dosage to 20 units.",
+      "prompt_b": "Decrease the patient's insulin dosage to 20 units."
+    },
+    {
+      "classifier": 0.23354844748973846,
+      "classifier_hit": false,
+      "cosine": 0.8822073340415955,
+      "cosine_hit": false,
+      "domain": "medical",
+      "label": 0,
+      "prompt_a": "Tell the patient it is safe to stop taking the medication.",
+      "prompt_b": "Tell the patient they must keep taking the medication."
+    },
+    {
+      "classifier": 1.826242805691436e-05,
+      "classifier_hit": false,
+      "cosine": 0.8127740025520325,
+      "cosine_hit": false,
+      "domain": "medical",
+      "label": 0,
+      "prompt_a": "Report the biopsy result to the patient as benign.",
+      "prompt_b": "Report the biopsy result to the patient as malignant."
+    },
+    {
+      "classifier": 0.013714339584112167,
+      "classifier_hit": false,
+      "cosine": 0.9100766777992249,
+      "cosine_hit": true,
+      "domain": "medical",
+      "label": 0,
+      "prompt_a": "Advise the patient that surgery is required.",
+      "prompt_b": "Advise the patient that surgery is not required."
+    },
+    {
+      "classifier": 1.0,
+      "classifier_hit": true,
+      "cosine": 0.9359838962554932,
+      "cosine_hit": true,
+      "domain": "medical",
+      "label": 0,
+      "prompt_a": "Schedule the patient for an urgent follow-up appointment.",
+      "prompt_b": "Schedule the patient for a routine follow-up appointment."
+    },
+    {
+      "classifier": 1.0,
+      "classifier_hit": true,
+      "cosine": 0.9643762707710266,
+      "cosine_hit": true,
+      "domain": "medical",
+      "label": 1,
+      "prompt_a": "Increase the patient's insulin dosage to 20 units.",
+      "prompt_b": "Raise the insulin dose for the patient to 20 units."
+    },
+    {
+      "classifier": 0.9998856782913208,
+      "classifier_hit": true,
+      "cosine": 0.8625068664550781,
+      "cosine_hit": false,
+      "domain": "medical",
+      "label": 1,
+      "prompt_a": "Tell the patient it is safe to stop taking the medication.",
+      "prompt_b": "Let the patient know they can safely discontinue the medication."
+    },
+    {
+      "classifier": 0.002045418368652463,
+      "classifier_hit": false,
+      "cosine": 0.7301772832870483,
+      "cosine_hit": false,
+      "domain": "medical",
+      "label": 1,
+      "prompt_a": "Report the biopsy result to the patient as benign.",
+      "prompt_b": "Inform the patient that the biopsy came back non-cancerous."
+    },
+    {
+      "classifier": 1.0,
+      "classifier_hit": true,
+      "cosine": 0.8400906324386597,
+      "cosine_hit": false,
+      "domain": "medical",
+      "label": 1,
+      "prompt_a": "Schedule the patient for an urgent follow-up appointment.",
+      "prompt_b": "Book the patient in for an urgent follow-up visit."
+    },
+    {
+      "classifier": 0.4246951639652252,
+      "classifier_hit": false,
+      "cosine": 0.7853385806083679,
+      "cosine_hit": false,
+      "domain": "legal",
+      "label": 0,
+      "prompt_a": "Advise the client that the contract is legally binding.",
+      "prompt_b": "Advise the client that the contract is void."
+    },
+    {
+      "classifier": 0.04762221500277519,
+      "classifier_hit": false,
+      "cosine": 0.9292411208152771,
+      "cosine_hit": true,
+      "domain": "legal",
+      "label": 0,
+      "prompt_a": "Tell the client they should sign the settlement agreement.",
+      "prompt_b": "Tell the client they should not sign the settlement agreement."
+    },
+    {
+      "classifier": 0.9975242018699646,
+      "classifier_hit": true,
+      "cosine": 0.8932592272758484,
+      "cosine_hit": false,
+      "domain": "legal",
+      "label": 0,
+      "prompt_a": "Confirm that the non-disclosure agreement is still in effect.",
+      "prompt_b": "Confirm that the non-disclosure agreement has expired."
+    },
+    {
+      "classifier": 0.9990670084953308,
+      "classifier_hit": true,
+      "cosine": 0.9584348797798157,
+      "cosine_hit": true,
+      "domain": "legal",
+      "label": 0,
+      "prompt_a": "Inform the client that the statute of limitations has passed.",
+      "prompt_b": "Inform the client that the statute of limitations still applies."
+    },
+    {
+      "classifier": 0.3927507698535919,
+      "classifier_hit": false,
+      "cosine": 0.9395989775657654,
+      "cosine_hit": true,
+      "domain": "legal",
+      "label": 0,
+      "prompt_a": "Recommend that the client plead guilty.",
+      "prompt_b": "Recommend that the client plead not guilty."
+    },
+    {
+      "classifier": 0.9999172687530518,
+      "classifier_hit": true,
+      "cosine": 0.8311054706573486,
+      "cosine_hit": false,
+      "domain": "legal",
+      "label": 1,
+      "prompt_a": "Advise the client that the contract is legally binding.",
+      "prompt_b": "Let the client know the contract is fully enforceable."
+    },
+    {
+      "classifier": 0.9999992847442627,
+      "classifier_hit": true,
+      "cosine": 0.9462512731552124,
+      "cosine_hit": true,
+      "domain": "legal",
+      "label": 1,
+      "prompt_a": "Tell the client they should sign the settlement agreement.",
+      "prompt_b": "Recommend that the client go ahead and sign the settlement agreement."
+    },
+    {
+      "classifier": 2.8352208119031275e-06,
+      "classifier_hit": false,
+      "cosine": 0.3517831265926361,
+      "cosine_hit": false,
+      "domain": "legal",
+      "label": 1,
+      "prompt_a": "Confirm that the non-disclosure agreement is still in effect.",
+      "prompt_b": "Verify that the NDA remains active."
+    },
+    {
+      "classifier": 0.011038758791983128,
+      "classifier_hit": false,
+      "cosine": 0.692113995552063,
+      "cosine_hit": false,
+      "domain": "legal",
+      "label": 1,
+      "prompt_a": "Inform the client that the statute of limitations has passed.",
+      "prompt_b": "Notify the client that the limitation period has now expired."
+    },
+    {
+      "classifier": 6.83965117787011e-05,
+      "classifier_hit": false,
+      "cosine": 0.8506740927696228,
+      "cosine_hit": false,
+      "domain": "finance",
+      "label": 0,
+      "prompt_a": "Approve the customer's loan application.",
+      "prompt_b": "Reject the customer's loan application."
+    },
+    {
+      "classifier": 0.999993085861206,
+      "classifier_hit": true,
+      "cosine": 0.9642863273620605,
+      "cosine_hit": true,
+      "domain": "finance",
+      "label": 0,
+      "prompt_a": "Recommend that the client buy the stock.",
+      "prompt_b": "Recommend that the client sell the stock."
+    },
+    {
+      "classifier": 0.6393874287605286,
+      "classifier_hit": false,
+      "cosine": 0.8733521699905396,
+      "cosine_hit": false,
+      "domain": "finance",
+      "label": 0,
+      "prompt_a": "Tell the client their account is in good standing.",
+      "prompt_b": "Tell the client their account is overdrawn."
+    },
+    {
+      "classifier": 0.9668662548065186,
+      "classifier_hit": true,
+      "cosine": 0.8713682889938354,
+      "cosine_hit": false,
+      "domain": "finance",
+      "label": 0,
+      "prompt_a": "Mark the transaction as fraudulent.",
+      "prompt_b": "Mark the transaction as legitimate."
+    },
+    {
+      "classifier": 0.9973151087760925,
+      "classifier_hit": true,
+      "cosine": 0.9627619385719299,
+      "cosine_hit": true,
+      "domain": "finance",
+      "label": 0,
+      "prompt_a": "Advise the client to increase their portfolio risk.",
+      "prompt_b": "Advise the client to reduce their portfolio risk."
+    },
+    {
+      "classifier": 0.015508132055401802,
+      "classifier_hit": false,
+      "cosine": 0.8409056067466736,
+      "cosine_hit": false,
+      "domain": "finance",
+      "label": 0,
+      "prompt_a": "Confirm the wire transfer should proceed.",
+      "prompt_b": "Confirm the wire transfer should be cancelled."
+    },
+    {
+      "classifier": 0.9999992847442627,
+      "classifier_hit": true,
+      "cosine": 0.8699859380722046,
+      "cosine_hit": false,
+      "domain": "finance",
+      "label": 1,
+      "prompt_a": "Approve the customer's loan application.",
+      "prompt_b": "Grant the customer's loan request."
+    },
+    {
+      "classifier": 1.0,
+      "classifier_hit": true,
+      "cosine": 0.9357830286026001,
+      "cosine_hit": true,
+      "domain": "finance",
+      "label": 1,
+      "prompt_a": "Recommend that the client buy the stock.",
+      "prompt_b": "Advise the client to purchase the stock."
+    },
+    {
+      "classifier": 0.9999326467514038,
+      "classifier_hit": true,
+      "cosine": 0.9200320243835449,
+      "cosine_hit": true,
+      "domain": "finance",
+      "label": 1,
+      "prompt_a": "Mark the transaction as fraudulent.",
+      "prompt_b": "Flag the transaction as fraudulent."
+    },
+    {
+      "classifier": 1.0,
+      "classifier_hit": true,
+      "cosine": 0.861180305480957,
+      "cosine_hit": false,
+      "domain": "finance",
+      "label": 1,
+      "prompt_a": "Confirm the wire transfer should proceed.",
+      "prompt_b": "Confirm that the wire transfer can go ahead."
+    }
+  ],
+  "positives": 12
+}

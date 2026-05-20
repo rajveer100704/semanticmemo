@@ -58,3 +58,39 @@
 {"text": "What are the benefits of regular exercise?", "domain": "general-qa"}
 {"text": "Explain the water cycle in simple terms.", "domain": "general-qa"}
 {"text": "Recommend a book about negotiation.", "domain": "general-qa"}
+{"text": "Summarize this patient's discharge instructions.", "domain": "medical"}
+{"text": "Explain what this lab report means in plain language.", "domain": "medical"}
+{"text": "List the common side effects of this medication.", "domain": "medical"}
+{"text": "Draft a reminder for the patient's upcoming appointment.", "domain": "medical"}
+{"text": "Describe how to take this antibiotic correctly.", "domain": "medical"}
+{"text": "Summarize the patient's medical history from these notes.", "domain": "medical"}
+{"text": "Explain the difference between a CT scan and an MRI.", "domain": "medical"}
+{"text": "Write patient instructions for fasting before a blood test.", "domain": "medical"}
+{"text": "Outline the steps for measuring blood pressure at home.", "domain": "medical"}
+{"text": "Explain what a normal cholesterol range is.", "domain": "medical"}
+{"text": "Summarize the key symptoms described in this referral letter.", "domain": "medical"}
+{"text": "Describe how to store insulin safely at home.", "domain": "medical"}
+{"text": "Summarize the key obligations in this lease agreement.", "domain": "legal"}
+{"text": "Explain what an indemnity clause does in plain language.", "domain": "legal"}
+{"text": "Draft a reminder about the upcoming court filing deadline.", "domain": "legal"}
+{"text": "List the documents needed to register a trademark.", "domain": "legal"}
+{"text": "Explain the difference between a contract and a memorandum of understanding.", "domain": "legal"}
+{"text": "Summarize the main points of this client intake note.", "domain": "legal"}
+{"text": "Describe the steps to file a small claims case.", "domain": "legal"}
+{"text": "Explain what a force majeure clause means.", "domain": "legal"}
+{"text": "Outline the standard sections of a non-disclosure agreement.", "domain": "legal"}
+{"text": "Summarize the dispute described in this complaint letter.", "domain": "legal"}
+{"text": "Explain what discovery means in a civil lawsuit.", "domain": "legal"}
+{"text": "Draft a short cover note for sending signed documents to a client.", "domain": "legal"}
+{"text": "Summarize this client's monthly account statement.", "domain": "finance"}
+{"text": "Explain the difference between a credit score and a credit report.", "domain": "finance"}
+{"text": "List the documents needed to open a business bank account.", "domain": "finance"}
+{"text": "Draft a reminder about an upcoming invoice due date.", "domain": "finance"}
+{"text": "Explain how compound interest works in simple terms.", "domain": "finance"}
+{"text": "Summarize the key expenses in this quarterly budget.", "domain": "finance"}
+{"text": "Describe the steps to set up automatic bill payments.", "domain": "finance"}
+{"text": "Explain what diversification means in an investment portfolio.", "domain": "finance"}
+{"text": "Outline the main sections of a personal loan agreement.", "domain": "finance"}
+{"text": "Summarize the spending trends in this expense report.", "domain": "finance"}
+{"text": "Explain the difference between gross and net income.", "domain": "finance"}
+{"text": "Draft a short note confirming receipt of a client's payment.", "domain": "finance"}

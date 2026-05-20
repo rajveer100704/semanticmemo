@@ -10,6 +10,7 @@ from smartmemo.models import (
     ClassifierConfig,
     EvictionPolicy,
     FeedbackEvent,
+    ImplicitFeedbackConfig,
     LookupRecord,
 )
 
@@ -22,6 +23,7 @@ __all__ = [
     "SmartMemo",
     "EvictionPolicy",
     "FeedbackEvent",
+    "ImplicitFeedbackConfig",
     "LookupRecord",
     "RetrainConfig",
     "RetrainResult",

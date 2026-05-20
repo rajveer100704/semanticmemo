@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import inspect
 import time
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 from uuid import UUID, uuid4
@@ -52,6 +53,14 @@ class CacheOrchestrator:
         query_id = uuid4()
         self.total_lookups += 1
 
+        # Strip once so the cache key and the implicit-feedback exact match are
+        # whitespace-insensitive and mutually consistent.
+        prompt = prompt.strip()
+
+        # Implicit-feedback detection must run before record_lookup writes this
+        # call's own lookup row, otherwise a re-issued hit would flag itself.
+        implicit_bad_hit_recorded = self._detect_implicit_bad_hit(prompt)
+
         query_embedding = self.embedding_service.embed(prompt)
         hit_entry_id, similarity_score, classifier_score = self._find_hit(query_embedding)
 
@@ -79,6 +88,7 @@ class CacheOrchestrator:
                     classifier_score=classifier_score,
                     cost_saved_usd=self.config.estimated_llm_cost_usd,
                     latency_ms=self._elapsed_ms(started_at),
+                    implicit_bad_hit_recorded=implicit_bad_hit_recorded,
                 )
 
         response = await self._call_llm(llm_function, prompt)
@@ -101,6 +111,7 @@ class CacheOrchestrator:
             classifier_score=classifier_score,
             cost_saved_usd=Decimal("0"),
             latency_ms=self._elapsed_ms(started_at),
+            implicit_bad_hit_recorded=implicit_bad_hit_recorded,
         )
 
     def report_bad_hit(self, query_id: UUID, reason: str | None = None) -> bool:
@@ -121,6 +132,42 @@ class CacheOrchestrator:
         if event_id is None:
             return False
         self.store.increment_good_feedback(lookup.cache_entry_id)
+        return True
+
+    def _detect_implicit_bad_hit(self, prompt: str) -> bool:
+        """Auto-flag a recent cache hit as bad when its exact prompt is re-issued.
+
+        Opt-in via ``CacheConfig.implicit_feedback``. Re-issuing the same prompt
+        soon after a hit is treated as an implicit signal the cached answer was
+        unsatisfactory. Returns whether a prior hit was flagged by this call.
+        """
+        cfg = self.config.implicit_feedback
+        if cfg is None:
+            return False
+        lookup = self.store.find_implicit_bad_hit(
+            domain=self.domain,
+            prompt=prompt,
+            within_seconds=cfg.window_seconds,
+        )
+        if lookup is None:
+            return False
+        elapsed = (datetime.now(tz=UTC) - lookup.created_at).total_seconds()
+        event_id = self.store.record_feedback(
+            query_id=lookup.id,
+            label=0,
+            reason="implicit:re-issued",
+            metadata={
+                "auto_detected": True,
+                "detector": "re-issue",
+                "window_seconds": cfg.window_seconds,
+                "elapsed_seconds": elapsed,
+            },
+        )
+        if event_id is None:
+            # The lookup row was removed (e.g. cache eviction) between the
+            # find and the write; nothing to flag.
+            return False
+        self.store.increment_bad_feedback(lookup.cache_entry_id)
         return True
 
     def export_feedback_pairs(self, path: str, *, split: str = "train") -> int:

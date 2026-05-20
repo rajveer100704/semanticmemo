@@ -12,7 +12,7 @@ from pathlib import Path
 
 from smartmemo.exceptions import SmartMemoError
 
-BUNDLED_CLASSIFIER_NAME = "classifier-v1.pt"
+BUNDLED_CLASSIFIER_NAME = "classifier-v2.pt"
 _BUNDLED_MODELS_DIR = "_models"
 
 

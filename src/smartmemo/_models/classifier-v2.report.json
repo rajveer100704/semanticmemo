@@ -1,0 +1,247 @@
+{
+  "architecture": "PairClassifier MLP over [a, b, |a-b|, a*b] -> 128 -> 64 -> 1",
+  "created_at": "2026-05-20T11:05:06.857011+00:00",
+  "dataset_manifest": {
+    "corpus": {
+      "action_templates": 109,
+      "base_prompts": 96
+    },
+    "generated_at": "2026-05-20T10:58:01.768234+00:00",
+    "hard_neg_per_template": 10,
+    "model": "qwen3:8b",
+    "n_para_base": 6,
+    "n_para_template": 4,
+    "neg_ratio": 1.0,
+    "ollama_host": "http://localhost:11434",
+    "seed": 7,
+    "train": {
+      "negatives": 6788,
+      "opposite_action": 1800,
+      "paraphrase": 6788,
+      "positives": 6788,
+      "total": 13576,
+      "unrelated": 4988
+    },
+    "train_ratio": 0.8,
+    "validation": {
+      "negatives": 1500,
+      "opposite_action": 380,
+      "paraphrase": 1500,
+      "positives": 1500,
+      "total": 3000,
+      "unrelated": 1120
+    }
+  },
+  "embedding_dim": 384,
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "gold_metrics": {
+    "accuracy": 0.9047619047619048,
+    "auc_roc": 0.963481436396835,
+    "examples": 84,
+    "expected_calibration_error": 0.10387316706627754,
+    "f1": 0.8787878787878788,
+    "false_negatives": 2,
+    "false_positives": 6,
+    "precision": 0.8285714285714286,
+    "recall": 0.9354838709677419,
+    "threshold": 0.95,
+    "true_negatives": 47,
+    "true_positives": 29
+  },
+  "gold_threshold_sweep": [
+    {
+      "f1": 0.8788,
+      "precision": 0.8286,
+      "recall": 0.9355,
+      "threshold": 0.5
+    },
+    {
+      "f1": 0.8788,
+      "precision": 0.8286,
+      "recall": 0.9355,
+      "threshold": 0.7
+    },
+    {
+      "f1": 0.8788,
+      "precision": 0.8286,
+      "recall": 0.9355,
+      "threshold": 0.8
+    },
+    {
+      "f1": 0.8788,
+      "precision": 0.8286,
+      "recall": 0.9355,
+      "threshold": 0.85
+    },
+    {
+      "f1": 0.8788,
+      "precision": 0.8286,
+      "recall": 0.9355,
+      "threshold": 0.9
+    },
+    {
+      "f1": 0.8788,
+      "precision": 0.8286,
+      "recall": 0.9355,
+      "threshold": 0.95
+    }
+  ],
+  "gold_vs_cosine": {
+    "classifier": {
+      "accuracy": 0.9047619047619048,
+      "auc_roc": 0.963481436396835,
+      "examples": 84,
+      "expected_calibration_error": 0.10387316706627754,
+      "f1": 0.8787878787878788,
+      "false_negatives": 2,
+      "false_positives": 6,
+      "precision": 0.8285714285714286,
+      "recall": 0.9354838709677419,
+      "threshold": 0.95,
+      "true_negatives": 47,
+      "true_positives": 29
+    },
+    "cosine_at_classifier_recall": {
+      "accuracy": 0.6666666666666666,
+      "auc_roc": 0.790626902008521,
+      "examples": 84,
+      "expected_calibration_error": 0.2644111977202729,
+      "f1": 0.6744186046511628,
+      "false_negatives": 2,
+      "false_positives": 26,
+      "precision": 0.5272727272727272,
+      "recall": 0.9354838709677419,
+      "target_recall": 0.9354838709677419,
+      "threshold": 0.72,
+      "true_negatives": 27,
+      "true_positives": 29
+    },
+    "cosine_default": {
+      "accuracy": 0.7023809523809523,
+      "auc_roc": 0.790626902008521,
+      "examples": 84,
+      "expected_calibration_error": 0.2644111977202729,
+      "f1": 0.4897959183673469,
+      "false_negatives": 19,
+      "false_positives": 6,
+      "precision": 0.6666666666666666,
+      "recall": 0.3870967741935484,
+      "threshold": 0.9,
+      "true_negatives": 47,
+      "true_positives": 12
+    },
+    "examples": 84,
+    "gate_passed": true,
+    "gold_path": "/Users/abhinandan/Desktop/smartcache/data/gold/equivalence_gold.jsonl",
+    "model_path": "/Users/abhinandan/Desktop/smartcache/src/smartmemo/_models/classifier-v2.pt",
+    "negatives": 53,
+    "positives": 31,
+    "precision_gain_at_equal_recall": 0.3012987012987014
+  },
+  "high_stakes": {
+    "classifier": {
+      "accuracy": 0.6785714285714286,
+      "auc_roc": 0.7239583333333334,
+      "examples": 28,
+      "expected_calibration_error": 0.3770394833700834,
+      "f1": 0.6666666666666665,
+      "false_negatives": 3,
+      "false_positives": 6,
+      "precision": 0.6,
+      "recall": 0.75,
+      "threshold": 0.95,
+      "true_negatives": 10,
+      "true_positives": 9
+    },
+    "classifier_false_positives": 6,
+    "classifier_threshold": 0.95,
+    "cosine": {
+      "accuracy": 0.42857142857142855,
+      "auc_roc": 0.328125,
+      "examples": 28,
+      "expected_calibration_error": 0.5026936094675745,
+      "f1": 0.3333333333333333,
+      "false_negatives": 8,
+      "false_positives": 8,
+      "precision": 0.3333333333333333,
+      "recall": 0.3333333333333333,
+      "threshold": 0.9,
+      "true_negatives": 8,
+      "true_positives": 4
+    },
+    "cosine_false_positives": 8,
+    "cosine_threshold": 0.9,
+    "dangerous_hits_blocked_by_classifier": 4,
+    "data_path": "/Users/abhinandan/Desktop/smartcache/benchmarks/data/high_stakes_pairs.jsonl",
+    "examples": 28,
+    "model_path": "/Users/abhinandan/Desktop/smartcache/src/smartmemo/_models/classifier-v2.pt",
+    "negatives": 16,
+    "positives": 12
+  },
+  "limitations": "Trained on LLM-paraphrased and templated data across nine domains (customer-support, software-engineering, scheduling, data-analysis, devops, general-qa, medical, legal, finance). It is a generic cold-start model: per-domain accuracy improves with the `smartmemo retrain` feedback loop. Bound to the all-MiniLM-L6-v2 embedding space (384-dim).",
+  "model": "classifier-v2",
+  "operating_threshold": 0.95,
+  "scope": "generic cross-domain cold-start classifier (nine domains)",
+  "training": {
+    "batch_size": 64,
+    "dropout": 0.2,
+    "epochs": 15,
+    "final_train_loss": 0.024864289640151666,
+    "learning_rate": 0.001,
+    "seed": 7,
+    "train_examples": 13576,
+    "validation_examples": 3000
+  },
+  "validation_metrics": {
+    "accuracy": 0.9056666666666666,
+    "auc_roc": 0.9745157777777778,
+    "examples": 3000,
+    "expected_calibration_error": 0.07148537254798411,
+    "f1": 0.9028492962581531,
+    "false_negatives": 185,
+    "false_positives": 98,
+    "precision": 0.9306440198159943,
+    "recall": 0.8766666666666667,
+    "threshold": 0.95,
+    "true_negatives": 1402,
+    "true_positives": 1315
+  },
+  "validation_threshold_sweep": [
+    {
+      "f1": 0.9113,
+      "precision": 0.8952,
+      "recall": 0.928,
+      "threshold": 0.5
+    },
+    {
+      "f1": 0.9155,
+      "precision": 0.9103,
+      "recall": 0.9207,
+      "threshold": 0.7
+    },
+    {
+      "f1": 0.9138,
+      "precision": 0.9162,
+      "recall": 0.9113,
+      "threshold": 0.8
+    },
+    {
+      "f1": 0.9105,
+      "precision": 0.9192,
+      "recall": 0.902,
+      "threshold": 0.85
+    },
+    {
+      "f1": 0.9094,
+      "precision": 0.9261,
+      "recall": 0.8933,
+      "threshold": 0.9
+    },
+    {
+      "f1": 0.9028,
+      "precision": 0.9306,
+      "recall": 0.8767,
+      "threshold": 0.95
+    }
+  ]
+}

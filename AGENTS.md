@@ -481,7 +481,7 @@ smartmemo/
 │   ├── test_feedback.py
 │   └── test_integration.py
 ├── models/
-│   └── classifier-v1.pt               # shipped pretrained classifier
+│   └── classifier-v2.pt               # shipped pretrained classifier
 ├── data/
 │   └── README.md                      # how to get training data
 ├── docs/
@@ -507,6 +507,16 @@ smartmemo/
 
 This is the longest of your four projects. Plan **6-8 weeks** for a solid v1. The ML training phases especially need patience.
 
+> **Build status — v0.2.0.** Phases 1–4 are complete; Phase 6 is largely done (the
+> package and docs ship; the blog/social content does not). The bundled classifier is
+> **`classifier-v2`**, retrained across nine domains. Phase 5's sibling-library
+> integrations were evaluated and **not adopted**: `guardloop`, `agenteval-py`, and
+> `orchflow` are pre-1.0, single-maintainer, and orthogonal to caching, so they ship
+> only as optional, lazy-imported `examples/with_*.py` with no dependency added. The
+> planned GPTCache head-to-head benchmark was dropped — GPTCache's runtime
+> dependency-install design did not run cleanly. The phase plan below is kept as the
+> original design record; `CHANGELOG.md` is the authoritative record of what shipped.
+
 ### Phase 1 — Embedding Pipeline & Naive Cache (Week 1-2)
 Get a working semantic cache without the classifier — i.e., GPTCache-equivalent. This is the baseline you'll later beat.
 
@@ -531,7 +541,7 @@ Build the ML core.
 3. `classifier/train.py` — training loop, checkpoints, logging
 4. `classifier/evaluate.py` — precision/recall/F1/AUC/calibration metrics
 5. Train a v1 classifier on ~10k pairs, evaluate it. Iterate until you beat cosine baseline on precision.
-6. Save the trained model. Ship it in `models/classifier-v1.pt`.
+6. Save the trained model. Ship it in `models/classifier-v2.pt`.
 7. Tests for training loop (smoke test), eval metrics
 
 **Done when:** trained classifier exists; precision on test set is at least 10 points higher than cosine threshold at same recall. Document the gap.
@@ -627,7 +637,7 @@ OPENAI_API_KEY=sk-...
 
 # Optional config
 SMARTMEMO_DB_PATH=./smartmemo.db
-SMARTMEMO_MODEL_PATH=./models/classifier-v1.pt
+SMARTMEMO_MODEL_PATH=./models/classifier-v2.pt
 SMARTMEMO_LOG_LEVEL=INFO
 SMARTMEMO_DEVICE=cpu                  # or "cuda" for GPU inference
 ```

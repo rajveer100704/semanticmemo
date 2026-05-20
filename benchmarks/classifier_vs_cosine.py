@@ -35,7 +35,7 @@ from smartmemo.embedding import SentenceTransformerEmbeddingProvider  # noqa: E4
 from smartmemo.embedding.service import normalize  # noqa: E402
 
 DEFAULT_GOLD = REPO_ROOT / "data" / "gold" / "equivalence_gold.jsonl"
-DEFAULT_MODEL = REPO_ROOT / "src" / "smartmemo" / "_models" / "classifier-v1.pt"
+DEFAULT_MODEL = REPO_ROOT / "src" / "smartmemo" / "_models" / "classifier-v2.pt"
 DEFAULT_RESULTS = REPO_ROOT / "benchmarks" / "results" / "classifier_vs_cosine.json"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 EMBEDDING_DIM = 384

@@ -432,8 +432,8 @@ def main() -> int:
         neg_ratio=args.neg_ratio,
     )
 
-    train_path = args.out_dir / "pairs_v1.train.jsonl"
-    val_path = args.out_dir / "pairs_v1.validation.jsonl"
+    train_path = args.out_dir / "pairs_v2.train.jsonl"
+    val_path = args.out_dir / "pairs_v2.validation.jsonl"
     write_jsonl(train_path, train_rows)
     write_jsonl(val_path, val_rows)
 

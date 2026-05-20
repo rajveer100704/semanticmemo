@@ -1,32 +1,32 @@
 {
   "classifier": {
     "accuracy": 0.9047619047619048,
-    "auc_roc": 0.9665246500304321,
+    "auc_roc": 0.963481436396835,
     "examples": 84,
-    "expected_calibration_error": 0.140466042334679,
-    "f1": 0.875,
-    "false_negatives": 3,
-    "false_positives": 5,
-    "precision": 0.8484848484848485,
-    "recall": 0.9032258064516129,
+    "expected_calibration_error": 0.10387316706627754,
+    "f1": 0.8787878787878788,
+    "false_negatives": 2,
+    "false_positives": 6,
+    "precision": 0.8285714285714286,
+    "recall": 0.9354838709677419,
     "threshold": 0.95,
-    "true_negatives": 48,
-    "true_positives": 28
+    "true_negatives": 47,
+    "true_positives": 29
   },
   "cosine_at_classifier_recall": {
     "accuracy": 0.6666666666666666,
     "auc_roc": 0.790626902008521,
     "examples": 84,
     "expected_calibration_error": 0.2644111977202729,
-    "f1": 0.6666666666666666,
-    "false_negatives": 3,
-    "false_positives": 25,
-    "precision": 0.5283018867924528,
-    "recall": 0.9032258064516129,
-    "target_recall": 0.9032258064516129,
-    "threshold": 0.73,
-    "true_negatives": 28,
-    "true_positives": 28
+    "f1": 0.6744186046511628,
+    "false_negatives": 2,
+    "false_positives": 26,
+    "precision": 0.5272727272727272,
+    "recall": 0.9354838709677419,
+    "target_recall": 0.9354838709677419,
+    "threshold": 0.72,
+    "true_negatives": 27,
+    "true_positives": 29
   },
   "cosine_default": {
     "accuracy": 0.7023809523809523,
@@ -45,8 +45,8 @@
   "examples": 84,
   "gate_passed": true,
   "gold_path": "/Users/abhinandan/Desktop/smartcache/data/gold/equivalence_gold.jsonl",
-  "model_path": "/Users/abhinandan/Desktop/smartcache/src/smartmemo/_models/classifier-v1.pt",
+  "model_path": "/Users/abhinandan/Desktop/smartcache/src/smartmemo/_models/classifier-v2.pt",
   "negatives": 53,
   "positives": 31,
-  "precision_gain_at_equal_recall": 0.3201829616923957
+  "precision_gain_at_equal_recall": 0.3012987012987014
 }

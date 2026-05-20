@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.2.0
+
+- Retrain the bundled classifier as `classifier-v2`: trained on 16,576 labeled pairs
+  across nine domains (adds medical, legal, and finance, plus negation-by-insertion hard
+  negatives). It beats the cosine baseline by +30 precision points at equal recall on the
+  gold set and replaces `classifier-v1` as the shipped checkpoint.
+- Add opt-in implicit-feedback detection: with `CacheConfig(implicit_feedback=...)`,
+  re-issuing the same prompt within a window after a cache hit auto-records a bad-hit
+  event. Off by default; explicit feedback always takes precedence.
+- Add the `ImplicitFeedbackConfig` model and `CacheResult.implicit_bad_hit_recorded`.
+- `get_or_call` now trims surrounding whitespace from the prompt, so the cache key is
+  whitespace-insensitive — prompts differing only by leading or trailing whitespace no
+  longer create duplicate cache entries.
+- Add `benchmarks/false_positive_eval.py` and `benchmarks/data/high_stakes_pairs.jsonl`:
+  a high-stakes medical/legal/finance opposite-action evaluation.
+- Add optional integration examples (`examples/with_orchflow.py`, `with_guardloop.py`,
+  `with_agenteval.py`) composing SmartMemo with companion libraries; none are
+  dependencies of smartmemo.
+- Add `docs/feedback.md` covering explicit and implicit feedback and retraining.
+
 ## 0.1.0
 
 - Ship `classifier-v1`, a pretrained generic equivalence classifier, inside the package.

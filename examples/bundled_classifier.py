@@ -1,7 +1,7 @@
 """Use the bundled pretrained classifier to block false-positive cache hits.
 
 This is the opt-in, zero-training path. ``ClassifierConfig.bundled()`` loads the
-``classifier-v1`` checkpoint shipped inside the package; cosine search then only
+pretrained checkpoint shipped inside the package; cosine search then only
 selects candidates, and the learned classifier makes the final cache decision.
 
 Requires the optional ML dependencies:
