@@ -16,7 +16,8 @@ from smartmemo.embedding import HashEmbeddingProvider
 
 async def main() -> None:
     with TemporaryDirectory() as temp_dir:
-        cache = SmartMemo(
+        # `async with` closes the underlying store on exit, even on error.
+        async with SmartMemo(
             domain="customer-support",
             config=CacheConfig(
                 db_path=Path(temp_dir) / "smartmemo.db",
@@ -26,29 +27,31 @@ async def main() -> None:
             ),
             embedding_provider=HashEmbeddingProvider(dim=32),
             use_faiss=False,
-        )
+        ) as cache:
+            calls = 0
 
-        calls = 0
+            async def call_llm(prompt: str) -> str:
+                nonlocal calls
+                calls += 1
+                return f"fresh response for: {prompt}"
 
-        async def call_llm(prompt: str) -> str:
-            nonlocal calls
-            calls += 1
-            return f"fresh response for: {prompt}"
+            first = await cache.get_or_call(
+                prompt="Summarize the latest billing ticket",
+                llm_function=call_llm,
+            )
+            second = await cache.get_or_call(
+                prompt="Summarize the latest billing ticket",
+                llm_function=call_llm,
+            )
 
-        first = await cache.get_or_call(
-            prompt="Summarize the latest billing ticket",
-            llm_function=call_llm,
-        )
-        second = await cache.get_or_call(
-            prompt="Summarize the latest billing ticket",
-            llm_function=call_llm,
-        )
-
-        print(
-            {"first_hit": first.was_cache_hit, "second_hit": second.was_cache_hit, "calls": calls}
-        )
-        print(cache.stats().model_dump())
-        cache.close()
+            print(
+                {
+                    "first_hit": first.was_cache_hit,
+                    "second_hit": second.was_cache_hit,
+                    "calls": calls,
+                }
+            )
+            print(cache.stats().model_dump())
 
 
 if __name__ == "__main__":

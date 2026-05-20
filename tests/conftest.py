@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from collections.abc import Generator
 from decimal import Decimal
 from pathlib import Path
@@ -7,8 +8,14 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from smartmemo import CacheConfig, SmartMemo
-from smartmemo.types import FloatVector
+# faiss-cpu and torch each bundle their own OpenMP runtime; on macOS loading
+# both in one process trips "OMP: Error #15". This test-only workaround lets
+# the suite exercise the faiss-backed index path. It is a no-op on Linux CI,
+# and must be set before smartmemo (and therefore torch/faiss) is imported.
+os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
+
+from smartmemo import CacheConfig, SmartMemo  # noqa: E402
+from smartmemo.types import FloatVector  # noqa: E402
 
 
 class ToyEmbeddingProvider:

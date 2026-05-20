@@ -10,6 +10,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any
 
+from smartmemo._logging import get_logger
 from smartmemo.classifier import (
     EvaluationMetrics,
     TrainingConfig,
@@ -19,6 +20,8 @@ from smartmemo.classifier import (
 from smartmemo.classifier.data import PairRecord
 from smartmemo.store import SQLiteCacheStore
 from smartmemo.types import EmbeddingProvider
+
+logger = get_logger(__name__)
 
 
 @dataclass(frozen=True)
@@ -86,6 +89,11 @@ def retrain_from_feedback(
     if not train_records:
         msg = "retrain requires at least one feedback or seed training record"
         raise ValueError(msg)
+    logger.info(
+        "retrain started: %d feedback + %d seed training records",
+        len(feedback_records),
+        len(seed_records),
+    )
 
     validation_records = load_pair_records(
         config.validation_data_path,
@@ -117,6 +125,19 @@ def retrain_from_feedback(
         promoted_path = config.promote_to
         promoted_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(training_result.checkpoint_path, promoted_path)
+    elif config.promote_to is not None and not gates_passed:
+        logger.warning(
+            "retrain candidate not promoted: gates failed (precision=%.4f recall=%.4f)",
+            metrics.precision,
+            metrics.recall,
+        )
+    logger.info(
+        "retrain finished: precision=%.4f recall=%.4f gates_passed=%s promoted=%s",
+        metrics.precision,
+        metrics.recall,
+        gates_passed,
+        promoted_path is not None,
+    )
 
     report_path = config.report_path or Path(f"{config.output_path}.report.json")
     result = RetrainResult(

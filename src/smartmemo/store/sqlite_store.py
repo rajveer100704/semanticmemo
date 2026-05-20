@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import threading
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
 from importlib import resources
@@ -13,8 +14,11 @@ from uuid import UUID, uuid4
 
 import numpy as np
 
+from smartmemo._logging import get_logger
 from smartmemo.models import CacheEntry, EvictionPolicy, FeedbackEvent, LookupRecord
 from smartmemo.types import FloatVector
+
+logger = get_logger(__name__)
 
 
 def _now() -> datetime:
@@ -38,22 +42,53 @@ def _parse_time(value: str | None) -> datetime | None:
 
 
 class SQLiteCacheStore:
-    """SQLite-backed cache persistence."""
+    """SQLite-backed cache persistence.
+
+    Concurrency model: the database is opened in WAL mode, so multiple processes
+    can read concurrently while one writes. A single store instance is safe to
+    call from multiple threads of one process -- writes are serialized by an
+    internal re-entrant lock, and ``check_same_thread=False`` is set so the
+    connection can cross threads (e.g. a thread pool). It is not a distributed
+    cache: heavy multi-process write contention can still raise
+    ``sqlite3.OperationalError`` once the 5-second busy timeout elapses.
+    """
 
     def __init__(self, db_path: Path | str) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        self._connection = sqlite3.connect(self.db_path)
+        # Re-entrant: evict() -> _evict_lru() -> delete() re-acquires the lock.
+        self._lock = threading.RLock()
+        self._connection = self._connect()
         self._connection.row_factory = sqlite3.Row
+        self._apply_pragmas()
         self._ensure_schema()
+        journal_mode = self._connection.execute("PRAGMA journal_mode").fetchone()[0]
+        logger.debug("opened sqlite store: path=%s journal_mode=%s", self.db_path, journal_mode)
 
     def close(self) -> None:
         self._connection.close()
 
+    def _connect(self) -> sqlite3.Connection:
+        # check_same_thread=False permits thread-pool use; correctness then
+        # depends on self._lock serializing every write.
+        return sqlite3.connect(self.db_path, check_same_thread=False)
+
+    def _apply_pragmas(self) -> None:
+        with self._lock:
+            # WAL: many concurrent readers alongside a single writer.
+            self._connection.execute("PRAGMA journal_mode=WAL")
+            self._connection.execute("PRAGMA synchronous=NORMAL")
+            # Wait out a competing writer rather than failing immediately.
+            self._connection.execute("PRAGMA busy_timeout=5000")
+            # SQLite ignores declared ON DELETE CASCADE unless this is on.
+            self._connection.execute("PRAGMA foreign_keys=ON")
+            self._connection.commit()
+
     def _ensure_schema(self) -> None:
-        schema = resources.files("smartmemo.store").joinpath("schema.sql").read_text()
-        self._connection.executescript(schema)
-        self._connection.commit()
+        with self._lock:
+            schema = resources.files("smartmemo.store").joinpath("schema.sql").read_text()
+            self._connection.executescript(schema)
+            self._connection.commit()
 
     def add(
         self,
@@ -66,26 +101,27 @@ class SQLiteCacheStore:
     ) -> UUID:
         entry_id = uuid4()
         created_at = _now()
-        self._connection.execute(
-            """
-            INSERT INTO cache_entries (
-                id, prompt, prompt_embedding, response, model, created_at,
-                last_hit_at, hit_count, feedback_negative_count,
-                feedback_positive_count, metadata_json
+        with self._lock:
+            self._connection.execute(
+                """
+                INSERT INTO cache_entries (
+                    id, prompt, prompt_embedding, response, model, created_at,
+                    last_hit_at, hit_count, feedback_negative_count,
+                    feedback_positive_count, metadata_json
+                )
+                VALUES (?, ?, ?, ?, ?, ?, NULL, 0, 0, 0, ?)
+                """,
+                (
+                    str(entry_id),
+                    prompt,
+                    _to_blob(embedding),
+                    response,
+                    model,
+                    _serialize_time(created_at),
+                    json.dumps(metadata or {}, sort_keys=True),
+                ),
             )
-            VALUES (?, ?, ?, ?, ?, ?, NULL, 0, 0, 0, ?)
-            """,
-            (
-                str(entry_id),
-                prompt,
-                _to_blob(embedding),
-                response,
-                model,
-                _serialize_time(created_at),
-                json.dumps(metadata or {}, sort_keys=True),
-            ),
-        )
-        self._connection.commit()
+            self._connection.commit()
         return entry_id
 
     def get(self, entry_id: UUID) -> CacheEntry | None:
@@ -111,37 +147,40 @@ class SQLiteCacheStore:
         return int(row["hits"])
 
     def update_hit(self, entry_id: UUID) -> None:
-        self._connection.execute(
-            """
-            UPDATE cache_entries
-            SET hit_count = hit_count + 1, last_hit_at = ?
-            WHERE id = ?
-            """,
-            (_serialize_time(_now()), str(entry_id)),
-        )
-        self._connection.commit()
+        with self._lock:
+            self._connection.execute(
+                """
+                UPDATE cache_entries
+                SET hit_count = hit_count + 1, last_hit_at = ?
+                WHERE id = ?
+                """,
+                (_serialize_time(_now()), str(entry_id)),
+            )
+            self._connection.commit()
 
     def increment_bad_feedback(self, entry_id: UUID) -> None:
-        self._connection.execute(
-            """
-            UPDATE cache_entries
-            SET feedback_negative_count = feedback_negative_count + 1
-            WHERE id = ?
-            """,
-            (str(entry_id),),
-        )
-        self._connection.commit()
+        with self._lock:
+            self._connection.execute(
+                """
+                UPDATE cache_entries
+                SET feedback_negative_count = feedback_negative_count + 1
+                WHERE id = ?
+                """,
+                (str(entry_id),),
+            )
+            self._connection.commit()
 
     def increment_good_feedback(self, entry_id: UUID) -> None:
-        self._connection.execute(
-            """
-            UPDATE cache_entries
-            SET feedback_positive_count = feedback_positive_count + 1
-            WHERE id = ?
-            """,
-            (str(entry_id),),
-        )
-        self._connection.commit()
+        with self._lock:
+            self._connection.execute(
+                """
+                UPDATE cache_entries
+                SET feedback_positive_count = feedback_positive_count + 1
+                WHERE id = ?
+                """,
+                (str(entry_id),),
+            )
+            self._connection.commit()
 
     def record_lookup(
         self,
@@ -154,26 +193,27 @@ class SQLiteCacheStore:
         similarity_score: float | None,
         classifier_score: float | None,
     ) -> None:
-        self._connection.execute(
-            """
-            INSERT OR REPLACE INTO lookup_records (
-                query_id, domain, query_prompt, query_embedding, cache_entry_id,
-                similarity_score, classifier_score, created_at
+        with self._lock:
+            self._connection.execute(
+                """
+                INSERT OR REPLACE INTO lookup_records (
+                    query_id, domain, query_prompt, query_embedding, cache_entry_id,
+                    similarity_score, classifier_score, created_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    str(query_id),
+                    domain,
+                    prompt,
+                    _to_blob(embedding),
+                    str(cache_entry_id),
+                    similarity_score,
+                    classifier_score,
+                    _serialize_time(_now()),
+                ),
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                str(query_id),
-                domain,
-                prompt,
-                _to_blob(embedding),
-                str(cache_entry_id),
-                similarity_score,
-                classifier_score,
-                _serialize_time(_now()),
-            ),
-        )
-        self._connection.commit()
+            self._connection.commit()
 
     def get_lookup(self, query_id: UUID) -> LookupRecord | None:
         row = self._connection.execute(
@@ -230,29 +270,31 @@ class SQLiteCacheStore:
         if label not in {0, 1}:
             msg = f"feedback label must be 0 or 1, got {label}"
             raise ValueError(msg)
-        lookup = self.get_lookup(query_id)
-        if lookup is None:
-            return None
-        event_id = uuid4()
-        self._connection.execute(
-            """
-            INSERT INTO feedback_events (
-                id, query_id, cache_entry_id, label, reason, created_at, metadata_json
+        with self._lock:
+            lookup = self.get_lookup(query_id)
+            if lookup is None:
+                return None
+            event_id = uuid4()
+            self._connection.execute(
+                """
+                INSERT INTO feedback_events (
+                    id, query_id, cache_entry_id, label, reason, created_at,
+                    metadata_json
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    str(event_id),
+                    str(query_id),
+                    str(lookup.cache_entry_id),
+                    label,
+                    reason,
+                    _serialize_time(_now()),
+                    json.dumps(metadata or {}, sort_keys=True),
+                ),
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                str(event_id),
-                str(query_id),
-                str(lookup.cache_entry_id),
-                label,
-                reason,
-                _serialize_time(_now()),
-                json.dumps(metadata or {}, sort_keys=True),
-            ),
-        )
-        self._connection.commit()
-        return event_id
+            self._connection.commit()
+            return event_id
 
     def feedback_count(self) -> int:
         row = self._connection.execute("SELECT COUNT(*) AS count FROM feedback_events").fetchone()
@@ -324,8 +366,9 @@ class SQLiteCacheStore:
         return len(lines)
 
     def delete(self, entry_id: UUID) -> None:
-        self._connection.execute("DELETE FROM cache_entries WHERE id = ?", (str(entry_id),))
-        self._connection.commit()
+        with self._lock:
+            self._connection.execute("DELETE FROM cache_entries WHERE id = ?", (str(entry_id),))
+            self._connection.commit()
 
     def evict(
         self,
@@ -334,43 +377,46 @@ class SQLiteCacheStore:
         max_entries: int,
         ttl_seconds: int | None,
     ) -> list[UUID]:
-        evicted: list[UUID] = []
-        if policy in {EvictionPolicy.TTL, EvictionPolicy.HYBRID} and ttl_seconds is not None:
-            evicted.extend(self._evict_expired(ttl_seconds))
-        if policy in {EvictionPolicy.LRU, EvictionPolicy.HYBRID}:
-            evicted.extend(self._evict_lru(max_entries))
-        return evicted
+        with self._lock:
+            evicted: list[UUID] = []
+            if policy in {EvictionPolicy.TTL, EvictionPolicy.HYBRID} and ttl_seconds is not None:
+                evicted.extend(self._evict_expired(ttl_seconds))
+            if policy in {EvictionPolicy.LRU, EvictionPolicy.HYBRID}:
+                evicted.extend(self._evict_lru(max_entries))
+            return evicted
 
     def _evict_expired(self, ttl_seconds: int) -> list[UUID]:
-        cutoff = _serialize_time(_now() - timedelta(seconds=ttl_seconds))
-        rows = self._connection.execute(
-            "SELECT id FROM cache_entries WHERE created_at < ?",
-            (cutoff,),
-        ).fetchall()
-        ids = [UUID(row["id"]) for row in rows]
-        for entry_id in ids:
-            self.delete(entry_id)
-        return ids
+        with self._lock:
+            cutoff = _serialize_time(_now() - timedelta(seconds=ttl_seconds))
+            rows = self._connection.execute(
+                "SELECT id FROM cache_entries WHERE created_at < ?",
+                (cutoff,),
+            ).fetchall()
+            ids = [UUID(row["id"]) for row in rows]
+            for entry_id in ids:
+                self.delete(entry_id)
+            return ids
 
     def _evict_lru(self, max_entries: int) -> list[UUID]:
-        overflow = self.count() - max_entries
-        if overflow <= 0:
-            return []
-        rows = self._connection.execute(
-            """
-            SELECT id FROM cache_entries
-            ORDER BY
-                feedback_negative_count DESC,
-                COALESCE(last_hit_at, created_at) ASC,
-                created_at ASC
-            LIMIT ?
-            """,
-            (overflow,),
-        ).fetchall()
-        ids = [UUID(row["id"]) for row in rows]
-        for entry_id in ids:
-            self.delete(entry_id)
-        return ids
+        with self._lock:
+            overflow = self.count() - max_entries
+            if overflow <= 0:
+                return []
+            rows = self._connection.execute(
+                """
+                SELECT id FROM cache_entries
+                ORDER BY
+                    feedback_negative_count DESC,
+                    COALESCE(last_hit_at, created_at) ASC,
+                    created_at ASC
+                LIMIT ?
+                """,
+                (overflow,),
+            ).fetchall()
+            ids = [UUID(row["id"]) for row in rows]
+            for entry_id in ids:
+                self.delete(entry_id)
+            return ids
 
     def _row_to_entry(self, row: sqlite3.Row) -> CacheEntry:
         metadata = json.loads(row["metadata_json"])

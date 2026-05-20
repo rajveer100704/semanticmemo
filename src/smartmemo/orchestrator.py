@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import inspect
 import time
 from datetime import UTC, datetime
@@ -11,11 +12,15 @@ from uuid import UUID, uuid4
 
 import numpy as np
 
+from smartmemo._logging import get_logger
 from smartmemo.embedding import EmbeddingService
 from smartmemo.embedding.service import SearchCandidate
+from smartmemo.exceptions import LLMCallError
 from smartmemo.models import CacheConfig, CacheResult, CacheStats
 from smartmemo.store import SQLiteCacheStore
 from smartmemo.types import EquivalenceClassifier, FloatVector, LLMFunction
+
+logger = get_logger(__name__)
 
 
 class CacheOrchestrator:
@@ -79,6 +84,13 @@ class CacheOrchestrator:
                 )
                 self.cache_hits += 1
                 self.total_cost_saved_usd += self.config.estimated_llm_cost_usd
+                logger.debug(
+                    "cache hit: query_id=%s entry_id=%s similarity=%s classifier=%s",
+                    query_id,
+                    entry.id,
+                    similarity_score,
+                    classifier_score,
+                )
                 return CacheResult(
                     query_id=query_id,
                     response=entry.response,
@@ -102,6 +114,7 @@ class CacheOrchestrator:
         self.embedding_service.add(entry_id, query_embedding)
         self._evict_if_needed()
         self.cache_misses += 1
+        logger.debug("cache miss: query_id=%s new_entry_id=%s", query_id, entry_id)
         return CacheResult(
             query_id=query_id,
             response=response,
@@ -122,6 +135,7 @@ class CacheOrchestrator:
         if event_id is None:
             return False
         self.store.increment_bad_feedback(lookup.cache_entry_id)
+        logger.info("explicit feedback recorded: query_id=%s label=0", query_id)
         return True
 
     def report_good_hit(self, query_id: UUID) -> bool:
@@ -132,6 +146,7 @@ class CacheOrchestrator:
         if event_id is None:
             return False
         self.store.increment_good_feedback(lookup.cache_entry_id)
+        logger.info("explicit feedback recorded: query_id=%s label=1", query_id)
         return True
 
     def _detect_implicit_bad_hit(self, prompt: str) -> bool:
@@ -168,6 +183,12 @@ class CacheOrchestrator:
             # find and the write; nothing to flag.
             return False
         self.store.increment_bad_feedback(lookup.cache_entry_id)
+        logger.info(
+            "implicit bad-hit recorded: lookup=%s entry=%s elapsed=%.1fs",
+            lookup.id,
+            lookup.cache_entry_id,
+            elapsed,
+        )
         return True
 
     def export_feedback_pairs(self, path: str, *, split: str = "train") -> int:
@@ -236,12 +257,52 @@ class CacheOrchestrator:
             reverse=True,
         )
         (best_candidate, _), best_classifier_score = ranked[0]
-        if best_classifier_score >= classifier.threshold:
+        is_hit = best_classifier_score >= classifier.threshold
+        logger.debug(
+            "classifier gate: score=%.4f threshold=%.4f decision=%s",
+            best_classifier_score,
+            classifier.threshold,
+            "hit" if is_hit else "miss",
+        )
+        if is_hit:
             return best_candidate.entry_id, best_candidate.score, best_classifier_score
         best = candidates[0]
         return None, best.score, best_classifier_score
 
     async def _call_llm(self, llm_function: LLMFunction, prompt: str) -> str:
+        """Call the user's LLM function, retrying transient failures if configured.
+
+        With ``config.retry`` unset this is a single attempt and exceptions
+        propagate unchanged. With a ``RetryConfig`` it retries on the configured
+        exception types using bounded exponential backoff, and raises
+        ``LLMCallError`` (chaining the last failure) once attempts are exhausted.
+        """
+        retry = self.config.retry
+        if retry is None:
+            return await self._invoke_llm(llm_function, prompt)
+
+        backoff = retry.initial_backoff_seconds
+        last_exc: Exception | None = None
+        for attempt in range(1, retry.max_attempts + 1):
+            try:
+                return await self._invoke_llm(llm_function, prompt)
+            except retry.retry_on as exc:
+                last_exc = exc
+                if attempt >= retry.max_attempts:
+                    break
+                logger.warning(
+                    "llm_function failed (attempt %d/%d), retrying in %.2fs: %s",
+                    attempt,
+                    retry.max_attempts,
+                    backoff,
+                    exc,
+                )
+                await asyncio.sleep(backoff)
+                backoff = min(backoff * retry.backoff_multiplier, retry.max_backoff_seconds)
+        msg = f"llm_function failed after {retry.max_attempts} attempt(s)"
+        raise LLMCallError(msg) from last_exc
+
+    async def _invoke_llm(self, llm_function: LLMFunction, prompt: str) -> str:
         value = llm_function(prompt)
         if inspect.isawaitable(value):
             value = await value
@@ -258,6 +319,8 @@ class CacheOrchestrator:
         )
         for entry_id in evicted:
             self.embedding_service.remove(entry_id)
+        if evicted:
+            logger.info("evicted %d cache entries", len(evicted))
 
     def _rebuild_index_from_store(self) -> None:
         items = [

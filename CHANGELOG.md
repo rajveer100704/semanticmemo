@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.3.0
+
+A hardening release: no new product features, but the existing ones become safer to run
+in production. Every change is backward compatible; new configuration is opt-in and off
+by default.
+
+- Add structured logging under the `smartmemo` logger namespace. The library is silent by
+  default (it attaches only a `NullHandler`); applications opt in by configuring the
+  `smartmemo` logger.
+- Open the SQLite store in WAL mode with a 5-second busy timeout, and serialize writes
+  with an internal re-entrant lock so one store instance is safe to use from multiple
+  threads of a process. The concurrency guarantees are documented honestly — it is not a
+  distributed cache.
+- Bug fix: enable `PRAGMA foreign_keys`, so the schema's declared `ON DELETE CASCADE`
+  foreign keys now actually fire. Deleting or evicting a cache entry previously left
+  orphan `lookup_records` and `feedback_events` rows behind; it now cleans them up.
+- `SmartMemo` supports `async with` for guaranteed cleanup; `close()` is unchanged.
+- Add opt-in LLM-call retries: `CacheConfig(retry=RetryConfig(...))` retries transient
+  failures of `llm_function` with bounded exponential backoff. Off by default; only the
+  cache-miss path is retried. Adds the `RetryConfig` model and the `LLMCallError`
+  exception (raised only when retries are enabled and exhausted).
+- CI now tests Python 3.11 through 3.14; the PyPI publish workflow runs the test suite
+  before building and releasing.
+- Add `CONTRIBUTING.md`.
+
 ## 0.2.0
 
 - Retrain the bundled classifier as `classifier-v2`: trained on 16,576 labeled pairs

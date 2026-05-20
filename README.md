@@ -200,15 +200,31 @@ The command always trains a candidate and writes an auditable
 validation gates pass. SmartMemo does not run background retraining or automatically reload
 classifiers at runtime.
 
+## Reliability
+
+SmartMemo is built to run inside long-lived agent processes:
+
+- **Resource cleanup** — use `async with SmartMemo(...) as cache:` to close the store
+  automatically, or call `cache.close()` yourself.
+- **Retries** — opt in with `CacheConfig(retry=RetryConfig(...))` to retry transient
+  `llm_function` failures with bounded exponential backoff. Off by default; only the
+  cache-miss path is retried, and exhausted retries raise `LLMCallError`.
+- **Logging** — SmartMemo logs under the `smartmemo` logger namespace and is silent until
+  your application configures that logger.
+- **Concurrency** — the SQLite store runs in WAL mode, and one instance is safe to use
+  from multiple threads of a process. It is not a distributed cache; see
+  [`CONTRIBUTING.md`](CONTRIBUTING.md) for the exact guarantees.
+
 ## Release
 
-Version `0.2.0` is configured for PyPI as `smartmemo`. The repository publishes through
-GitHub Actions trusted publishing from `.github/workflows/publish-pypi.yml` with the
-`pypi` environment.
+`smartmemo` is published to PyPI through GitHub Actions trusted publishing from
+`.github/workflows/publish-pypi.yml` with the `pypi` environment. The publish workflow
+runs the full test suite before building, so a broken tag cannot publish.
 
 ```bash
-git tag v0.2.0
-git push origin v0.2.0
+git tag v0.3.0
+git push origin v0.3.0
 ```
 
-That tag builds the source distribution and wheel, then uploads them to PyPI.
+That tag runs the tests, builds the source distribution and wheel, then uploads them to
+PyPI.

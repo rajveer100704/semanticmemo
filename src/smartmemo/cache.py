@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 from uuid import UUID
 
+from smartmemo._logging import get_logger
 from smartmemo.classifier import ClassifierService
 from smartmemo.embedding import (
     EmbeddingService,
@@ -18,6 +19,8 @@ from smartmemo.models import CacheConfig, CacheResult, CacheStats, ClassifierCon
 from smartmemo.orchestrator import CacheOrchestrator
 from smartmemo.store import SQLiteCacheStore
 from smartmemo.types import EmbeddingProvider, LLMFunction
+
+logger = get_logger(__name__)
 
 
 class SmartMemo:
@@ -48,7 +51,8 @@ class SmartMemo:
         if use_faiss:
             try:
                 index = FaissVectorIndex(provider.dim)
-            except MissingDependencyError:
+            except MissingDependencyError as exc:
+                logger.warning("faiss unavailable, falling back to InMemoryVectorIndex: %s", exc)
                 index = InMemoryVectorIndex(provider.dim)
         else:
             index = InMemoryVectorIndex(provider.dim)
@@ -90,7 +94,17 @@ class SmartMemo:
         return self._orchestrator.export_feedback_pairs(str(path), split=split)
 
     def close(self) -> None:
+        """Close the underlying store. Safe to call more than once."""
         self.store.close()
+        logger.debug("SmartMemo closed: domain=%s", self.domain)
+
+    async def __aenter__(self) -> SmartMemo:
+        """Enter an ``async with`` block; returns this instance."""
+        return self
+
+    async def __aexit__(self, *exc_info: object) -> None:
+        """Exit an ``async with`` block, closing the store. Exceptions propagate."""
+        self.close()
 
     def _build_classifier_service(
         self,

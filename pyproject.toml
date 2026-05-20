@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "smartmemo"
-version = "0.2.0"
+version = "0.3.0"
 description = "Semantic memory for LLM agent calls with an equivalence-first cache architecture."
 readme = "README.md"
 requires-python = ">=3.11,<3.15"
@@ -14,7 +14,7 @@ authors = [
 ]
 keywords = ["llm", "agents", "semantic-cache", "semantic-memory", "embeddings", "equivalence"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",

@@ -37,6 +37,28 @@ class ImplicitFeedbackConfig(BaseModel):
     match: Literal["exact"] = "exact"
 
 
+class RetryConfig(BaseModel):
+    """Opt-in retry policy for the user-supplied LLM function.
+
+    Off by default. Pass an instance to ``CacheConfig(retry=RetryConfig())`` to
+    retry transient failures of ``llm_function`` with bounded exponential
+    backoff. Only the cache-miss path is retried -- a cache hit never calls the
+    LLM, so it is never retried. When all attempts are exhausted, SmartMemo
+    raises :class:`~smartmemo.exceptions.LLMCallError`, chaining the last
+    underlying failure as its cause. With ``CacheConfig.retry`` left ``None``,
+    the LLM call behaves exactly as before: a single attempt, exceptions raised
+    unchanged.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    max_attempts: int = Field(default=3, ge=1)
+    initial_backoff_seconds: float = Field(default=0.5, gt=0)
+    backoff_multiplier: float = Field(default=2.0, ge=1.0)
+    max_backoff_seconds: float = Field(default=30.0, gt=0)
+    retry_on: tuple[type[Exception], ...] = (Exception,)
+
+
 class CacheConfig(BaseModel):
     """Configuration for a local SmartMemo instance."""
 
@@ -53,6 +75,7 @@ class CacheConfig(BaseModel):
     ttl_seconds: int | None = Field(default=None, gt=0)
     estimated_llm_cost_usd: Decimal = Decimal("0")
     implicit_feedback: ImplicitFeedbackConfig | None = None
+    retry: RetryConfig | None = None
 
     @field_validator("estimated_llm_cost_usd")
     @classmethod

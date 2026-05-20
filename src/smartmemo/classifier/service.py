@@ -9,11 +9,14 @@ from typing import Any
 import numpy as np
 import torch
 
+from smartmemo._logging import get_logger
 from smartmemo.classifier.model import PairClassifier
 from smartmemo.embedding.service import normalize
 from smartmemo.types import FloatVector
 
 _torch: Any = torch
+
+logger = get_logger(__name__)
 
 
 class ClassifierService:
@@ -78,4 +81,11 @@ class ClassifierService:
         model.load_state_dict(state_dict)
         model.to(self.device)
         model.eval()
-        return model, float(checkpoint.get("threshold", 0.85))
+        threshold = float(checkpoint.get("threshold", 0.85))
+        logger.debug(
+            "loaded classifier checkpoint: path=%s embed_dim=%d threshold=%.4f",
+            model_path,
+            embed_dim,
+            threshold,
+        )
+        return model, threshold
