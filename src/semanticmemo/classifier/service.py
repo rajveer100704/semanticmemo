@@ -23,7 +23,6 @@ logger = get_logger(__name__)
 _MODEL_CACHE: dict[tuple[Path, Any], tuple[PairClassifier, float]] = {}
 
 
-
 class ClassifierService:
     """Load a PairClassifier checkpoint and run CPU-friendly inference."""
 
