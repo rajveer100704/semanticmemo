@@ -184,7 +184,7 @@ class CacheOrchestrator:
         if event_id is None:
             return False
         self.store.increment_bad_feedback(lookup.cache_entry_id)
-        
+
         # Record bad hit for active learning
         cache_entry = self.store.get(lookup.cache_entry_id)
         if cache_entry is not None:
@@ -392,19 +392,17 @@ class CacheOrchestrator:
 
         # Resolve MLP threshold
         domain_cfg = risk_policy.domain_thresholds.get(detected_domain, {})
-        mlp_threshold = (
-            classifier.threshold
-            if classifier.threshold is not None
-            else (
-                domain_cfg.get("mlp")
-                if "mlp" in domain_cfg
-                else (
+        mlp_threshold = classifier.threshold
+        if mlp_threshold is None:
+            mlp_val = domain_cfg.get("mlp")
+            if mlp_val is not None:
+                mlp_threshold = mlp_val
+            else:
+                mlp_threshold = (
                     risk_policy.high_risk_classifier_threshold
                     if risk_tier == RiskTier.HIGH
                     else risk_policy.low_risk_classifier_threshold
                 )
-            )
-        )
 
         t_mlp_start = time.perf_counter()
         probabilities = classifier.predict_batch(
@@ -524,19 +522,17 @@ class CacheOrchestrator:
             )
             return best_candidate.entry_id, best_candidate.score, best_mlp_score, None, decision_obj
 
-        ce_threshold = (
-            self.cross_encoder_service.threshold
-            if self.cross_encoder_service.threshold is not None
-            else (
-                domain_cfg.get("cross_encoder")
-                if "cross_encoder" in domain_cfg
-                else (
+        ce_threshold = self.cross_encoder_service.threshold
+        if ce_threshold is None:
+            ce_val = domain_cfg.get("cross_encoder")
+            if ce_val is not None:
+                ce_threshold = ce_val
+            else:
+                ce_threshold = (
                     risk_policy.high_risk_cross_encoder_threshold
                     if risk_tier == RiskTier.HIGH
                     else risk_policy.low_risk_cross_encoder_threshold
                 )
-            )
-        )
 
         t_ce_start = time.perf_counter()
         ce_score = self.cross_encoder_service.predict(prompt, best_entry.prompt)

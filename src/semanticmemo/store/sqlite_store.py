@@ -384,7 +384,7 @@ class SQLiteCacheStore:
         cached_prompt: str,
         similarity_score: float,
         classifier_score: float,
-        cross_encoder_score: float,
+        cross_encoder_score: float | None,
         label: int,
         source: str,
     ) -> UUID:

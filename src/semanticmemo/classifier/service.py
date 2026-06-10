@@ -20,7 +20,8 @@ logger = get_logger(__name__)
 
 
 # Global cache for loaded model checkpoints to avoid reloading overhead
-_MODEL_CACHE: dict[tuple[Path, torch.device], tuple[PairClassifier, float]] = {}
+_MODEL_CACHE: dict[tuple[Path, Any], tuple[PairClassifier, float]] = {}
+
 
 
 class ClassifierService:

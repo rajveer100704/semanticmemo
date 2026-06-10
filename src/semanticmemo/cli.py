@@ -249,4 +249,3 @@ def _export_active_learning(args: argparse.Namespace) -> None:
     count = store.export_active_learning_pairs(args.out, split=args.split)
     store.close()
     print(f"exported={count} path={args.out}")
-

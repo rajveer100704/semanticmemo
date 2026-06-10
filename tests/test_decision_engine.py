@@ -135,6 +135,7 @@ async def test_orchestrator_double_verification_flow():
         llm_function=lambda p: "fresh response",
     )
     assert not res.was_cache_hit
+    assert res.decision is not None
     assert res.decision.decision == "miss"
     assert res.decision.reason == "failed_mlp_threshold"
 
@@ -147,6 +148,7 @@ async def test_orchestrator_double_verification_flow():
         llm_function=lambda p: "fresh response",
     )
     assert res.was_cache_hit
+    assert res.decision is not None
     assert res.decision.decision == "hit"
     assert res.decision.reason == "mlp_bypass"
     mock_cross_encoder.predict.assert_not_called()
@@ -160,6 +162,7 @@ async def test_orchestrator_double_verification_flow():
         llm_function=lambda p: "fresh response",
     )
     assert not res.was_cache_hit
+    assert res.decision is not None
     assert res.decision.decision == "miss"
     assert res.decision.reason == "failed_cross_encoder_threshold"
 
@@ -171,6 +174,7 @@ async def test_orchestrator_double_verification_flow():
         llm_function=lambda p: "fresh response",
     )
     assert res.was_cache_hit
+    assert res.decision is not None
     assert res.decision.decision == "hit"
     assert res.decision.reason == "passed_all_thresholds"
 
@@ -186,11 +190,13 @@ async def test_orchestrator_domain_conditioned_thresholds():
 
     entry_id = uuid4()
     from semanticmemo.embedding.service import SearchCandidate
+
     mock_embedding.search.return_value = [SearchCandidate(entry_id=entry_id, score=0.95)]
 
     from datetime import datetime
 
     from semanticmemo.models import CacheEntry
+
     mock_entry = CacheEntry(
         id=entry_id,
         prompt="cached prompt",
@@ -238,6 +244,7 @@ async def test_orchestrator_domain_conditioned_thresholds():
         llm_function=lambda p: "fresh response",
     )
     assert res.was_cache_hit
+    assert res.decision is not None
     assert res.decision.decision == "hit"
     assert res.decision.reason == "passed_all_thresholds"
 
@@ -248,6 +255,7 @@ async def test_orchestrator_domain_conditioned_thresholds():
         llm_function=lambda p: "fresh response 2",
     )
     assert not res_disagree.was_cache_hit
+    assert res_disagree.decision is not None
     assert res_disagree.decision.decision == "miss"
     assert res_disagree.decision.reason == "failed_cross_encoder_threshold"
 
@@ -332,4 +340,3 @@ async def test_report_bad_hit_records_active_learning():
         label=0,
         source="user_reported_bad_hit",
     )
-

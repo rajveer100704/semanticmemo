@@ -65,7 +65,6 @@ class EntityChangeConfig:
     strict_proper_nouns: bool = True
 
 
-
 # ---------------------------------------------------------------------------
 # Detection result
 # ---------------------------------------------------------------------------
@@ -369,6 +368,7 @@ class EntityChangeDetector:
         Year-like 4-digit numbers are deliberately excluded here because the
         ``year`` detector already handles them with higher precision.
         """
+
         def _non_year_nums(text: str) -> set[str]:
             return {
                 m.group(0)
@@ -507,8 +507,7 @@ class EntityChangeDetector:
             return EntityChangeResult(
                 entity_changed=True,
                 reason=(
-                    f"privilege escalation mismatch: "
-                    f"'{ta}' (privileged) vs possessive user scope"
+                    f"privilege escalation mismatch: '{ta}' (privileged) vs possessive user scope"
                 ),
                 changed_tokens=(ta, "user"),
                 detector="privilege",
@@ -519,8 +518,7 @@ class EntityChangeDetector:
             return EntityChangeResult(
                 entity_changed=True,
                 reason=(
-                    f"privilege escalation mismatch: "
-                    f"possessive user scope vs '{tb}' (privileged)"
+                    f"privilege escalation mismatch: possessive user scope vs '{tb}' (privileged)"
                 ),
                 changed_tokens=("user", tb),
                 detector="privilege",
@@ -543,14 +541,65 @@ class EntityChangeDetector:
 
         # Filter out very short tokens and common stop words to reduce noise
         _stop = {
-            "the", "an", "a", "in", "on", "at", "for", "of", "to", "and",
-            "or", "but", "is", "are", "was", "were", "be", "i", "my",
-            "this", "that", "it", "its", "by", "as", "do", "can", "how",
-            "what", "give", "me", "us", "list", "provide", "q", "mr",
-            "dr", "ms", "tell", "show", "get", "find", "describe",
-            "explain", "summarize", "summarise", "analyze", "analyse",
-            "compare", "calculate", "generate", "write", "create", "make",
-            "help", "please", "need", "want", "looking",
+            "the",
+            "an",
+            "a",
+            "in",
+            "on",
+            "at",
+            "for",
+            "of",
+            "to",
+            "and",
+            "or",
+            "but",
+            "is",
+            "are",
+            "was",
+            "were",
+            "be",
+            "i",
+            "my",
+            "this",
+            "that",
+            "it",
+            "its",
+            "by",
+            "as",
+            "do",
+            "can",
+            "how",
+            "what",
+            "give",
+            "me",
+            "us",
+            "list",
+            "provide",
+            "q",
+            "mr",
+            "dr",
+            "ms",
+            "tell",
+            "show",
+            "get",
+            "find",
+            "describe",
+            "explain",
+            "summarize",
+            "summarise",
+            "analyze",
+            "analyse",
+            "compare",
+            "calculate",
+            "generate",
+            "write",
+            "create",
+            "make",
+            "help",
+            "please",
+            "need",
+            "want",
+            "looking",
         }
         pn_a = {t for t in pn_a if len(t) > 2 and t not in _stop}
         pn_b = {t for t in pn_b if len(t) > 2 and t not in _stop}

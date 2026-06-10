@@ -40,7 +40,6 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 from semanticmemo import CacheConfig, ClassifierConfig, CrossEncoderConfig, SemanticMemo
 from semanticmemo.embedding import SentenceTransformerEmbeddingProvider
 
-
 # ---------------------------------------------------------------------------
 # Drift test scenarios
 # ---------------------------------------------------------------------------
@@ -315,8 +314,7 @@ async def run_benchmark(db_prefix: str) -> dict[str, Any]:
                 }
             )
             print(
-                f"    [{q_type}] Expected={expected} | "
-                f"Cosine={cos_dec} | v1={v1_dec} | v2={v2_dec}"
+                f"    [{q_type}] Expected={expected} | Cosine={cos_dec} | v1={v1_dec} | v2={v2_dec}"
             )
 
         results.append(
@@ -401,36 +399,46 @@ def print_summary_table(summary: dict[str, Any]) -> None:
     def row(label: str, *vals: Any) -> str:
         return f"{label:<38} {str(vals[0]):>10} {str(vals[1]):>10} {str(vals[2]):>10}"
 
-    print(row(
-        "Safety Accuracy (% drift blocked)",
-        f"{summary['cosine_safety_accuracy']}%",
-        f"{summary['v1_safety_accuracy']}%",
-        f"{summary['v2_safety_accuracy']}%",
-    ))
-    print(row(
-        "Dangerous FP Rate (% drift served)",
-        f"{summary['cosine_dfp_rate']}%",
-        f"{summary['v1_dfp_rate']}%",
-        f"{summary['v2_dfp_rate']}%",
-    ))
-    print(row(
-        "Dangerous FP Count",
-        summary["cosine_dangerous_fp"],
-        summary["v1_dangerous_fp"],
-        summary["v2_dangerous_fp"],
-    ))
-    print(row(
-        "Reuse Accuracy (% equiv. reused)",
-        f"{summary['cosine_reuse_accuracy']}%",
-        f"{summary['v1_reuse_accuracy']}%",
-        f"{summary['v2_reuse_accuracy']}%",
-    ))
-    print(row(
-        "Missed Reuse Count",
-        summary["cosine_missed_reuse"],
-        summary["v1_missed_reuse"],
-        summary["v2_missed_reuse"],
-    ))
+    print(
+        row(
+            "Safety Accuracy (% drift blocked)",
+            f"{summary['cosine_safety_accuracy']}%",
+            f"{summary['v1_safety_accuracy']}%",
+            f"{summary['v2_safety_accuracy']}%",
+        )
+    )
+    print(
+        row(
+            "Dangerous FP Rate (% drift served)",
+            f"{summary['cosine_dfp_rate']}%",
+            f"{summary['v1_dfp_rate']}%",
+            f"{summary['v2_dfp_rate']}%",
+        )
+    )
+    print(
+        row(
+            "Dangerous FP Count",
+            summary["cosine_dangerous_fp"],
+            summary["v1_dangerous_fp"],
+            summary["v2_dangerous_fp"],
+        )
+    )
+    print(
+        row(
+            "Reuse Accuracy (% equiv. reused)",
+            f"{summary['cosine_reuse_accuracy']}%",
+            f"{summary['v1_reuse_accuracy']}%",
+            f"{summary['v2_reuse_accuracy']}%",
+        )
+    )
+    print(
+        row(
+            "Missed Reuse Count",
+            summary["cosine_missed_reuse"],
+            summary["v1_missed_reuse"],
+            summary["v2_missed_reuse"],
+        )
+    )
 
     print()
     print("=" * 100)
@@ -466,7 +474,6 @@ def print_summary_table(summary: dict[str, Any]) -> None:
     print("Legend: [DFP!] = Dangerous False Positive (most critical failure)")
     print("        (MR)   = Missed Reuse (unnecessary LLM call, not catastrophic)")
     print("        OK     = Correct decision")
-
 
 
 def main() -> None:
