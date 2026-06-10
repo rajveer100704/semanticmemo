@@ -1,11 +1,11 @@
-"""Compose SmartMemo with orchflow: cache the LLM call inside each pipeline step.
+"""Compose SemanticMemo with orchflow: cache the LLM call inside each pipeline step.
 
 orchflow (https://pypi.org/project/orchflow/) orchestrates multi-step agent
-pipelines. SmartMemo wraps the LLM call inside each step, so when a pipeline runs
+pipelines. SemanticMemo wraps the LLM call inside each step, so when a pipeline runs
 again over a repeated input the step is served from cache instead of paying for
 another call -- and the savings compound across every step of the pipeline.
 
-orchflow is an optional companion library; it is NOT a dependency of smartmemo.
+orchflow is an optional companion library; it is NOT a dependency of semanticmemo.
 Install it to run this example:
 
     pip install orchflow
@@ -20,7 +20,7 @@ import asyncio
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from smartmemo import CacheConfig, SmartMemo
+from semanticmemo import CacheConfig, SemanticMemo
 
 
 async def main() -> None:
@@ -32,10 +32,10 @@ async def main() -> None:
         raise SystemExit(0) from None
 
     with TemporaryDirectory() as temp_dir:
-        cache = SmartMemo(
+        cache = SemanticMemo(
             domain="research-pipeline",
             config=CacheConfig(
-                db_path=Path(temp_dir) / "smartmemo.db",
+                db_path=Path(temp_dir) / "semanticmemo.db",
                 estimated_llm_cost_usd="0.01",
             ),
         )

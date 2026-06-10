@@ -1,12 +1,12 @@
-"""Compose SmartMemo with guardloop: cache LLM calls under a hard budget cap.
+"""Compose SemanticMemo with guardloop: cache LLM calls under a hard budget cap.
 
 guardloop (https://pypi.org/project/guardloop/) runs an agent under budget caps
-(cost, tokens, time, tool calls). SmartMemo sits inside the agent: on a cache hit
+(cost, tokens, time, tool calls). SemanticMemo sits inside the agent: on a cache hit
 it returns immediately without an LLM call, so that turn consumes none of the
 budget. The two are complementary -- caching lowers spend, the cap bounds the
 worst case.
 
-guardloop is an optional companion library; it is NOT a dependency of smartmemo.
+guardloop is an optional companion library; it is NOT a dependency of semanticmemo.
 Install it to run this example:
 
     pip install guardloop
@@ -21,7 +21,7 @@ import asyncio
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from smartmemo import CacheConfig, SmartMemo
+from semanticmemo import CacheConfig, SemanticMemo
 
 
 async def main() -> None:
@@ -33,10 +33,10 @@ async def main() -> None:
         raise SystemExit(0) from None
 
     with TemporaryDirectory() as temp_dir:
-        cache = SmartMemo(
+        cache = SemanticMemo(
             domain="support-agent",
             config=CacheConfig(
-                db_path=Path(temp_dir) / "smartmemo.db",
+                db_path=Path(temp_dir) / "semanticmemo.db",
                 estimated_llm_cost_usd="0.01",
             ),
         )
@@ -45,7 +45,7 @@ async def main() -> None:
         async def call_llm(prompt: str) -> str:
             # In production this would call ctx.openai / ctx.anthropic -- the
             # guardloop-wrapped client that meters spend against the budget.
-            # A SmartMemo cache hit skips this call entirely.
+            # A SemanticMemo cache hit skips this call entirely.
             nonlocal llm_calls
             llm_calls += 1
             return f"answer for: {prompt}"
@@ -60,7 +60,7 @@ async def main() -> None:
         )
 
         async def agent(ctx: RunContext, prompt: str) -> str:
-            # SmartMemo runs first; a cache hit returns without touching the
+            # SemanticMemo runs first; a cache hit returns without touching the
             # budget-metered LLM client.
             result = await cache.get_or_call(prompt=prompt, llm_function=call_llm)
             return result.response

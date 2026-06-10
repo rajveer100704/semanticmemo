@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Train and package the shipped equivalence classifier (``classifier-v2``).
+"""Train and package the shipped equivalence classifier (``equivalence-net-v1``).
 
 Reads the generated pair dataset under ``data/training/``, trains a
 ``PairClassifier`` over SentenceTransformers embeddings, writes the checkpoint
@@ -25,7 +25,7 @@ sys.path.insert(0, str(REPO_ROOT / "benchmarks"))
 from classifier_vs_cosine import run_comparison  # noqa: E402
 from false_positive_eval import score_high_stakes  # noqa: E402
 
-from smartmemo.classifier import (  # noqa: E402
+from semanticmemo.classifier import (  # noqa: E402
     ClassifierService,
     PairRecord,
     TrainingConfig,
@@ -33,15 +33,15 @@ from smartmemo.classifier import (  # noqa: E402
     load_pair_records,
     train_classifier,
 )
-from smartmemo.embedding import SentenceTransformerEmbeddingProvider  # noqa: E402
-from smartmemo.embedding.service import normalize  # noqa: E402
+from semanticmemo.embedding import SentenceTransformerEmbeddingProvider  # noqa: E402
+from semanticmemo.embedding.service import normalize  # noqa: E402
 
 DEFAULT_TRAIN = REPO_ROOT / "data" / "training" / "pairs_v2.train.jsonl"
 DEFAULT_VALIDATION = REPO_ROOT / "data" / "training" / "pairs_v2.validation.jsonl"
 DEFAULT_MANIFEST = REPO_ROOT / "data" / "training" / "manifest.json"
 DEFAULT_GOLD = REPO_ROOT / "data" / "gold" / "equivalence_gold.jsonl"
 DEFAULT_HIGH_STAKES = REPO_ROOT / "benchmarks" / "data" / "high_stakes_pairs.jsonl"
-DEFAULT_OUT = REPO_ROOT / "src" / "smartmemo" / "_models" / "classifier-v2.pt"
+DEFAULT_OUT = REPO_ROOT / "src" / "semanticmemo" / "_models" / "equivalence-net-v1.pt"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 EMBEDDING_DIM = 384
 SWEEP_THRESHOLDS = [0.5, 0.7, 0.8, 0.85, 0.9, 0.95]
@@ -163,7 +163,7 @@ def main() -> int:
         manifest = json.loads(DEFAULT_MANIFEST.read_text())
 
     report = {
-        "model": "classifier-v2",
+        "model": "equivalence-net-v1",
         "created_at": datetime.now(UTC).isoformat(),
         "architecture": "PairClassifier MLP over [a, b, |a-b|, a*b] -> 128 -> 64 -> 1",
         "embedding_model": EMBEDDING_MODEL,
@@ -194,7 +194,7 @@ def main() -> int:
             "(customer-support, software-engineering, scheduling, data-analysis, "
             "devops, general-qa, medical, legal, finance). It is a generic "
             "cold-start model: per-domain accuracy improves with the "
-            "`smartmemo retrain` feedback loop. Bound to the all-MiniLM-L6-v2 "
+            "`semanticmemo retrain` feedback loop. Bound to the all-MiniLM-L6-v2 "
             "embedding space (384-dim)."
         ),
     }

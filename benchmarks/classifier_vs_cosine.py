@@ -25,17 +25,17 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 import numpy as np  # noqa: E402
 
-from smartmemo.classifier import (  # noqa: E402
+from semanticmemo.classifier import (  # noqa: E402
     ClassifierService,
     compute_binary_metrics,
     load_pair_records,
 )
-from smartmemo.classifier.evaluate import EvaluationMetrics  # noqa: E402
-from smartmemo.embedding import SentenceTransformerEmbeddingProvider  # noqa: E402
-from smartmemo.embedding.service import normalize  # noqa: E402
+from semanticmemo.classifier.evaluate import EvaluationMetrics  # noqa: E402
+from semanticmemo.embedding import SentenceTransformerEmbeddingProvider  # noqa: E402
+from semanticmemo.embedding.service import normalize  # noqa: E402
 
 DEFAULT_GOLD = REPO_ROOT / "data" / "gold" / "equivalence_gold.jsonl"
-DEFAULT_MODEL = REPO_ROOT / "src" / "smartmemo" / "_models" / "classifier-v2.pt"
+DEFAULT_MODEL = REPO_ROOT / "src" / "semanticmemo" / "_models" / "equivalence-net-v1.pt"
 DEFAULT_RESULTS = REPO_ROOT / "benchmarks" / "results" / "classifier_vs_cosine.json"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 EMBEDDING_DIM = 384

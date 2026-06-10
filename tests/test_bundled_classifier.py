@@ -6,10 +6,10 @@ from pathlib import Path
 
 import pytest
 
-from smartmemo import CacheConfig, ClassifierConfig, SmartMemo
-from smartmemo.embedding import HashEmbeddingProvider
-from smartmemo.exceptions import SmartMemoError
-from smartmemo.resources import bundled_classifier_path
+from semanticmemo import CacheConfig, ClassifierConfig, SemanticMemo
+from semanticmemo.embedding import HashEmbeddingProvider
+from semanticmemo.exceptions import SemanticMemoError
+from semanticmemo.resources import bundled_classifier_path
 
 _BUNDLED_DIM = 384
 
@@ -34,15 +34,15 @@ def test_bundled_config_accepts_overrides() -> None:
 
 
 def test_bundled_path_reports_missing_checkpoint(monkeypatch: pytest.MonkeyPatch) -> None:
-    from smartmemo import resources
+    from semanticmemo import resources
 
     monkeypatch.setattr(resources, "BUNDLED_CLASSIFIER_NAME", "does-not-exist.pt")
-    with pytest.raises(SmartMemoError, match="missing"):
+    with pytest.raises(SemanticMemoError, match="missing"):
         resources.bundled_classifier_path()
 
 
 async def test_bundled_classifier_gates_cache_lookups(tmp_path: Path) -> None:
-    cache = SmartMemo(
+    cache = SemanticMemo(
         domain="customer-support",
         config=CacheConfig(
             db_path=tmp_path / "cache.db",

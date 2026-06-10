@@ -1,4 +1,4 @@
-"""Verify a SmartMemo-cached agent with agenteval.
+"""Verify a SemanticMemo-cached agent with agenteval.
 
 agenteval (https://pypi.org/project/agenteval-py/) runs an agent many times and
 checks its pass rate. A semantic cache should make a repeated query return the
@@ -6,7 +6,7 @@ same cached answer on every run -- this file uses agenteval to assert that the
 cached agent stays consistent.
 
 agenteval-py is an optional companion library; it is NOT a dependency of
-smartmemo. Install it to run this file:
+semanticmemo. Install it to run this file:
 
     pip install agenteval-py
 
@@ -22,7 +22,7 @@ from __future__ import annotations
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from smartmemo import CacheConfig, SmartMemo
+from semanticmemo import CacheConfig, SemanticMemo
 
 try:
     import agenteval
@@ -37,12 +37,12 @@ if _HAVE_AGENTEVAL:
 
     @agenteval.test(n=20, threshold=0.95)
     async def test_cached_agent_is_consistent(tracer: Tracer) -> None:
-        """A primed SmartMemo cache must return the same answer every run."""
+        """A primed SemanticMemo cache must return the same answer every run."""
 
         with TemporaryDirectory() as temp_dir:
-            cache = SmartMemo(
+            cache = SemanticMemo(
                 domain="faq-agent",
-                config=CacheConfig(db_path=Path(temp_dir) / "smartmemo.db"),
+                config=CacheConfig(db_path=Path(temp_dir) / "semanticmemo.db"),
             )
 
             async def call_llm(prompt: str) -> str:

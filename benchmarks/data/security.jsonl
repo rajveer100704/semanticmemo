@@ -1,0 +1,20 @@
+{"domain": "security", "label": 1, "prompt_a": "Grant read permission to team members.", "prompt_b": "Allow reading for the team.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 1, "prompt_a": "How do I enable two-factor authentication?", "prompt_b": "Where do I set up 2FA?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 1, "prompt_a": "Reset the firewall rules.", "prompt_b": "Restore default firewall configuration.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 1, "prompt_a": "List all active user sessions.", "prompt_b": "Show currently logged-in users.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 1, "prompt_a": "Create a new security group for backend developers.", "prompt_b": "Provision a backend developer permission group.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 1, "prompt_a": "How do I rotate API keys?", "prompt_b": "What is the process for updating our API keys?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 1, "prompt_a": "Enable SSL for the application.", "prompt_b": "Turn on HTTPS traffic for the app.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 1, "prompt_a": "Show network security group rules.", "prompt_b": "List configuration rules for the network firewall.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 1, "prompt_a": "How can I revoke a user's access token?", "prompt_b": "What is the API to invalidate a user session token?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 1, "prompt_a": "Check if SSH agent is running.", "prompt_b": "Determine if SSH agent is active in the background.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Allow access to administrative panel.", "prompt_b": "Block access to administrative panel.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Enable SSH login for root.", "prompt_b": "Disable SSH login for root.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Revoke user admin permissions.", "prompt_b": "Approve user admin permissions.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Encrypt all database tables.", "prompt_b": "Decrypt all database tables.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Grant write access to public users.", "prompt_b": "Restrict write access to public users.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Turn off the security intrusion detection system.", "prompt_b": "Turn on the security intrusion detection system.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Open port 22 to the public internet.", "prompt_b": "Close port 22 to the public internet.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Whitelist IP address 192.168.1.50.", "prompt_b": "Blacklist IP address 192.168.1.50.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Backup the private cryptographic key.", "prompt_b": "Delete the private cryptographic key.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Require complex passwords for sign up.", "prompt_b": "Allow simple passwords for sign up.", "source": "benchmarks-manual", "split": "test"}

@@ -6,12 +6,12 @@ from uuid import uuid4
 
 import numpy as np
 
-from smartmemo import CacheConfig, SmartMemo
-from smartmemo.classifier.data import load_pair_records
-from smartmemo.embedding import EmbeddingService, InMemoryVectorIndex
-from smartmemo.orchestrator import CacheOrchestrator
-from smartmemo.store import SQLiteCacheStore
-from smartmemo.types import FloatVector
+from semanticmemo import CacheConfig, SemanticMemo
+from semanticmemo.classifier.data import load_pair_records
+from semanticmemo.embedding import EmbeddingService, InMemoryVectorIndex
+from semanticmemo.orchestrator import CacheOrchestrator
+from semanticmemo.store import SQLiteCacheStore
+from semanticmemo.types import FloatVector
 
 
 class ToyEmbeddingProvider:
@@ -83,7 +83,7 @@ def add_seed_entry(
     embedding_service.add(entry_id, embedding)
 
 
-async def test_get_or_call_misses_then_hits(cache: SmartMemo) -> None:
+async def test_get_or_call_misses_then_hits(cache: SemanticMemo) -> None:
     calls = 0
 
     async def llm(prompt: str) -> str:
@@ -103,7 +103,7 @@ async def test_get_or_call_misses_then_hits(cache: SmartMemo) -> None:
     assert calls == 1
 
 
-async def test_threshold_rejects_low_similarity(cache: SmartMemo) -> None:
+async def test_threshold_rejects_low_similarity(cache: SemanticMemo) -> None:
     calls = 0
 
     def llm(prompt: str) -> str:
@@ -187,7 +187,7 @@ async def test_classifier_selects_best_equivalent_candidate(
     store.close()
 
 
-async def test_feedback_updates_hit_entry(cache: SmartMemo) -> None:
+async def test_feedback_updates_hit_entry(cache: SemanticMemo) -> None:
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
@@ -201,7 +201,7 @@ async def test_feedback_updates_hit_entry(cache: SmartMemo) -> None:
     assert entry.feedback_negative_count == 1
 
 
-async def test_cache_hit_creates_lookup_and_durable_bad_feedback(cache: SmartMemo) -> None:
+async def test_cache_hit_creates_lookup_and_durable_bad_feedback(cache: SemanticMemo) -> None:
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
@@ -217,7 +217,7 @@ async def test_cache_hit_creates_lookup_and_durable_bad_feedback(cache: SmartMem
     assert events[0].reason == "wrong cached answer"
 
 
-async def test_good_feedback_persists_positive_event(cache: SmartMemo) -> None:
+async def test_good_feedback_persists_positive_event(cache: SemanticMemo) -> None:
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
@@ -235,13 +235,13 @@ async def test_good_feedback_persists_positive_event(cache: SmartMemo) -> None:
     assert entry.feedback_positive_count == 1
 
 
-async def test_unknown_feedback_query_returns_false(cache: SmartMemo) -> None:
+async def test_unknown_feedback_query_returns_false(cache: SemanticMemo) -> None:
     assert await cache.report_bad_hit(uuid4(), reason="missing") is False
     assert await cache.report_good_hit(uuid4()) is False
     assert cache.store.feedback_count() == 0
 
 
-async def test_export_feedback_pairs_public_api(cache: SmartMemo, tmp_path: Path) -> None:
+async def test_export_feedback_pairs_public_api(cache: SemanticMemo, tmp_path: Path) -> None:
     output_path = tmp_path / "feedback_pairs.jsonl"
 
     async def llm(prompt: str) -> str:
@@ -262,7 +262,7 @@ async def test_export_feedback_pairs_public_api(cache: SmartMemo, tmp_path: Path
     assert records[0].prompt_b == "alpha"
 
 
-async def test_stats_track_runtime_counts(cache: SmartMemo) -> None:
+async def test_stats_track_runtime_counts(cache: SemanticMemo) -> None:
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 

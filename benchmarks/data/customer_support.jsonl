@@ -1,0 +1,20 @@
+{"domain": "customer_support", "label": 1, "prompt_a": "Where is my order?", "prompt_b": "Can you check the delivery status of my package?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 1, "prompt_a": "I want to change my password.", "prompt_b": "How do I reset my password?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 1, "prompt_a": "How do I cancel my subscription?", "prompt_b": "I need to terminate my membership.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 1, "prompt_a": "Do you offer international shipping?", "prompt_b": "Can you deliver packages outside the US?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 1, "prompt_a": "How can I contact customer service?", "prompt_b": "What is the phone number or email for support?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 1, "prompt_a": "Can I get a copy of my invoice?", "prompt_b": "I need to download the receipt for my last payment.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 1, "prompt_a": "How do I update my billing info?", "prompt_b": "Where can I edit my credit card details for billing?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 1, "prompt_a": "What is your return policy?", "prompt_b": "How many days do I have to return an item?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 1, "prompt_a": "Do you have a mobile app?", "prompt_b": "Is there an app I can download on my phone?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 1, "prompt_a": "Can I change the shipping address?", "prompt_b": "Is it possible to update where the package is being sent?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 0, "prompt_a": "Approve user refund request.", "prompt_b": "Reject user refund request.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 0, "prompt_a": "Cancel my billing subscription.", "prompt_b": "Renew my billing subscription.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 0, "prompt_a": "Add a new credit card to my account.", "prompt_b": "Delete my credit card from the account.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 0, "prompt_a": "Change my email address.", "prompt_b": "Change my shipping address.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 0, "prompt_a": "My item arrived damaged, I need a replacement.", "prompt_b": "My item is great, I want to buy another one.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 0, "prompt_a": "The price is too high, can I get a discount?", "prompt_b": "I received a discount, how do I apply it?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 0, "prompt_a": "I want to close my account.", "prompt_b": "I want to upgrade my account.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 0, "prompt_a": "How do I submit a complaint?", "prompt_b": "Where can I leave a positive review?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 0, "prompt_a": "Is live chat available 24/7?", "prompt_b": "Is telephone support available on weekends?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "customer_support", "label": 0, "prompt_a": "The package has arrived.", "prompt_b": "The package is lost.", "source": "benchmarks-manual", "split": "test"}

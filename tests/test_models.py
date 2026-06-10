@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytest
 from pydantic import ValidationError
 
-from smartmemo import CacheConfig, EvictionPolicy, ImplicitFeedbackConfig, RetryConfig
+from semanticmemo import CacheConfig, EvictionPolicy, ImplicitFeedbackConfig, RetryConfig
 
 
 def test_cache_config_defaults() -> None:

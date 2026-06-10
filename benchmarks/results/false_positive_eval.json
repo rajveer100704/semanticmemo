@@ -34,8 +34,8 @@
   "dangerous_hits_blocked_by_classifier": 4,
   "data_path": "/Users/abhinandan/Desktop/smartcache/benchmarks/data/high_stakes_pairs.jsonl",
   "examples": 28,
-  "model_name": "classifier-v2",
-  "model_path": "/Users/abhinandan/Desktop/smartcache/src/smartmemo/_models/classifier-v2.pt",
+  "model_name": "equivalence-net-v1",
+  "model_path": "/Users/abhinandan/Desktop/smartcache/src/smartmemo/_models/equivalence-net-v1.pt",
   "negatives": 16,
   "pairs": [
     {
@@ -321,3 +321,4 @@
   ],
   "positives": 12
 }
+

@@ -1,0 +1,69 @@
+{
+  "total_pairs": 40,
+  "results": {
+    "cosine": {
+      "Baseline (No Mutation)": {
+        "hits": 2,
+        "misses": 38,
+        "correct": 2
+      },
+      "Synonym Swap": {
+        "hits": 11,
+        "misses": 29,
+        "correct": 11
+      },
+      "Word Order Swap": {
+        "hits": 40,
+        "misses": 0,
+        "correct": 40
+      },
+      "Typo/Noise": {
+        "hits": 1,
+        "misses": 39,
+        "correct": 1
+      },
+      "Negation Injection": {
+        "hits": 29,
+        "misses": 11,
+        "correct": 11
+      },
+      "Numeric Perturbation": {
+        "hits": 5,
+        "misses": 35,
+        "correct": 35
+      }
+    },
+    "semantic": {
+      "Baseline (No Mutation)": {
+        "hits": 17,
+        "misses": 23,
+        "correct": 17
+      },
+      "Synonym Swap": {
+        "hits": 31,
+        "misses": 9,
+        "correct": 31
+      },
+      "Word Order Swap": {
+        "hits": 39,
+        "misses": 1,
+        "correct": 39
+      },
+      "Typo/Noise": {
+        "hits": 15,
+        "misses": 25,
+        "correct": 15
+      },
+      "Negation Injection": {
+        "hits": 27,
+        "misses": 13,
+        "correct": 13
+      },
+      "Numeric Perturbation": {
+        "hits": 26,
+        "misses": 14,
+        "correct": 14
+      }
+    }
+  }
+}

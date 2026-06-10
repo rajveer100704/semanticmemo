@@ -17,3 +17,5 @@ models/*.pt
 !models/.gitkeep
 data/generated/
 data/training/.paraphrase_cache.json
+scratch/
+

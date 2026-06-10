@@ -5,12 +5,12 @@ from pathlib import Path
 
 import pytest
 
-from smartmemo import CacheConfig, SmartMemo
-from smartmemo.embedding import HashEmbeddingProvider
+from semanticmemo import CacheConfig, SemanticMemo
+from semanticmemo.embedding import HashEmbeddingProvider
 
 
-def _make_cache(tmp_path: Path) -> SmartMemo:
-    return SmartMemo(
+def _make_cache(tmp_path: Path) -> SemanticMemo:
+    return SemanticMemo(
         domain="test",
         config=CacheConfig(db_path=tmp_path / "cache.db", embedding_dim=16),
         embedding_provider=HashEmbeddingProvider(dim=16),

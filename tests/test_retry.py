@@ -5,13 +5,13 @@ from pathlib import Path
 
 import pytest
 
-from smartmemo import CacheConfig, RetryConfig, SmartMemo
-from smartmemo.embedding import HashEmbeddingProvider
-from smartmemo.exceptions import LLMCallError
+from semanticmemo import CacheConfig, RetryConfig, SemanticMemo
+from semanticmemo.embedding import HashEmbeddingProvider
+from semanticmemo.exceptions import LLMCallError
 
 
-def _make_cache(tmp_path: Path, retry: RetryConfig | None) -> SmartMemo:
-    return SmartMemo(
+def _make_cache(tmp_path: Path, retry: RetryConfig | None) -> SemanticMemo:
+    return SemanticMemo(
         domain="test",
         config=CacheConfig(
             db_path=tmp_path / "cache.db",

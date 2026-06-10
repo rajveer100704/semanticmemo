@@ -5,9 +5,9 @@ from uuid import uuid4
 
 import numpy as np
 
-from smartmemo.classifier.data import load_pair_records
-from smartmemo.models import EvictionPolicy
-from smartmemo.store import SQLiteCacheStore
+from semanticmemo.classifier.data import load_pair_records
+from semanticmemo.models import EvictionPolicy
+from semanticmemo.store import SQLiteCacheStore
 
 
 def test_store_add_get_and_update_hit(tmp_path) -> None:
@@ -128,5 +128,5 @@ def test_feedback_events_survive_reopen_and_export_pairs(tmp_path) -> None:
     assert records[0].prompt_a == "accept refund"
     assert records[0].prompt_b == "approve refund"
     assert records[0].label == 0
-    assert records[0].source == "smartmemo-feedback"
+    assert records[0].source == "SemanticMemo-feedback"
     reopened.close()

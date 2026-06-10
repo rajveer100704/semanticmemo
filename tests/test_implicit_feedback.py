@@ -10,10 +10,10 @@ from uuid import uuid4
 import numpy as np
 import pytest
 
-import smartmemo.store.sqlite_store as sqlite_store
-from smartmemo import CacheConfig, ImplicitFeedbackConfig, SmartMemo
-from smartmemo.store import SQLiteCacheStore
-from smartmemo.types import FloatVector
+import semanticmemo.store.sqlite_store as sqlite_store
+from semanticmemo import CacheConfig, ImplicitFeedbackConfig, SemanticMemo
+from semanticmemo.store import SQLiteCacheStore
+from semanticmemo.types import FloatVector
 
 
 class ToyEmbeddingProvider:
@@ -46,15 +46,15 @@ def _make_cache(
     tmp_path: Path,
     *,
     implicit: ImplicitFeedbackConfig | None,
-) -> SmartMemo:
+) -> SemanticMemo:
     config = CacheConfig(
-        db_path=tmp_path / "smartmemo.db",
+        db_path=tmp_path / "semanticmemo.db",
         embedding_dim=ToyEmbeddingProvider.dim,
         cosine_threshold=0.95,
         candidate_k=3,
         implicit_feedback=implicit,
     )
-    return SmartMemo(
+    return SemanticMemo(
         domain="test",
         config=config,
         embedding_provider=ToyEmbeddingProvider(),

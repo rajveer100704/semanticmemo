@@ -8,10 +8,10 @@ from uuid import uuid4
 import numpy as np
 import pytest
 
-from smartmemo.classifier import TrainingConfig
-from smartmemo.feedback import RetrainConfig, retrain_from_feedback
-from smartmemo.store import SQLiteCacheStore
-from smartmemo.types import FloatVector
+from semanticmemo.classifier import TrainingConfig
+from semanticmemo.feedback import RetrainConfig, retrain_from_feedback
+from semanticmemo.store import SQLiteCacheStore
+from semanticmemo.types import FloatVector
 
 
 class Provider:
@@ -157,7 +157,7 @@ def test_retrain_cli_smoke_with_hash_embeddings(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    from smartmemo.cli import main
+    from semanticmemo.cli import main
 
     db_path = tmp_path / "cache.db"
     store = _store_with_feedback(tmp_path, db_path=db_path, label=0)
@@ -169,7 +169,7 @@ def test_retrain_cli_smoke_with_hash_embeddings(
         sys,
         "argv",
         [
-            "smartmemo",
+            "SemanticMemo",
             "--db-path",
             str(db_path),
             "retrain",

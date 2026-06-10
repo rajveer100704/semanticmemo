@@ -1,6 +1,6 @@
 # Feedback and Retraining
 
-SmartMemo optimizes for precision: a false negative costs one extra LLM call, but
+SemanticMemo optimizes for precision: a false negative costs one extra LLM call, but
 a false positive returns the wrong cached answer. The feedback loop exists to turn
 those wrong hits into training signal, so the classifier improves on the prompts
 your application actually sees.
@@ -35,9 +35,9 @@ hit, the earlier hit is auto-recorded as a bad hit.
 It is **off by default**. Enable it through `CacheConfig`:
 
 ```python
-from smartmemo import CacheConfig, ImplicitFeedbackConfig, SmartMemo
+from semanticmemo import CacheConfig, ImplicitFeedbackConfig, SemanticMemo
 
-cache = SmartMemo(
+cache = SemanticMemo(
     domain="customer-support",
     config=CacheConfig(
         implicit_feedback=ImplicitFeedbackConfig(window_seconds=30.0),
@@ -54,7 +54,7 @@ What it deliberately does **not** do:
 
 - It matches the prompt **exactly** (after trimming surrounding whitespace). A
   re-phrased re-issue is not detected. Matching by embedding similarity would
-  reintroduce the false-positive failure mode SmartMemo exists to avoid.
+  reintroduce the false-positive failure mode SemanticMemo exists to avoid.
 - An earlier hit that already has feedback — explicit or implicit — is never
   flagged again, so explicit feedback always takes precedence.
 - It is best-effort: if the earlier hit's cache entry was evicted, there is
@@ -71,17 +71,17 @@ written = cache.export_feedback_pairs("data/feedback_pairs.jsonl")
 or from the CLI:
 
 ```bash
-uv run smartmemo --db-path .smartmemo/cache.db export-feedback --out data/feedback_pairs.jsonl
+uv run semanticmemo --db-path .semanticmemo/cache.db export-feedback --out data/feedback_pairs.jsonl
 ```
 
 ## Retraining
 
-`smartmemo retrain` turns exported feedback into a candidate classifier
+`semanticmemo retrain` turns exported feedback into a candidate classifier
 checkpoint, evaluates it against a validation set, and only promotes it when the
 validation gates pass:
 
 ```bash
-uv run smartmemo --db-path .smartmemo/cache.db retrain \
+uv run semanticmemo --db-path .semanticmemo/cache.db retrain \
   --out models/classifier-candidate.pt \
   --validation-data data/validation_pairs.jsonl \
   --seed-data data/fixtures/customer_support_pairs.jsonl \
@@ -91,7 +91,9 @@ uv run smartmemo --db-path .smartmemo/cache.db retrain \
 ```
 
 Retraining always writes an auditable `<checkpoint>.report.json`. Promotion to
-`--promote-to` happens only when the gates pass. SmartMemo never retrains in the
+`--promote-to` happens only when the gates pass. SemanticMemo never retrains in the
 background or swaps classifiers at runtime — promotion is a deliberate, explicit
 step. A classifier is only worth enabling if it is validated to beat the cosine
 baseline; that is exactly what the gates check.
+
+

@@ -1,4 +1,4 @@
-"""Minimal dependency-light SmartMemo example.
+"""Minimal dependency-light SemanticMemo example.
 
 Run with:
     uv run python examples/basic_usage.py
@@ -10,17 +10,17 @@ import asyncio
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from smartmemo import CacheConfig, SmartMemo
-from smartmemo.embedding import HashEmbeddingProvider
+from semanticmemo import CacheConfig, SemanticMemo
+from semanticmemo.embedding import HashEmbeddingProvider
 
 
 async def main() -> None:
     with TemporaryDirectory() as temp_dir:
         # `async with` closes the underlying store on exit, even on error.
-        async with SmartMemo(
+        async with SemanticMemo(
             domain="customer-support",
             config=CacheConfig(
-                db_path=Path(temp_dir) / "smartmemo.db",
+                db_path=Path(temp_dir) / "semanticmemo.db",
                 embedding_dim=32,
                 cosine_threshold=0.80,
                 estimated_llm_cost_usd="0.002",

@@ -6,9 +6,9 @@ import numpy as np
 import pytest
 import torch
 
-from smartmemo.classifier.model import PairClassifier
-from smartmemo.classifier.service import ClassifierService
-from smartmemo.resources import bundled_classifier_path
+from semanticmemo.classifier.model import PairClassifier
+from semanticmemo.classifier.service import ClassifierService
+from semanticmemo.resources import bundled_classifier_path
 
 _DIM = 384
 

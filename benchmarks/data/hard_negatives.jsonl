@@ -1,0 +1,12 @@
+{"domain": "finance", "label": 0, "prompt_a": "Approve the refund request for the customer.", "prompt_b": "Deny the refund request for the customer.", "source": "hard-negatives", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Allow SSH access to the production server.", "prompt_b": "Block SSH access to the production server.", "source": "hard-negatives", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "Increase the patient's daily insulin dosage.", "prompt_b": "Decrease the patient's daily insulin dosage.", "source": "hard-negatives", "split": "test"}
+{"domain": "finance", "label": 0, "prompt_a": "Buy 500 shares of Tesla.", "prompt_b": "Sell 500 shares of Tesla.", "source": "hard-negatives", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Enable admin permissions for user account.", "prompt_b": "Disable admin permissions for user account.", "source": "hard-negatives", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "Tell the patient surgery is required immediately.", "prompt_b": "Tell the patient surgery is not required at all.", "source": "hard-negatives", "split": "test"}
+{"domain": "finance", "label": 0, "prompt_a": "Approve the commercial loan application.", "prompt_b": "Deny the commercial loan application.", "source": "hard-negatives", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Allow root system privilege to database daemon.", "prompt_b": "Deny root system privilege to database daemon.", "source": "hard-negatives", "split": "test"}
+{"domain": "finance", "label": 0, "prompt_a": "Liquidate and sell all current stock holdings.", "prompt_b": "Keep and maintain all current stock holdings.", "source": "hard-negatives", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Enable database table write permission.", "prompt_b": "Disable database table write permission.", "source": "hard-negatives", "split": "test"}
+{"domain": "security", "label": 0, "prompt_a": "Grant system administrator role to team leader.", "prompt_b": "Revoke system administrator role from team leader.", "source": "hard-negatives", "split": "test"}
+{"domain": "software", "label": 0, "prompt_a": "Release the software deployment update to users.", "prompt_b": "Hold back the software deployment update from users.", "source": "hard-negatives", "split": "test"}

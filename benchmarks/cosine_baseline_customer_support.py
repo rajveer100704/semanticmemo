@@ -14,8 +14,8 @@ from tempfile import TemporaryDirectory
 
 import numpy as np
 
-from smartmemo import CacheConfig, SmartMemo
-from smartmemo.types import FloatVector
+from semanticmemo import CacheConfig, SemanticMemo
+from semanticmemo.types import FloatVector
 
 
 class CustomerSupportFixtureEmbeddingProvider:
@@ -81,7 +81,7 @@ SCENARIOS = [
 
 
 async def run_scenario(scenario: dict[str, object], db_path: Path) -> dict[str, object]:
-    cache = SmartMemo(
+    cache = SemanticMemo(
         domain="customer-support",
         config=CacheConfig(
             db_path=db_path,

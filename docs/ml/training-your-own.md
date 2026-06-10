@@ -1,11 +1,11 @@
 # Training Your Own Classifier
 
-SmartMemo already ships a pretrained classifier (`ClassifierConfig.bundled()`). Train your
+SemanticMemo already ships a pretrained classifier (`ClassifierConfig.bundled()`). Train your
 own when you want a domain-specialized model or want to reproduce the shipped one.
 
 ## Reproducing the bundled classifier
 
-The shipped `classifier-v2` is fully reproducible from committed data:
+The shipped `equivalence-net-v1` is fully reproducible from committed data:
 
 ```bash
 # Optional: regenerate the dataset from the prompt corpus (requires a local Ollama model)
@@ -15,7 +15,7 @@ python scripts/generate_training_data.py
 uv run python scripts/train_classifier.py
 ```
 
-`train_classifier.py` writes the checkpoint to `src/smartmemo/_models/classifier-v2.pt`
+`train_classifier.py` writes the checkpoint to `src/semanticmemo/_models/equivalence-net-v1.pt`
 and an auditable model card next to it (gold-set and high-stakes metrics included).
 
 ## Dataset format
@@ -32,7 +32,7 @@ experiments.
 Run a local training job:
 
 ```bash
-uv run smartmemo train-classifier \
+uv run semanticmemo train-classifier \
   --data data/fixtures/customer_support_pairs.jsonl \
   --out models/classifier-custom.pt \
   --domain customer-support \
@@ -43,7 +43,7 @@ By default, the CLI uses `sentence-transformers/all-MiniLM-L6-v2`, so the `ml` e
 required. For dependency-light smoke runs, use deterministic hash embeddings:
 
 ```bash
-uv run smartmemo train-classifier \
+uv run semanticmemo train-classifier \
   --data data/fixtures/customer_support_pairs.jsonl \
   --out models/classifier-smoke.pt \
   --embedding-provider hash \
@@ -55,10 +55,10 @@ The smoke command proves the pipeline works. It is not a quality benchmark.
 
 ## Training From Feedback
 
-SmartMemo can export explicit cache-hit feedback as JSONL pairs:
+SemanticMemo can export explicit cache-hit feedback as JSONL pairs:
 
 ```bash
-uv run smartmemo export-feedback \
+uv run semanticmemo export-feedback \
   --out data/feedback_pairs.jsonl \
   --split train
 ```
@@ -68,14 +68,14 @@ The query prompt is paired with the cached prompt that was reused. Cached respon
 duplicated in the feedback export.
 
 The exported file uses the same format as other classifier datasets, so it can be passed
-directly to `smartmemo train-classifier`.
+directly to `semanticmemo train-classifier`.
 
 ## Manual Retraining From Feedback
 
-For an auditable feedback loop, use `smartmemo retrain`:
+For an auditable feedback loop, use `semanticmemo retrain`:
 
 ```bash
-uv run smartmemo --db-path .smartmemo/cache.db retrain \
+uv run semanticmemo --db-path .semanticmemo/cache.db retrain \
   --out models/classifier-candidate.pt \
   --validation-data data/validation_pairs.jsonl \
   --seed-data data/fixtures/customer_support_pairs.jsonl \
@@ -91,5 +91,7 @@ training records, trains a candidate checkpoint, evaluates it on held-out valida
 and writes `<checkpoint>.report.json`. If `--promote-to` is provided, the candidate is
 copied to that path only when the configured gates pass.
 
-This is intentionally an operator-controlled workflow. SmartMemo does not run background
+This is intentionally an operator-controlled workflow. SemanticMemo does not run background
 training, auto-promote failed candidates, or hot-reload classifiers in running processes.
+
+

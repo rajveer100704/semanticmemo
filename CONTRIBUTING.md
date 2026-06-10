@@ -1,18 +1,18 @@
-# Contributing to SmartMemo
+# Contributing to SemanticMemo
 
-Thanks for your interest in SmartMemo. This guide covers local development, the quality
+Thanks for your interest in SemanticMemo. This guide covers local development, the quality
 gates, and how releases are made.
 
 ## Development setup
 
-SmartMemo uses [uv](https://docs.astral.sh/uv/) for environment and dependency
+SemanticMemo uses [uv](https://docs.astral.sh/uv/) for environment and dependency
 management. Python 3.11–3.14 are supported.
 
 ```bash
 uv sync --all-extras
 ```
 
-The `[ml]` extra (PyTorch, FAISS, SentenceTransformers) is required to import `smartmemo`
+The `[ml]` extra (PyTorch, FAISS, SentenceTransformers) is required to import `semanticmemo`
 itself, so `--all-extras` is the normal development sync.
 
 ## Quality gates
@@ -33,14 +33,14 @@ CI runs them on Python 3.11, 3.12, 3.13, and 3.14.
 The SQLite store opens the database in WAL mode with a 5-second busy timeout. A single
 store instance is safe to use from multiple threads of one process — writes are
 serialized by an internal re-entrant lock, and the connection is created with
-`check_same_thread=False`. SmartMemo is not a distributed cache: multiple processes
+`check_same_thread=False`. SemanticMemo is not a distributed cache: multiple processes
 writing the same database file rely solely on SQLite's file locking, and heavy
 multi-process write contention can still raise `sqlite3.OperationalError`.
 
 ## The bundled classifier
 
 The package ships a pretrained equivalence classifier at
-`src/smartmemo/_models/classifier-v2.pt`, force-included into the wheel by the
+`src/semanticmemo/_models/equivalence-net-v1.pt`, force-included into the wheel by the
 `[tool.hatch.build.targets.wheel.force-include]` table in `pyproject.toml`.
 
 It is reproducible from committed data:
@@ -54,7 +54,7 @@ uv run python scripts/train_classifier.py
 ```
 
 `train_classifier.py` writes the checkpoint plus an auditable model card
-(`classifier-v2.report.json`) next to it. SmartMemo is precision-first: the acceptance
+(`equivalence-net-v1.report.json`) next to it. SemanticMemo is precision-first: the acceptance
 gate requires the classifier to beat the cosine baseline by at least 10 precision points
 at equal recall on the held-out gold set. See `docs/ml/` for details.
 
@@ -69,3 +69,5 @@ Releases are tag-triggered:
 
 Pushing the tag triggers `.github/workflows/publish-pypi.yml`, which runs the full test
 suite before building and publishing to PyPI — a broken tag cannot publish.
+
+

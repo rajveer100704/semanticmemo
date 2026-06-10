@@ -5,19 +5,19 @@ from pathlib import Path
 
 import pytest
 
-from smartmemo import CacheConfig, ClassifierConfig, SmartMemo
-from smartmemo.embedding import HashEmbeddingProvider
+from semanticmemo import CacheConfig, ClassifierConfig, SemanticMemo
+from semanticmemo.embedding import HashEmbeddingProvider
 
 
-def test_smartmemo_logger_has_null_handler() -> None:
-    handlers = logging.getLogger("smartmemo").handlers
+def test_semanticmemo_logger_has_null_handler() -> None:
+    handlers = logging.getLogger("semanticmemo").handlers
     assert any(isinstance(handler, logging.NullHandler) for handler in handlers)
 
 
 def test_warnings_are_silent_by_default(capsys: pytest.CaptureFixture[str]) -> None:
-    # With a NullHandler on the 'smartmemo' logger, Python's logging "last
+    # With a NullHandler on the 'SemanticMemo' logger, Python's logging "last
     # resort" handler is not used, so even a WARNING reaches no stream.
-    logging.getLogger("smartmemo.silent-check").warning("should not appear")
+    logging.getLogger("semanticmemo.silent-check").warning("should not appear")
 
     captured = capsys.readouterr()
     assert captured.err == ""
@@ -25,12 +25,12 @@ def test_warnings_are_silent_by_default(capsys: pytest.CaptureFixture[str]) -> N
 
 
 async def test_cache_hit_and_miss_are_logged_when_opted_in(
-    cache: SmartMemo, caplog: pytest.LogCaptureFixture
+    cache: SemanticMemo, caplog: pytest.LogCaptureFixture
 ) -> None:
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
-    with caplog.at_level(logging.DEBUG, logger="smartmemo"):
+    with caplog.at_level(logging.DEBUG, logger="semanticmemo"):
         await cache.get_or_call(prompt="alpha", llm_function=llm)
         await cache.get_or_call(prompt="alpha duplicate", llm_function=llm)
 
@@ -40,7 +40,7 @@ async def test_cache_hit_and_miss_are_logged_when_opted_in(
 
 
 async def test_eviction_is_logged(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
-    cache = SmartMemo(
+    cache = SemanticMemo(
         domain="test",
         config=CacheConfig(
             db_path=tmp_path / "cache.db",
@@ -54,7 +54,7 @@ async def test_eviction_is_logged(caplog: pytest.LogCaptureFixture, tmp_path: Pa
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
-    with caplog.at_level(logging.INFO, logger="smartmemo"):
+    with caplog.at_level(logging.INFO, logger="semanticmemo"):
         await cache.get_or_call(prompt="first prompt", llm_function=llm)
         await cache.get_or_call(prompt="second prompt", llm_function=llm)
     cache.close()
@@ -63,7 +63,7 @@ async def test_eviction_is_logged(caplog: pytest.LogCaptureFixture, tmp_path: Pa
 
 
 async def test_classifier_gate_is_logged(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
-    cache = SmartMemo(
+    cache = SemanticMemo(
         domain="test",
         config=CacheConfig(db_path=tmp_path / "cache.db", embedding_dim=384),
         embedding_provider=HashEmbeddingProvider(dim=384),
@@ -74,7 +74,7 @@ async def test_classifier_gate_is_logged(caplog: pytest.LogCaptureFixture, tmp_p
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
-    with caplog.at_level(logging.DEBUG, logger="smartmemo"):
+    with caplog.at_level(logging.DEBUG, logger="semanticmemo"):
         await cache.get_or_call(prompt="approve the refund", llm_function=llm)
         await cache.get_or_call(prompt="approve the refund", llm_function=llm)
     cache.close()

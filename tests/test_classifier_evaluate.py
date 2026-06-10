@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from smartmemo.classifier import compute_binary_metrics
+from semanticmemo.classifier import compute_binary_metrics
 
 
 def test_compute_binary_metrics_reports_confusion_counts() -> None:

@@ -6,7 +6,7 @@ selects candidates, and the learned classifier makes the final cache decision.
 
 Requires the optional ML dependencies:
 
-    pip install "smartmemo[ml]"
+    pip install "SemanticMemo[ml]"
 
 Run with:
     uv run python examples/bundled_classifier.py
@@ -18,15 +18,15 @@ import asyncio
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from smartmemo import CacheConfig, ClassifierConfig, SmartMemo
+from semanticmemo import CacheConfig, ClassifierConfig, SemanticMemo
 
 
 async def main() -> None:
     with TemporaryDirectory() as temp_dir:
-        cache = SmartMemo(
+        cache = SemanticMemo(
             domain="customer-support",
             config=CacheConfig(
-                db_path=Path(temp_dir) / "smartmemo.db",
+                db_path=Path(temp_dir) / "semanticmemo.db",
                 estimated_llm_cost_usd="0.002",
             ),
             classifier=ClassifierConfig.bundled(),

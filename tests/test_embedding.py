@@ -6,15 +6,15 @@ from uuid import uuid4
 import numpy as np
 import pytest
 
-from smartmemo.embedding import (
+from semanticmemo.embedding import (
     EmbeddingService,
     FaissVectorIndex,
     HashEmbeddingProvider,
     InMemoryVectorIndex,
     SentenceTransformerEmbeddingProvider,
 )
-from smartmemo.exceptions import MissingDependencyError
-from smartmemo.types import FloatVector
+from semanticmemo.exceptions import MissingDependencyError
+from semanticmemo.types import FloatVector
 
 
 class Provider:
@@ -86,5 +86,5 @@ def test_sentence_transformer_reports_missing_dependency(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setitem(sys.modules, "sentence_transformers", None)
-    with pytest.raises(MissingDependencyError, match=r"smartmemo\[ml\]"):
+    with pytest.raises(MissingDependencyError, match=r"SemanticMemo\[ml\]"):
         SentenceTransformerEmbeddingProvider("any-model")

@@ -4,7 +4,7 @@ from typing import Any
 
 import torch
 
-from smartmemo.classifier import PairClassifier, build_pair_features
+from semanticmemo.classifier import PairClassifier, build_pair_features
 
 _torch: Any = torch
 

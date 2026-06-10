@@ -2,7 +2,7 @@
 """Generate equivalence-classifier training data with a local Ollama model.
 
 Reads the hand-authored corpus under ``data/corpus/`` and produces labeled
-prompt pairs in the JSONL shape consumed by ``smartmemo train-classifier``:
+prompt pairs in the JSONL shape consumed by ``SemanticMemo train-classifier``:
 
 * **positives**  -- LLM paraphrases that preserve intent (label 1)
 * **hard negatives** -- same object, opposite action; built from templates so
@@ -41,7 +41,7 @@ DEFAULT_CORPUS = REPO_ROOT / "data" / "corpus"
 DEFAULT_OUT = REPO_ROOT / "data" / "training"
 
 THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL)
-LIST_PREFIX_RE = re.compile(r"^\s*(?:[-*•]|\d+[.)])\s*")
+LIST_PREFIX_RE = re.compile(r"^\s*(?:[-*â€¢]|\d+[.)])\s*")
 
 PARAPHRASE_SYSTEM = (
     "You rewrite task instructions while preserving their exact meaning and the "

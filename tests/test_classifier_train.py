@@ -4,9 +4,9 @@ from pathlib import Path
 
 import numpy as np
 
-from smartmemo.classifier import ClassifierService, TrainingConfig, train_classifier
-from smartmemo.classifier.data import PairRecord
-from smartmemo.types import FloatVector
+from semanticmemo.classifier import ClassifierService, TrainingConfig, train_classifier
+from semanticmemo.classifier.data import PairRecord
+from semanticmemo.types import FloatVector
 
 
 class Provider:

@@ -1,0 +1,20 @@
+{"domain": "medical", "label": 1, "prompt_a": "What are the common side effects of ibuprofen?", "prompt_b": "List side effects for ibuprofen.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 1, "prompt_a": "Schedule an appointment with the cardiologist.", "prompt_b": "Book a visit to the heart doctor.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 1, "prompt_a": "How often should I take this medication?", "prompt_b": "What is the daily frequency for this drug?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 1, "prompt_a": "Is this vaccine safe for pregnant women?", "prompt_b": "Can pregnant women take this vaccine?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 1, "prompt_a": "How can I lower my cholesterol level?", "prompt_b": "What are effective ways to reduce cholesterol?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 1, "prompt_a": "What are the symptoms of high blood pressure?", "prompt_b": "How do I know if my blood pressure is high?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 1, "prompt_a": "I need a refill on my asthma inhaler prescription.", "prompt_b": "Can you renew my prescription for the asthma inhaler?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 1, "prompt_a": "Where is the nearest emergency room?", "prompt_b": "Tell me the location of the closest ER.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 1, "prompt_a": "Is diabetes hereditary?", "prompt_b": "Does diabetes run in families?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 1, "prompt_a": "How do I treat a mild burn?", "prompt_b": "What should I do for a first-degree burn?", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "Increase patient's insulin dosage to 20 units.", "prompt_b": "Decrease patient's insulin dosage to 20 units.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "Stop taking the daily medication.", "prompt_b": "Continue taking the daily medication.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "Biopsy result is benign.", "prompt_b": "Biopsy result is malignant.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "Recommend immediate surgery.", "prompt_b": "Advise against surgery.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "The patient's blood pressure is rising.", "prompt_b": "The patient's blood pressure is dropping.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "Administer 50mg of Benadryl.", "prompt_b": "Administer 500mg of Benadryl.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "Test the patient for type 1 diabetes.", "prompt_b": "Test the patient for type 2 diabetes.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "Patient is allergic to penicillin.", "prompt_b": "Patient is safe to take penicillin.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "The wound is fully healed.", "prompt_b": "The wound has become infected.", "source": "benchmarks-manual", "split": "test"}
+{"domain": "medical", "label": 0, "prompt_a": "The patient should be discharged today.", "prompt_b": "The patient must remain admitted.", "source": "benchmarks-manual", "split": "test"}

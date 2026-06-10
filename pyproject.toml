@@ -3,19 +3,32 @@ requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
-name = "smartmemo"
-version = "0.3.0"
-description = "Semantic memory for LLM agent calls with an equivalence-first cache architecture."
+name = "semanticmemo"
+version = "1.2.0"
+description = "Production-grade semantic caching for LLM agents — a learned equivalence classifier replaces the naive cosine threshold that causes false-positive failures."
 readme = "README.md"
 requires-python = ">=3.11,<3.15"
 license = "MIT"
 authors = [
-  { name = "Abhinandan" }
+  { name = "Rajveer Singh Saggu" }
 ]
-keywords = ["llm", "agents", "semantic-cache", "semantic-memory", "embeddings", "equivalence"]
+keywords = [
+  "llm",
+  "agents",
+  "semantic-cache",
+  "semantic-memory",
+  "embeddings",
+  "equivalence",
+  "cross-encoder",
+  "mlp-classifier",
+  "false-positive-reduction",
+  "risk-aware",
+  "faiss",
+]
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
@@ -23,6 +36,7 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
   "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
   "numpy>=1.26,<3",
@@ -47,19 +61,21 @@ dev = [
 ]
 
 [project.urls]
-Repository = "https://github.com/awesome-pro/smartmemo"
-Issues = "https://github.com/awesome-pro/smartmemo/issues"
-Changelog = "https://github.com/awesome-pro/smartmemo/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/rajveer100704/semanticmemo"
+Repository = "https://github.com/rajveer100704/semanticmemo"
+Issues = "https://github.com/rajveer100704/semanticmemo/issues"
+Changelog = "https://github.com/rajveer100704/semanticmemo/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/rajveer100704/semanticmemo/blob/main/docs/results.md"
 
 [project.scripts]
-smartmemo = "smartmemo.cli:main"
+semanticmemo = "semanticmemo.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/smartmemo"]
+packages = ["src/semanticmemo"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"src/smartmemo/store/schema.sql" = "smartmemo/store/schema.sql"
-"src/smartmemo/_models/classifier-v2.pt" = "smartmemo/_models/classifier-v2.pt"
+"src/semanticmemo/store/schema.sql" = "semanticmemo/store/schema.sql"
+"src/semanticmemo/_models/equivalence-net-v1.pt" = "semanticmemo/_models/equivalence-net-v1.pt"
 
 [tool.ruff]
 line-length = 100

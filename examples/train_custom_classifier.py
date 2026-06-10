@@ -1,7 +1,7 @@
 """Train a tiny classifier checkpoint from the seed customer-support fixture.
 
 This example uses HashEmbeddingProvider so it runs without model downloads. Real
-training should use SentenceTransformerEmbeddingProvider via `smartmemo[ml]`.
+training should use SentenceTransformerEmbeddingProvider via `SemanticMemo[ml]`.
 """
 
 from __future__ import annotations
@@ -9,8 +9,8 @@ from __future__ import annotations
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from smartmemo.classifier import TrainingConfig, load_pair_records, train_classifier
-from smartmemo.embedding import HashEmbeddingProvider
+from semanticmemo.classifier import TrainingConfig, load_pair_records, train_classifier
+from semanticmemo.embedding import HashEmbeddingProvider
 
 
 def main() -> None:

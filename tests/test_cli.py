@@ -5,11 +5,11 @@ from pathlib import Path
 
 import pytest
 
-from smartmemo import cli
+from semanticmemo import cli
 
 
 def _run(monkeypatch: pytest.MonkeyPatch, *argv: str) -> None:
-    monkeypatch.setattr(sys, "argv", ["smartmemo", *argv])
+    monkeypatch.setattr(sys, "argv", ["SemanticMemo", *argv])
     cli.main()
 
 
@@ -43,6 +43,6 @@ def test_cli_export_feedback_with_no_feedback(
 
 
 def test_cli_requires_a_subcommand(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(sys, "argv", ["smartmemo"])
+    monkeypatch.setattr(sys, "argv", ["SemanticMemo"])
     with pytest.raises(SystemExit):
         cli.main()

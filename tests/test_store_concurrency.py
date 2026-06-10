@@ -6,7 +6,7 @@ from uuid import uuid4
 
 import numpy as np
 
-from smartmemo.store import SQLiteCacheStore
+from semanticmemo.store import SQLiteCacheStore
 
 
 def test_wal_and_pragmas_enabled(tmp_path: Path) -> None:

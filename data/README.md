@@ -1,7 +1,7 @@
 # Data
 
 This directory holds the corpora, generated datasets, and evaluation fixtures used to
-build and measure the SmartMemo equivalence classifier.
+build and measure the SemanticMemo equivalence classifier.
 
 - `corpus/` — hand-authored source material. `base_prompts.jsonl` is a diverse set of
   agent prompts across nine domains; `action_templates.jsonl` defines same-object,
@@ -16,3 +16,5 @@ build and measure the SmartMemo equivalence classifier.
   is the trustworthy benchmark: it is never used for training, only for measuring the
   classifier against the cosine baseline.
 - `fixtures/` — the original small customer-support seed fixture, kept for smoke checks.
+
+

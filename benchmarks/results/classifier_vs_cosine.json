@@ -45,8 +45,9 @@
   "examples": 84,
   "gate_passed": true,
   "gold_path": "/Users/abhinandan/Desktop/smartcache/data/gold/equivalence_gold.jsonl",
-  "model_path": "/Users/abhinandan/Desktop/smartcache/src/smartmemo/_models/classifier-v2.pt",
+  "model_path": "/Users/abhinandan/Desktop/smartcache/src/smartmemo/_models/equivalence-net-v1.pt",
   "negatives": 53,
   "positives": 31,
   "precision_gain_at_equal_recall": 0.3012987012987014
 }
+
