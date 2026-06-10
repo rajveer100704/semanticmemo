@@ -1,6 +1,6 @@
 # SemanticMemo
 
-**Semantic caching framework using FAISS retrieval, learned equivalence classification, Cross-Encoder verification, and entity-drift detection.**
+**Semantic caching framework using FAISS retrieval, learned equivalence classification, Cross-Encoder verification and entity-drift detection.**
 
 
 [![Tests](https://github.com/rajveer100704/semanticmemo/actions/workflows/ci.yml/badge.svg)](https://github.com/rajveer100704/semanticmemo/actions)
