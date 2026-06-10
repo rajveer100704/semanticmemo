@@ -4,8 +4,8 @@
 
 
 [![Tests](https://github.com/rajveer100704/semanticmemo/actions/workflows/ci.yml/badge.svg)](https://github.com/rajveer100704/semanticmemo/actions)
-[![PyPI](https://img.shields.io/pypi/v/semanticmemo.svg)](https://pypi.org/project/semanticmemo/)
-[![Python](https://img.shields.io/pypi/pyversions/semanticmemo.svg)](https://pypi.org/project/semanticmemo/)
+[![PyPI](https://img.shields.io/pypi/v/semanticmemo.svg?v=2)](https://pypi.org/project/semanticmemo/)
+[![Python](https://img.shields.io/pypi/pyversions/semanticmemo.svg?v=2)](https://pypi.org/project/semanticmemo/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
