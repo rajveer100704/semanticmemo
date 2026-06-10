@@ -3,7 +3,7 @@
     "accuracy": 0.6785714285714286,
     "auc_roc": 0.7239583333333334,
     "examples": 28,
-    "expected_calibration_error": 0.3770394833700834,
+    "expected_calibration_error": 0.37703927049794367,
     "f1": 0.6666666666666665,
     "false_negatives": 3,
     "false_positives": 6,
@@ -19,7 +19,7 @@
     "accuracy": 0.42857142857142855,
     "auc_roc": 0.328125,
     "examples": 28,
-    "expected_calibration_error": 0.5026936094675745,
+    "expected_calibration_error": 0.5026935786008835,
     "f1": 0.3333333333333333,
     "false_negatives": 8,
     "false_positives": 8,
@@ -32,16 +32,16 @@
   "cosine_false_positives": 8,
   "cosine_threshold": 0.9,
   "dangerous_hits_blocked_by_classifier": 4,
-  "data_path": "/Users/abhinandan/Desktop/smartcache/benchmarks/data/high_stakes_pairs.jsonl",
+  "data_path": "C:\\Users\\BIT\\SmartMemo-X\\smartmemo\\benchmarks\\data\\high_stakes_pairs.jsonl",
   "examples": 28,
   "model_name": "equivalence-net-v1",
-  "model_path": "/Users/abhinandan/Desktop/smartcache/src/smartmemo/_models/equivalence-net-v1.pt",
+  "model_path": "C:\\Users\\BIT\\SmartMemo-X\\smartmemo\\src\\semanticmemo\\_models\\equivalence-net-v1.pt",
   "negatives": 16,
   "pairs": [
     {
-      "classifier": 0.0037577408365905285,
+      "classifier": 0.003757739206776023,
       "classifier_hit": false,
-      "cosine": 0.9475659728050232,
+      "cosine": 0.9475658535957336,
       "cosine_hit": true,
       "domain": "medical",
       "label": 0,
@@ -49,9 +49,9 @@
       "prompt_b": "Decrease the patient's insulin dosage to 20 units."
     },
     {
-      "classifier": 0.23354844748973846,
+      "classifier": 0.23354649543762207,
       "classifier_hit": false,
-      "cosine": 0.8822073340415955,
+      "cosine": 0.8822072148323059,
       "cosine_hit": false,
       "domain": "medical",
       "label": 0,
@@ -59,9 +59,9 @@
       "prompt_b": "Tell the patient they must keep taking the medication."
     },
     {
-      "classifier": 1.826242805691436e-05,
+      "classifier": 1.8262480807607062e-05,
       "classifier_hit": false,
-      "cosine": 0.8127740025520325,
+      "cosine": 0.8127739429473877,
       "cosine_hit": false,
       "domain": "medical",
       "label": 0,
@@ -69,9 +69,9 @@
       "prompt_b": "Report the biopsy result to the patient as malignant."
     },
     {
-      "classifier": 0.013714339584112167,
+      "classifier": 0.013714577071368694,
       "classifier_hit": false,
-      "cosine": 0.9100766777992249,
+      "cosine": 0.9100767970085144,
       "cosine_hit": true,
       "domain": "medical",
       "label": 0,
@@ -91,7 +91,7 @@
     {
       "classifier": 1.0,
       "classifier_hit": true,
-      "cosine": 0.9643762707710266,
+      "cosine": 0.9643760919570923,
       "cosine_hit": true,
       "domain": "medical",
       "label": 1,
@@ -101,7 +101,7 @@
     {
       "classifier": 0.9998856782913208,
       "classifier_hit": true,
-      "cosine": 0.8625068664550781,
+      "cosine": 0.8625067472457886,
       "cosine_hit": false,
       "domain": "medical",
       "label": 1,
@@ -109,9 +109,9 @@
       "prompt_b": "Let the patient know they can safely discontinue the medication."
     },
     {
-      "classifier": 0.002045418368652463,
+      "classifier": 0.0020454174373298883,
       "classifier_hit": false,
-      "cosine": 0.7301772832870483,
+      "cosine": 0.7301771640777588,
       "cosine_hit": false,
       "domain": "medical",
       "label": 1,
@@ -121,7 +121,7 @@
     {
       "classifier": 1.0,
       "classifier_hit": true,
-      "cosine": 0.8400906324386597,
+      "cosine": 0.8400905132293701,
       "cosine_hit": false,
       "domain": "medical",
       "label": 1,
@@ -129,9 +129,9 @@
       "prompt_b": "Book the patient in for an urgent follow-up visit."
     },
     {
-      "classifier": 0.4246951639652252,
+      "classifier": 0.42469432950019836,
       "classifier_hit": false,
-      "cosine": 0.7853385806083679,
+      "cosine": 0.7853384613990784,
       "cosine_hit": false,
       "domain": "legal",
       "label": 0,
@@ -141,7 +141,7 @@
     {
       "classifier": 0.04762221500277519,
       "classifier_hit": false,
-      "cosine": 0.9292411208152771,
+      "cosine": 0.9292410612106323,
       "cosine_hit": true,
       "domain": "legal",
       "label": 0,
@@ -151,7 +151,7 @@
     {
       "classifier": 0.9975242018699646,
       "classifier_hit": true,
-      "cosine": 0.8932592272758484,
+      "cosine": 0.8932592868804932,
       "cosine_hit": false,
       "domain": "legal",
       "label": 0,
@@ -169,9 +169,9 @@
       "prompt_b": "Inform the client that the statute of limitations still applies."
     },
     {
-      "classifier": 0.3927507698535919,
+      "classifier": 0.39275097846984863,
       "classifier_hit": false,
-      "cosine": 0.9395989775657654,
+      "cosine": 0.9395990371704102,
       "cosine_hit": true,
       "domain": "legal",
       "label": 0,
@@ -191,7 +191,7 @@
     {
       "classifier": 0.9999992847442627,
       "classifier_hit": true,
-      "cosine": 0.9462512731552124,
+      "cosine": 0.946251392364502,
       "cosine_hit": true,
       "domain": "legal",
       "label": 1,
@@ -199,9 +199,9 @@
       "prompt_b": "Recommend that the client go ahead and sign the settlement agreement."
     },
     {
-      "classifier": 2.8352208119031275e-06,
+      "classifier": 2.835218083419022e-06,
       "classifier_hit": false,
-      "cosine": 0.3517831265926361,
+      "cosine": 0.3517831563949585,
       "cosine_hit": false,
       "domain": "legal",
       "label": 1,
@@ -209,7 +209,7 @@
       "prompt_b": "Verify that the NDA remains active."
     },
     {
-      "classifier": 0.011038758791983128,
+      "classifier": 0.01103877928107977,
       "classifier_hit": false,
       "cosine": 0.692113995552063,
       "cosine_hit": false,
@@ -219,9 +219,9 @@
       "prompt_b": "Notify the client that the limitation period has now expired."
     },
     {
-      "classifier": 6.83965117787011e-05,
+      "classifier": 6.839618436060846e-05,
       "classifier_hit": false,
-      "cosine": 0.8506740927696228,
+      "cosine": 0.850674033164978,
       "cosine_hit": false,
       "domain": "finance",
       "label": 0,
@@ -239,9 +239,9 @@
       "prompt_b": "Recommend that the client sell the stock."
     },
     {
-      "classifier": 0.6393874287605286,
+      "classifier": 0.6393845081329346,
       "classifier_hit": false,
-      "cosine": 0.8733521699905396,
+      "cosine": 0.87335205078125,
       "cosine_hit": false,
       "domain": "finance",
       "label": 0,
@@ -249,9 +249,9 @@
       "prompt_b": "Tell the client their account is overdrawn."
     },
     {
-      "classifier": 0.9668662548065186,
+      "classifier": 0.966866135597229,
       "classifier_hit": true,
-      "cosine": 0.8713682889938354,
+      "cosine": 0.871368408203125,
       "cosine_hit": false,
       "domain": "finance",
       "label": 0,
@@ -261,7 +261,7 @@
     {
       "classifier": 0.9973151087760925,
       "classifier_hit": true,
-      "cosine": 0.9627619385719299,
+      "cosine": 0.9627619981765747,
       "cosine_hit": true,
       "domain": "finance",
       "label": 0,
@@ -269,9 +269,9 @@
       "prompt_b": "Advise the client to reduce their portfolio risk."
     },
     {
-      "classifier": 0.015508132055401802,
+      "classifier": 0.015508219599723816,
       "classifier_hit": false,
-      "cosine": 0.8409056067466736,
+      "cosine": 0.8409055471420288,
       "cosine_hit": false,
       "domain": "finance",
       "label": 0,
@@ -291,7 +291,7 @@
     {
       "classifier": 1.0,
       "classifier_hit": true,
-      "cosine": 0.9357830286026001,
+      "cosine": 0.9357830882072449,
       "cosine_hit": true,
       "domain": "finance",
       "label": 1,
@@ -311,7 +311,7 @@
     {
       "classifier": 1.0,
       "classifier_hit": true,
-      "cosine": 0.861180305480957,
+      "cosine": 0.8611801266670227,
       "cosine_hit": false,
       "domain": "finance",
       "label": 1,
@@ -321,4 +321,3 @@
   ],
   "positives": 12
 }
-

@@ -1,10 +1,11 @@
 # SemanticMemo v1.2.0 Release Notes
 
-**Production-grade semantic caching for LLM agents.** SemanticMemo v1.2.0 introduces zero-latency entity drift protection, domain-conditioned thresholds, active learning telemetry, and a safety-framed benchmarking suite.
+SemanticMemo is a semantic caching framework combining FAISS retrieval, learned equivalence classification, Cross-Encoder verification, and entity-drift detection. Version 1.2.0 introduces zero-latency entity drift protection, domain-conditioned risk thresholds, active learning telemetry, and a safety-focused benchmarking suite.
 
 ```bash
 pip install "semanticmemo[ml]>=1.2.0"
 ```
+
 
 ---
 

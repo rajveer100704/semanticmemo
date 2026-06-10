@@ -1,6 +1,7 @@
 # SemanticMemo
 
-**Semantic caching for LLM agents that actually works in production.**
+**Semantic caching framework using FAISS retrieval, learned equivalence classification, Cross-Encoder verification, and entity-drift detection.**
+
 
 [![Tests](https://github.com/rajveer100704/semanticmemo/actions/workflows/ci.yml/badge.svg)](https://github.com/rajveer100704/semanticmemo/actions)
 [![PyPI](https://img.shields.io/pypi/v/semanticmemo.svg)](https://pypi.org/project/semanticmemo/)
