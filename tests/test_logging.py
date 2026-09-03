@@ -31,8 +31,8 @@ async def test_cache_hit_and_miss_are_logged_when_opted_in(
         return f"fresh:{prompt}"
 
     with caplog.at_level(logging.DEBUG, logger="semanticmemo"):
-        await cache.get_or_call(prompt="alpha", llm_function=llm)
-        await cache.get_or_call(prompt="alpha duplicate", llm_function=llm)
+        await cache.get_or_call(prompt="alpha", llm_function=llm, user_id="default_user")
+        await cache.get_or_call(prompt="alpha duplicate", llm_function=llm, user_id="default_user")
 
     messages = [record.getMessage() for record in caplog.records]
     assert any("cache miss" in message for message in messages)
@@ -50,13 +50,14 @@ async def test_eviction_is_logged(caplog: pytest.LogCaptureFixture, tmp_path: Pa
         embedding_provider=HashEmbeddingProvider(dim=16),
         use_faiss=False,
     )
+    cache.bootstrap_default_user("default_user", "default", "analyst")
 
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
     with caplog.at_level(logging.INFO, logger="semanticmemo"):
-        await cache.get_or_call(prompt="first prompt", llm_function=llm)
-        await cache.get_or_call(prompt="second prompt", llm_function=llm)
+        await cache.get_or_call(prompt="first prompt", llm_function=llm, user_id="default_user")
+        await cache.get_or_call(prompt="second prompt", llm_function=llm, user_id="default_user")
     cache.close()
 
     assert any("evicted" in record.getMessage() for record in caplog.records)
@@ -70,13 +71,18 @@ async def test_classifier_gate_is_logged(caplog: pytest.LogCaptureFixture, tmp_p
         classifier=ClassifierConfig.bundled(),
         use_faiss=False,
     )
+    cache.bootstrap_default_user("default_user", "default", "analyst")
 
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
     with caplog.at_level(logging.DEBUG, logger="semanticmemo"):
-        await cache.get_or_call(prompt="approve the refund", llm_function=llm)
-        await cache.get_or_call(prompt="approve the refund", llm_function=llm)
+        await cache.get_or_call(
+            prompt="approve the refund", llm_function=llm, user_id="default_user"
+        )
+        await cache.get_or_call(
+            prompt="approve the refund", llm_function=llm, user_id="default_user"
+        )
     cache.close()
 
     assert any("classifier gate" in record.getMessage() for record in caplog.records)

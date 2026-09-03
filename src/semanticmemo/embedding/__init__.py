@@ -1,5 +1,8 @@
-"""Embedding providers and vector indexes."""
-
+from semanticmemo.embedding.qdrant_index import (
+    QDRANT_AVAILABLE,
+    QdrantConfig,
+    QdrantVectorIndex,
+)
 from semanticmemo.embedding.service import (
     EmbeddingService,
     FaissVectorIndex,
@@ -14,6 +17,9 @@ __all__ = [
     "FaissVectorIndex",
     "HashEmbeddingProvider",
     "InMemoryVectorIndex",
+    "QDRANT_AVAILABLE",
+    "QdrantConfig",
+    "QdrantVectorIndex",
     "SearchCandidate",
     "SentenceTransformerEmbeddingProvider",
 ]

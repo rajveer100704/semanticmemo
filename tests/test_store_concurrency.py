@@ -28,6 +28,7 @@ def test_cascade_delete_removes_lookups_and_feedback(tmp_path: Path) -> None:
         response="approved",
         model=None,
     )
+    assert entry_id is not None
     store.record_lookup(
         query_id=query_id,
         domain="customer-support",

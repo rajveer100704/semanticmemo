@@ -93,7 +93,12 @@ async def test_orchestrator_double_verification_flow():
     # Store gets the entry
     from datetime import datetime
 
-    from semanticmemo.models import CacheEntry
+    from semanticmemo.models import CacheEntry, User
+
+    mock_user = User(id="default_user", tenant_id="default")
+    mock_store.get_user.return_value = mock_user
+    mock_store.get_user_roles.return_value = ["analyst"]
+    mock_store.check_user_permission.return_value = True
 
     mock_entry = CacheEntry(
         id=entry_id,
@@ -133,6 +138,7 @@ async def test_orchestrator_double_verification_flow():
     res = await orchestrator.get_or_call(
         prompt="new prompt",
         llm_function=lambda p: "fresh response",
+        user_id="default_user",
     )
     assert not res.was_cache_hit
     assert res.decision is not None
@@ -146,6 +152,7 @@ async def test_orchestrator_double_verification_flow():
     res = await orchestrator.get_or_call(
         prompt="new prompt",
         llm_function=lambda p: "fresh response",
+        user_id="default_user",
     )
     assert res.was_cache_hit
     assert res.decision is not None
@@ -160,6 +167,7 @@ async def test_orchestrator_double_verification_flow():
     res = await orchestrator.get_or_call(
         prompt="new prompt",
         llm_function=lambda p: "fresh response",
+        user_id="default_user",
     )
     assert not res.was_cache_hit
     assert res.decision is not None
@@ -172,6 +180,7 @@ async def test_orchestrator_double_verification_flow():
     res = await orchestrator.get_or_call(
         prompt="new prompt",
         llm_function=lambda p: "fresh response",
+        user_id="default_user",
     )
     assert res.was_cache_hit
     assert res.decision is not None
@@ -195,7 +204,12 @@ async def test_orchestrator_domain_conditioned_thresholds():
 
     from datetime import datetime
 
-    from semanticmemo.models import CacheEntry
+    from semanticmemo.models import CacheEntry, User
+
+    mock_user = User(id="default_user", tenant_id="default")
+    mock_store.get_user.return_value = mock_user
+    mock_store.get_user_roles.return_value = ["analyst"]
+    mock_store.check_user_permission.return_value = True
 
     mock_entry = CacheEntry(
         id=entry_id,
@@ -242,6 +256,7 @@ async def test_orchestrator_domain_conditioned_thresholds():
     res = await orchestrator.get_or_call(
         prompt="new prompt",
         llm_function=lambda p: "fresh response",
+        user_id="default_user",
     )
     assert res.was_cache_hit
     assert res.decision is not None
@@ -253,6 +268,7 @@ async def test_orchestrator_domain_conditioned_thresholds():
     res_disagree = await orchestrator.get_or_call(
         prompt="new prompt disagreement",
         llm_function=lambda p: "fresh response 2",
+        user_id="default_user",
     )
     assert not res_disagree.was_cache_hit
     assert res_disagree.decision is not None
@@ -269,6 +285,9 @@ async def test_orchestrator_domain_conditioned_thresholds():
         cross_encoder_score=pytest.approx(0.920),
         label=0,
         source="mlp_ce_disagreement",
+        tenant_id="default",
+        resource_id=None,
+        pipeline_version="v2",
     )
 
 
@@ -311,6 +330,9 @@ async def test_report_bad_hit_records_active_learning():
         prompt="original prompt",
         prompt_embedding=[0.1] * 384,
         response="some response",
+        tenant_id="default",
+        resource_id=None,
+        pipeline_version="v2",
         created_at=datetime.now(),
     )
 
@@ -339,4 +361,7 @@ async def test_report_bad_hit_records_active_learning():
         cross_encoder_score=pytest.approx(0.84),
         label=0,
         source="user_reported_bad_hit",
+        tenant_id="default",
+        resource_id=None,
+        pipeline_version="v2",
     )

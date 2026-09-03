@@ -38,7 +38,7 @@ SemanticMemo introduces a third option: **Double-Verification Caching**. It comb
 ## The Mental Model: A Multi-Stage Verification Pipeline
 
 SemanticMemo works like a layered security checkpoint:
-1. **Metal Detector (High Recall, Low Latency):** Uses fast vector similarity (FAISS / Qdrant) to quickly retrieve the top $K$ candidates ($O(\log N)$).
+1. **Metal Detector (High Recall, Low Latency):** Uses fast vector similarity (`InMemoryVectorIndex` / `FaissVectorIndex`, with Qdrant as planned distributed extension) to quickly retrieve the top $K$ candidates ($O(\log N)$).
 2. **First Gate (MLP Classifier):** Evaluates candidate pairs via a fast (~1ms) classifier ($O(K)$). If the score is extremely high (e.g. $\ge 0.995$), it bypasses the next gate.
 3. **Second Gate (Cross-Encoder):** Runs a deep joint-attention transformer pass on candidate pairs where the MLP is uncertain, providing high-precision validation.
 4. **Final Gate (Entity Change Detector):** Runs a zero-latency (<1ms) battery of 11 regex detectors to veto any matches that contain critical entity drift (e.g. quarter, drug, year, numeric, or proper noun changes).
@@ -52,9 +52,9 @@ This structure ensures both sub-millisecond retrieval scaling and maximum correc
 The codebase is structured around five core concepts:
 
 ### 1. The Embedding Layer (Fast Filter)
-Embeds incoming queries and queries the vector index (FAISS or Qdrant) for the top $K$ candidate vectors.
+Embeds incoming queries and queries the vector index (`InMemoryVectorIndex` or `FaissVectorIndex`) for the top $K$ candidate vectors.
 - **Default Encoder:** `sentence-transformers/all-MiniLM-L6-v2` (384-dimensional).
-- **Index:** `faiss.IndexFlatIP` (normalized inner product for cosine similarity).
+- **Index:** `faiss.IndexFlatIP` (normalized inner product for cosine similarity with scope pre-filtering).
 
 ### 2. The Equivalence Classifier (Stage 1 MLP)
 A lightweight neural network computing equivalence probabilities on concatenated features ($[u, v, |u - v|, u * v]$).

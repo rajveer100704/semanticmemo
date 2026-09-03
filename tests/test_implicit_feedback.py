@@ -54,12 +54,14 @@ def _make_cache(
         candidate_k=3,
         implicit_feedback=implicit,
     )
-    return SemanticMemo(
+    memo = SemanticMemo(
         domain="test",
         config=config,
         embedding_provider=ToyEmbeddingProvider(),
         use_faiss=False,
     )
+    memo.bootstrap_default_user("default_user", "default", "analyst")
+    return memo
 
 
 async def _echo(prompt: str) -> str:
@@ -70,7 +72,9 @@ async def test_implicit_feedback_disabled_by_default(tmp_path: Path) -> None:
     cache = _make_cache(tmp_path, implicit=None)
     try:
         for _ in range(3):
-            result = await cache.get_or_call(prompt="alpha", llm_function=_echo)
+            result = await cache.get_or_call(
+                prompt="alpha", llm_function=_echo, user_id="default_user"
+            )
             assert result.implicit_bad_hit_recorded is False
         assert cache.store.feedback_count() == 0
     finally:
@@ -85,14 +89,16 @@ async def test_reissue_within_window_flags_prior_hit(
     monkeypatch.setattr(sqlite_store, "_now", clock)
     cache = _make_cache(tmp_path, implicit=ImplicitFeedbackConfig(window_seconds=30.0))
     try:
-        miss = await cache.get_or_call(prompt="alpha", llm_function=_echo)
-        hit = await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        miss = await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
+        hit = await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
         assert miss.was_cache_hit is False
         assert hit.was_cache_hit is True
         assert hit.implicit_bad_hit_recorded is False
 
         clock.advance(5)
-        reissue = await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        reissue = await cache.get_or_call(
+            prompt="alpha", llm_function=_echo, user_id="default_user"
+        )
         assert reissue.implicit_bad_hit_recorded is True
 
         events = list(cache.store.feedback_events())
@@ -120,11 +126,13 @@ async def test_reissue_outside_window_not_flagged(
     monkeypatch.setattr(sqlite_store, "_now", clock)
     cache = _make_cache(tmp_path, implicit=ImplicitFeedbackConfig(window_seconds=30.0))
     try:
-        await cache.get_or_call(prompt="alpha", llm_function=_echo)
-        await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
+        await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
 
         clock.advance(60)
-        reissue = await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        reissue = await cache.get_or_call(
+            prompt="alpha", llm_function=_echo, user_id="default_user"
+        )
         assert reissue.implicit_bad_hit_recorded is False
         assert cache.store.feedback_count() == 0
     finally:
@@ -139,12 +147,12 @@ async def test_triple_reissue_flags_each_prior_hit_once(
     monkeypatch.setattr(sqlite_store, "_now", clock)
     cache = _make_cache(tmp_path, implicit=ImplicitFeedbackConfig(window_seconds=30.0))
     try:
-        await cache.get_or_call(prompt="alpha", llm_function=_echo)  # miss
-        hit_1 = await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")  # miss
+        hit_1 = await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
         clock.advance(1)
-        hit_2 = await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        hit_2 = await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
         clock.advance(1)
-        await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
 
         events = list(cache.store.feedback_events())
         # hit_3 flags hit_1's lookup; hit_4 flags hit_2's lookup -- two events.
@@ -164,12 +172,14 @@ async def test_explicit_good_feedback_blocks_implicit_flag(
     monkeypatch.setattr(sqlite_store, "_now", clock)
     cache = _make_cache(tmp_path, implicit=ImplicitFeedbackConfig(window_seconds=30.0))
     try:
-        await cache.get_or_call(prompt="alpha", llm_function=_echo)
-        hit = await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
+        hit = await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
         assert await cache.report_good_hit(hit.query_id) is True
 
         clock.advance(2)
-        reissue = await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        reissue = await cache.get_or_call(
+            prompt="alpha", llm_function=_echo, user_id="default_user"
+        )
         assert reissue.implicit_bad_hit_recorded is False
 
         # Only the explicit positive event exists -- implicit detection did not
@@ -189,12 +199,14 @@ async def test_explicit_bad_feedback_not_double_flagged(
     monkeypatch.setattr(sqlite_store, "_now", clock)
     cache = _make_cache(tmp_path, implicit=ImplicitFeedbackConfig(window_seconds=30.0))
     try:
-        await cache.get_or_call(prompt="alpha", llm_function=_echo)
-        hit = await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
+        hit = await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
         assert await cache.report_bad_hit(hit.query_id, reason="explicit") is True
 
         clock.advance(2)
-        reissue = await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        reissue = await cache.get_or_call(
+            prompt="alpha", llm_function=_echo, user_id="default_user"
+        )
         assert reissue.implicit_bad_hit_recorded is False
         assert cache.store.feedback_count() == 1
     finally:
@@ -211,8 +223,8 @@ async def test_prior_miss_is_not_flagged(
     try:
         # A cache miss records no lookup row, so re-issuing after a miss
         # has nothing to flag.
-        miss = await cache.get_or_call(prompt="alpha", llm_function=_echo)
-        hit = await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        miss = await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
+        hit = await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
         assert miss.was_cache_hit is False
         assert hit.was_cache_hit is True
         assert hit.implicit_bad_hit_recorded is False
@@ -229,10 +241,12 @@ async def test_whitespace_only_difference_is_treated_as_reissue(
     monkeypatch.setattr(sqlite_store, "_now", clock)
     cache = _make_cache(tmp_path, implicit=ImplicitFeedbackConfig(window_seconds=30.0))
     try:
-        await cache.get_or_call(prompt="alpha", llm_function=_echo)
-        await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
+        await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
         clock.advance(2)
-        reissue = await cache.get_or_call(prompt="  alpha\n", llm_function=_echo)
+        reissue = await cache.get_or_call(
+            prompt="  alpha\n", llm_function=_echo, user_id="default_user"
+        )
         assert reissue.implicit_bad_hit_recorded is True
     finally:
         cache.close()
@@ -247,10 +261,10 @@ async def test_implicit_flag_is_exported_as_training_pair(
     cache = _make_cache(tmp_path, implicit=ImplicitFeedbackConfig(window_seconds=30.0))
     export_path = tmp_path / "feedback_pairs.jsonl"
     try:
-        await cache.get_or_call(prompt="alpha", llm_function=_echo)
-        await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
+        await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
         clock.advance(3)
-        await cache.get_or_call(prompt="alpha", llm_function=_echo)
+        await cache.get_or_call(prompt="alpha", llm_function=_echo, user_id="default_user")
 
         written = cache.export_feedback_pairs(export_path, split="train")
         assert written == 1
@@ -279,6 +293,7 @@ def test_find_implicit_bad_hit_window_boundary(
             response="cached",
             model="unit-test",
         )
+        assert entry_id is not None
         query_id = uuid4()
         store.record_lookup(
             query_id=query_id,
@@ -305,5 +320,58 @@ def test_find_implicit_bad_hit_window_boundary(
             store.find_implicit_bad_hit(domain="other", prompt="alpha", within_seconds=60) is None
         )
         assert store.find_implicit_bad_hit(domain="test", prompt="beta", within_seconds=60) is None
+    finally:
+        store.close()
+
+
+def test_implicit_feedback_tenant_isolation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    clock = FakeClock()
+    monkeypatch.setattr(sqlite_store, "_now", clock)
+    store = SQLiteCacheStore(tmp_path / "tenant_implicit_store.db")
+    try:
+        embedding = np.array([1, 0, 0, 0], dtype=np.float32)
+        # Entry in Tenant A
+        entry_a = store.add(
+            prompt="alpha",
+            embedding=embedding,
+            response="cached_a",
+            model="unit-test",
+            tenant_id="tenant_a",
+            scope="tenant",
+        )
+        assert entry_a is not None
+        query_a = uuid4()
+        store.record_lookup(
+            query_id=query_a,
+            domain="test",
+            prompt="alpha",
+            embedding=embedding,
+            cache_entry_id=entry_a,
+            similarity_score=1.0,
+            classifier_score=None,
+        )
+
+        clock.advance(5)
+        # Tenant B checks for implicit bad hit on same prompt "alpha" -> Must be None!
+        match_b = store.find_implicit_bad_hit(
+            domain="test",
+            prompt="alpha",
+            within_seconds=30,
+            tenant_id="tenant_b",
+        )
+        assert match_b is None
+
+        # Tenant A checks for implicit bad hit on prompt "alpha" -> Finds Tenant A's query
+        match_a = store.find_implicit_bad_hit(
+            domain="test",
+            prompt="alpha",
+            within_seconds=30,
+            tenant_id="tenant_a",
+        )
+        assert match_a is not None
+        assert match_a.id == query_a
     finally:
         store.close()

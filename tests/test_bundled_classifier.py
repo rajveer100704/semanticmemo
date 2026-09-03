@@ -53,17 +53,22 @@ async def test_bundled_classifier_gates_cache_lookups(tmp_path: Path) -> None:
         classifier=ClassifierConfig.bundled(),
         use_faiss=False,
     )
+    cache.bootstrap_default_user("default_user", "default", "analyst")
     try:
 
         async def call_llm(prompt: str) -> str:
             return f"response::{prompt}"
 
-        first = await cache.get_or_call(prompt="Approve the refund", llm_function=call_llm)
+        first = await cache.get_or_call(
+            prompt="Approve the refund", llm_function=call_llm, user_id="default_user"
+        )
         assert first.was_cache_hit is False
 
         # An identical prompt yields a cosine candidate, so the learned
         # classifier evaluates it and a classifier score is recorded.
-        second = await cache.get_or_call(prompt="Approve the refund", llm_function=call_llm)
+        second = await cache.get_or_call(
+            prompt="Approve the refund", llm_function=call_llm, user_id="default_user"
+        )
         assert second.classifier_score is not None
         assert 0.0 <= second.classifier_score <= 1.0
     finally:

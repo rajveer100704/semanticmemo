@@ -213,6 +213,7 @@ def _store_with_feedback(
         response="approved",
         model="test-model",
     )
+    assert entry_id is not None
     query_id = uuid4()
     store.record_lookup(
         query_id=query_id,

@@ -1,0 +1,47 @@
+[
+  {
+    "scenario_name": "global",
+    "total_index_entries": 100,
+    "query_count": 30,
+    "concurrency": 5,
+    "p50_latency_ms": 2.982,
+    "p95_latency_ms": 9.42,
+    "p99_latency_ms": 14.182,
+    "mean_latency_ms": 3.905,
+    "avg_candidates_evaluated": 100.0,
+    "candidate_reduction_pct": 0.0,
+    "cache_hit_rate_pct": 93.33,
+    "llm_calls_made": 2,
+    "llm_calls_avoided": 28
+  },
+  {
+    "scenario_name": "tenant_scoped",
+    "total_index_entries": 100,
+    "query_count": 30,
+    "concurrency": 5,
+    "p50_latency_ms": 3.146,
+    "p95_latency_ms": 11.66,
+    "p99_latency_ms": 60.225,
+    "mean_latency_ms": 6.396,
+    "avg_candidates_evaluated": 50.0,
+    "candidate_reduction_pct": 50.0,
+    "cache_hit_rate_pct": 93.33,
+    "llm_calls_made": 2,
+    "llm_calls_avoided": 28
+  },
+  {
+    "scenario_name": "resource_scoped",
+    "total_index_entries": 100,
+    "query_count": 30,
+    "concurrency": 5,
+    "p50_latency_ms": 2.531,
+    "p95_latency_ms": 11.77,
+    "p99_latency_ms": 77.389,
+    "mean_latency_ms": 6.607,
+    "avg_candidates_evaluated": 0.9,
+    "candidate_reduction_pct": 99.13,
+    "cache_hit_rate_pct": 30.0,
+    "llm_calls_made": 21,
+    "llm_calls_avoided": 9
+  }
+]

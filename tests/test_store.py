@@ -20,6 +20,7 @@ def test_store_add_get_and_update_hit(tmp_path) -> None:
         metadata={"tenant": "acme"},
     )
 
+    assert entry_id is not None
     entry = store.get(entry_id)
     assert entry is not None
     assert entry.prompt == "alpha"
@@ -50,6 +51,7 @@ def test_store_evicts_lru_with_negative_feedback_priority(tmp_path) -> None:
         response="second",
         model=None,
     )
+    assert first is not None and second is not None
     store.increment_bad_feedback(second)
 
     evicted = store.evict(policy=EvictionPolicy.LRU, max_entries=1, ttl_seconds=None)
@@ -101,6 +103,7 @@ def test_feedback_events_survive_reopen_and_export_pairs(tmp_path) -> None:
         response="approved",
         model="test-model",
     )
+    assert entry_id is not None
     store.record_lookup(
         query_id=query_id,
         domain="customer-support",

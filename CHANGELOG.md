@@ -1,5 +1,57 @@
 # Changelog
 
+## 2.0.0
+
+Major architecture evolution: SemanticMemo transforms from a single-process semantic cache library into an authorization-aware, resource-versioned, distributed caching plane for enterprise LLM agents.
+
+### ⚠️ Breaking Changes & Migration Notice
+- **Mandatory Authentication:** `get_or_call(...)` now requires an authenticated `user_id`. Unauthenticated invocations fail closed and raise `PermissionError`. For development and unit tests, use `cache.bootstrap_default_user(...)` or provide `user_id="default_user"`.
+- **Tenant Context Authority:** Tenant context is now authoritatively derived server-side from the authenticated user principal (`user.tenant_id`) rather than client request arguments, eliminating tenant spoofing risks.
+- **Fail-Closed Scope Resolution:** Retrieval will fail closed if caller permissions, resource existence, or version matching are invalid.
+
+### Major Features & Systems Architecture
+
+1. **Pre-Retrieval RBAC & Scoped Authorization**
+   - Implemented role-based access control with granular permissions (`cache:read`, `cache:write`, `resource:read`, `resource:write`, `admin`).
+   - Permissions are evaluated on every request *before* vector search: a cache hit never bypasses authorization.
+   - Introduced three explicit cache visibility scopes:
+     - `GLOBAL`: Public data shared across all tenants.
+     - `TENANT`: Strictly bounded to the caller's tenant.
+     - `RESOURCE`: Bounded to a specific resource and its exact version.
+
+2. **Resource & Pipeline Versioning**
+   - Cache identity incorporates both `resource_version` and `pipeline_version`.
+   - Modifying a resource invalidates prior inferences immediately without requiring synchronous vector deletion.
+   - Upgrading the equivalence model or pipeline version isolates older cache entries automatically.
+
+3. **Distributed Single-Flight with Generation Fencing (CAS)**
+   - Implemented `RedisSingleFlightManager` to coalesce stampeding concurrent requests across independent OS processes and container instances.
+   - Hardened with monotonic fencing tokens: stale leaders whose lock leases expire are rejected by PostgreSQL via compare-and-swap (CAS), preventing split-brain cache corruption.
+   - Opportunistic Redis Pub/Sub wakeups for follower instances with authoritative database fallback polling.
+
+4. **Authoritative PostgreSQL Store & Transactional Outbox**
+   - Added `PostgresCacheStore` as the production single source of truth for cache entries, metadata, versioning, and RBAC policies.
+   - Integrated Transactional Outbox: cache mutations and event notifications are committed in a single atomic database transaction.
+   - Added `migrate_sqlite_to_postgres` utility with deterministic SHA-256 row checksum validation for smooth migration from v1.x SQLite databases.
+
+5. **Durable Kafka Relay & Idempotent Consumer**
+   - Added `KafkaEventBus` (powered by `aiokafka`) and `OutboxRelay` background publisher for durable event dispatch.
+   - Added `InvalidationConsumer` with an authoritative processed-events ledger guaranteeing exactly-once invalidation semantics under network retries and duplicate replays.
+
+6. **Server-Side Scoped Qdrant Retrieval & Reconciliation**
+   - Added `QdrantVectorIndex` supporting server-side payload filters strictly matching the resolved `RetrievalScope`.
+   - Added `IndexReconciler` to detect and repair vector index drift or missing embeddings by reconciling against authoritative PostgreSQL tables.
+
+7. **Observability & Enterprise Security Sanitization**
+   - Integrated OpenTelemetry distributed tracing (`SemanticMemoTracer`) with zero-PII span attribute sanitization (prompts, API keys, and user identifiers are hashed or redacted).
+   - Added Prometheus / OpenMetrics metric instrumentation (`SemanticMemoMetrics`) exporting request counts, hit rates, token savings, cost savings, and stage latencies.
+
+8. **Windows Multi-Process Certification & Import-Safety Hardening**
+   - Fully certified on Windows across 3 distinct OS processes coordinating through real Redis and PostgreSQL.
+   - Hardened transitive import boundaries: background workers and subprocesses operate without loading heavy ML packages (`torch`, `scipy`, `sklearn`, `sentence_transformers`).
+
+---
+
 ## 1.2.0
 
 Upgrade release featuring zero-latency entity drift protection, domain-conditioned thresholds, active learning builder, and safety-framed benchmarking.

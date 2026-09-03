@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
 from enum import StrEnum
@@ -10,6 +11,76 @@ from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+
+class CacheScope(StrEnum):
+    """Supported cache scopes."""
+
+    GLOBAL = "global"
+    TENANT = "tenant"
+    RESOURCE = "resource"
+
+
+@dataclass(frozen=True)
+class RetrievalScope:
+    """Mandatory scope context passed to vector retrievers to enforce isolation."""
+
+    tenant_id: str
+    scope: CacheScope
+    resource_id: str | None = None
+    resource_version: int | None = None
+    pipeline_version: str = "v2"
+
+
+class PermissionName(StrEnum):
+    """Core RBAC permission names."""
+
+    CACHE_READ = "cache:read"
+    CACHE_WRITE = "cache:write"
+    CACHE_INVALIDATE = "cache:invalidate"
+    RESOURCE_READ = "resource:read"
+    RESOURCE_WRITE = "resource:write"
+    RESOURCE_MANAGE = "resource:manage"
+
+
+class User(BaseModel):
+    """An authenticated user associated with a tenant."""
+
+    model_config = ConfigDict(frozen=True)
+
+    id: str
+    tenant_id: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class Role(BaseModel):
+    """A role that groups permissions."""
+
+    model_config = ConfigDict(frozen=True)
+
+    id: str
+    name: str
+
+
+class Permission(BaseModel):
+    """A granular permission."""
+
+    model_config = ConfigDict(frozen=True)
+
+    id: str
+    name: str
+
+
+class Resource(BaseModel):
+    """A versioned resource belonging to a tenant."""
+
+    model_config = ConfigDict(frozen=True)
+
+    id: str
+    tenant_id: str
+    current_version: int = 1
+    status: str = "active"
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 class EvictionPolicy(StrEnum):
@@ -150,6 +221,8 @@ class CacheConfig(BaseModel):
     cross_encoder: CrossEncoderConfig | None = None
     risk_policy: RiskPolicy | None = None
     high_precision_skip_threshold: float = 0.995
+    pipeline_version: str = "v2"
+    default_tenant: str = "default"
 
     @field_validator("estimated_llm_cost_usd")
     @classmethod
@@ -208,12 +281,19 @@ class CacheEntry(BaseModel):
     prompt: str
     prompt_embedding: list[float]
     response: str
+    tenant_id: str = "default"
+    scope: CacheScope = CacheScope.GLOBAL
+    resource_id: str | None = None
+    resource_version: int | None = None
+    pipeline_version: str = "v2"
+    expires_at: datetime | None = None
     model: str | None = None
     created_at: datetime
     last_hit_at: datetime | None = None
     hit_count: int = 0
     feedback_negative_count: int = 0
     feedback_positive_count: int = 0
+    flight_generation: int = 0
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 

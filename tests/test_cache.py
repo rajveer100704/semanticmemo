@@ -63,6 +63,7 @@ def build_classifier_orchestrator(
         embedding_service=embedding_service,
         classifier_service=classifier_service,
     )
+    orchestrator.bootstrap_default_user("default_user", "default", "analyst")
     return orchestrator, store, embedding_service
 
 
@@ -80,6 +81,7 @@ def add_seed_entry(
         response=response,
         model="unit-test",
     )
+    assert entry_id is not None
     embedding_service.add(entry_id, embedding)
 
 
@@ -91,8 +93,12 @@ async def test_get_or_call_misses_then_hits(cache: SemanticMemo) -> None:
         calls += 1
         return f"fresh:{prompt}"
 
-    first = await cache.get_or_call(prompt="alpha", llm_function=llm, model="unit-test")
-    second = await cache.get_or_call(prompt="alpha duplicate", llm_function=llm)
+    first = await cache.get_or_call(
+        prompt="alpha", llm_function=llm, model="unit-test", user_id="default_user"
+    )
+    second = await cache.get_or_call(
+        prompt="alpha duplicate", llm_function=llm, user_id="default_user"
+    )
 
     assert first.was_cache_hit is False
     assert second.was_cache_hit is True
@@ -111,8 +117,8 @@ async def test_threshold_rejects_low_similarity(cache: SemanticMemo) -> None:
         calls += 1
         return f"fresh:{prompt}"
 
-    first = await cache.get_or_call(prompt="alpha", llm_function=llm)
-    second = await cache.get_or_call(prompt="beta", llm_function=llm)
+    first = await cache.get_or_call(prompt="alpha", llm_function=llm, user_id="default_user")
+    second = await cache.get_or_call(prompt="beta", llm_function=llm, user_id="default_user")
 
     assert first.was_cache_hit is False
     assert second.was_cache_hit is False
@@ -142,7 +148,9 @@ async def test_classifier_rejects_high_cosine_candidate(
         calls += 1
         return f"fresh:{prompt}"
 
-    result = await orchestrator.get_or_call(prompt="alpha duplicate", llm_function=llm)
+    result = await orchestrator.get_or_call(
+        prompt="alpha duplicate", llm_function=llm, user_id="default_user"
+    )
 
     assert result.was_cache_hit is False
     assert result.response == "fresh:alpha duplicate"
@@ -177,7 +185,9 @@ async def test_classifier_selects_best_equivalent_candidate(
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
-    result = await orchestrator.get_or_call(prompt="alpha duplicate", llm_function=llm)
+    result = await orchestrator.get_or_call(
+        prompt="alpha duplicate", llm_function=llm, user_id="default_user"
+    )
 
     assert result.was_cache_hit is True
     assert result.response == "cached:near-alpha"
@@ -191,8 +201,10 @@ async def test_feedback_updates_hit_entry(cache: SemanticMemo) -> None:
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
-    await cache.get_or_call(prompt="alpha", llm_function=llm)
-    hit = await cache.get_or_call(prompt="alpha duplicate", llm_function=llm)
+    await cache.get_or_call(prompt="alpha", llm_function=llm, user_id="default_user")
+    hit = await cache.get_or_call(
+        prompt="alpha duplicate", llm_function=llm, user_id="default_user"
+    )
 
     assert await cache.report_bad_hit(hit.query_id, reason="wrong answer") is True
     assert hit.cache_entry_id is not None
@@ -205,8 +217,10 @@ async def test_cache_hit_creates_lookup_and_durable_bad_feedback(cache: Semantic
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
-    await cache.get_or_call(prompt="alpha", llm_function=llm)
-    hit = await cache.get_or_call(prompt="alpha duplicate", llm_function=llm)
+    await cache.get_or_call(prompt="alpha", llm_function=llm, user_id="default_user")
+    hit = await cache.get_or_call(
+        prompt="alpha duplicate", llm_function=llm, user_id="default_user"
+    )
 
     assert cache.store.lookup_count() == 1
     assert await cache.report_bad_hit(hit.query_id, reason="wrong cached answer") is True
@@ -221,8 +235,10 @@ async def test_good_feedback_persists_positive_event(cache: SemanticMemo) -> Non
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
-    await cache.get_or_call(prompt="alpha", llm_function=llm)
-    hit = await cache.get_or_call(prompt="alpha duplicate", llm_function=llm)
+    await cache.get_or_call(prompt="alpha", llm_function=llm, user_id="default_user")
+    hit = await cache.get_or_call(
+        prompt="alpha duplicate", llm_function=llm, user_id="default_user"
+    )
 
     assert await cache.report_good_hit(hit.query_id) is True
 
@@ -247,9 +263,13 @@ async def test_export_feedback_pairs_public_api(cache: SemanticMemo, tmp_path: P
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
-    await cache.get_or_call(prompt="alpha", llm_function=llm)
-    bad_hit = await cache.get_or_call(prompt="alpha duplicate", llm_function=llm)
-    good_hit = await cache.get_or_call(prompt="alpha duplicate", llm_function=llm)
+    await cache.get_or_call(prompt="alpha", llm_function=llm, user_id="default_user")
+    bad_hit = await cache.get_or_call(
+        prompt="alpha duplicate", llm_function=llm, user_id="default_user"
+    )
+    good_hit = await cache.get_or_call(
+        prompt="alpha duplicate", llm_function=llm, user_id="default_user"
+    )
     await cache.report_bad_hit(bad_hit.query_id, reason="bad match")
     await cache.report_good_hit(good_hit.query_id)
 
@@ -266,8 +286,8 @@ async def test_stats_track_runtime_counts(cache: SemanticMemo) -> None:
     async def llm(prompt: str) -> str:
         return f"fresh:{prompt}"
 
-    await cache.get_or_call(prompt="alpha", llm_function=llm)
-    await cache.get_or_call(prompt="alpha duplicate", llm_function=llm)
+    await cache.get_or_call(prompt="alpha", llm_function=llm, user_id="default_user")
+    await cache.get_or_call(prompt="alpha duplicate", llm_function=llm, user_id="default_user")
     stats = cache.stats()
 
     assert stats.total_entries == 1

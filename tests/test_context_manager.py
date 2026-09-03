@@ -10,12 +10,14 @@ from semanticmemo.embedding import HashEmbeddingProvider
 
 
 def _make_cache(tmp_path: Path) -> SemanticMemo:
-    return SemanticMemo(
+    memo = SemanticMemo(
         domain="test",
         config=CacheConfig(db_path=tmp_path / "cache.db", embedding_dim=16),
         embedding_provider=HashEmbeddingProvider(dim=16),
         use_faiss=False,
     )
+    memo.bootstrap_default_user("default_user", "default", "analyst")
+    return memo
 
 
 async def test_async_with_closes_store(tmp_path: Path) -> None:
@@ -23,7 +25,7 @@ async def test_async_with_closes_store(tmp_path: Path) -> None:
         return f"fresh:{prompt}"
 
     async with _make_cache(tmp_path) as cache:
-        await cache.get_or_call(prompt="hello", llm_function=llm)
+        await cache.get_or_call(prompt="hello", llm_function=llm, user_id="default_user")
         assert cache.store.count() == 1
 
     with pytest.raises(sqlite3.ProgrammingError):
