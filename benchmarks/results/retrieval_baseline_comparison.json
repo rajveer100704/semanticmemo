@@ -1,0 +1,179 @@
+{
+  "benchmark": "semanticmemo_retrieval_baseline_comparison",
+  "dataset_name": "semanticmemo_retrieval_relevance_v1",
+  "dataset_type": "manually_curated_retrieval_evaluation",
+  "labeling_policy": "Each query is relevant to all candidate documents in its assigned intent group. Documents in other groups are non-relevant within this benchmark's closed candidate set. This is a small evaluation fixture, not production traffic.",
+  "warning": "Small manually curated closed-corpus evaluation. Results do not establish production retrieval quality.",
+  "candidate_count": 42,
+  "query_count": 14,
+  "recall_k": 5,
+  "mrr_k": 10,
+  "semantic_embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "semantic_transformer": {
+    "recall_at_5": 1.0,
+    "precision_at_5": 0.6,
+    "mrr_at_10": 1.0,
+    "top1_intent_accuracy": 1.0,
+    "cross_intent_top1_rate": 0.0,
+    "mean_query_latency_ms": 15.366,
+    "p95_query_latency_ms": 17.779
+  },
+  "tfidf_lexical": {
+    "recall_at_5": 0.714286,
+    "precision_at_5": 0.428571,
+    "mrr_at_10": 0.845238,
+    "top1_intent_accuracy": 0.785714,
+    "cross_intent_top1_rate": 0.214286,
+    "mean_query_latency_ms": 0.257,
+    "p95_query_latency_ms": 0.366
+  },
+  "metric_deltas_tfidf_minus_sentence_transformer": {
+    "recall_at_5": -0.285714,
+    "precision_at_5": -0.171429,
+    "mrr_at_10": -0.154762,
+    "top1_intent_accuracy": -0.214286,
+    "cross_intent_top1_rate": 0.214286
+  },
+  "per_query": [
+    {
+      "query_id": "order_status",
+      "semantic_top1_group": "order_status",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "disable_mfa",
+      "tfidf_top1_match": false,
+      "tfidf_first_relevant_rank": null,
+      "tfidf_recall": 0.0,
+      "tfidf_mrr": 0.0
+    },
+    {
+      "query_id": "password_reset",
+      "semantic_top1_group": "password_reset",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "enable_mfa",
+      "tfidf_top1_match": false,
+      "tfidf_first_relevant_rank": 3,
+      "tfidf_recall": 0.333333,
+      "tfidf_mrr": 0.333333
+    },
+    {
+      "query_id": "subscription_cancel",
+      "semantic_top1_group": "subscription_cancel",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "subscription_cancel",
+      "tfidf_top1_match": true,
+      "tfidf_first_relevant_rank": 1,
+      "tfidf_recall": 0.666667,
+      "tfidf_mrr": 1.0
+    },
+    {
+      "query_id": "refund_approve",
+      "semantic_top1_group": "refund_approve",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "refund_approve",
+      "tfidf_top1_match": true,
+      "tfidf_first_relevant_rank": 1,
+      "tfidf_recall": 0.666667,
+      "tfidf_mrr": 1.0
+    },
+    {
+      "query_id": "refund_deny",
+      "semantic_top1_group": "refund_deny",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "refund_deny",
+      "tfidf_top1_match": true,
+      "tfidf_first_relevant_rank": 1,
+      "tfidf_recall": 0.666667,
+      "tfidf_mrr": 1.0
+    },
+    {
+      "query_id": "bank_balance",
+      "semantic_top1_group": "bank_balance",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "bank_balance",
+      "tfidf_top1_match": true,
+      "tfidf_first_relevant_rank": 1,
+      "tfidf_recall": 1.0,
+      "tfidf_mrr": 1.0
+    },
+    {
+      "query_id": "card_transactions",
+      "semantic_top1_group": "card_transactions",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "card_transactions",
+      "tfidf_top1_match": true,
+      "tfidf_first_relevant_rank": 1,
+      "tfidf_recall": 1.0,
+      "tfidf_mrr": 1.0
+    },
+    {
+      "query_id": "transfer_savings",
+      "semantic_top1_group": "transfer_savings",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "transfer_savings",
+      "tfidf_top1_match": true,
+      "tfidf_first_relevant_rank": 1,
+      "tfidf_recall": 1.0,
+      "tfidf_mrr": 1.0
+    },
+    {
+      "query_id": "enable_mfa",
+      "semantic_top1_group": "enable_mfa",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "disable_mfa",
+      "tfidf_top1_match": false,
+      "tfidf_first_relevant_rank": 2,
+      "tfidf_recall": 0.666667,
+      "tfidf_mrr": 0.5
+    },
+    {
+      "query_id": "disable_mfa",
+      "semantic_top1_group": "disable_mfa",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "disable_mfa",
+      "tfidf_top1_match": true,
+      "tfidf_first_relevant_rank": 1,
+      "tfidf_recall": 1.0,
+      "tfidf_mrr": 1.0
+    },
+    {
+      "query_id": "ssh_allow",
+      "semantic_top1_group": "ssh_allow",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "ssh_allow",
+      "tfidf_top1_match": true,
+      "tfidf_first_relevant_rank": 1,
+      "tfidf_recall": 1.0,
+      "tfidf_mrr": 1.0
+    },
+    {
+      "query_id": "ssh_block",
+      "semantic_top1_group": "ssh_block",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "ssh_block",
+      "tfidf_top1_match": true,
+      "tfidf_first_relevant_rank": 1,
+      "tfidf_recall": 0.666667,
+      "tfidf_mrr": 1.0
+    },
+    {
+      "query_id": "meeting_schedule",
+      "semantic_top1_group": "meeting_schedule",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "meeting_schedule",
+      "tfidf_top1_match": true,
+      "tfidf_first_relevant_rank": 1,
+      "tfidf_recall": 0.333333,
+      "tfidf_mrr": 1.0
+    },
+    {
+      "query_id": "email_summary",
+      "semantic_top1_group": "email_summary",
+      "semantic_top1_match": true,
+      "tfidf_top1_group": "email_summary",
+      "tfidf_top1_match": true,
+      "tfidf_first_relevant_rank": 1,
+      "tfidf_recall": 1.0,
+      "tfidf_mrr": 1.0
+    }
+  ]
+}

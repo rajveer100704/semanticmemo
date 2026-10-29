@@ -1003,6 +1003,131 @@ class CacheOrchestrator:
         a_lower = prompt_a.lower()
         b_lower = prompt_b.lower()
 
+        # Contextual refund polarity: do not reuse a denied-refund answer
+        # for an affirmative refund request, or vice versa.
+        import re
+
+        negative_refund_action = re.compile(
+            r"\b(?:do\s+not|don't|never|cannot|can't|will\s+not|won't)\b"
+            r".{0,60}\b(?:return|issue|process|provide|send|give|refund|reimburse)\b"
+        )
+        positive_refund_action = re.compile(
+            r"\b(?:refund|reimbursement|payment)\b.{0,50}"
+            r"\b(?:issu\w*|process\w*|approv\w*|authoriz\w*|return\w*|"
+            r"provid\w*|send\w*|reimburs\w*)\b"
+            r"|\b(?:issu\w*|process\w*|approv\w*|authoriz\w*|return\w*|"
+            r"provid\w*|send\w*|reimburs\w*)\b.{0,50}"
+            r"\b(?:refund|reimbursement|payment)\b"
+        )
+
+        a_negative_refund = bool(negative_refund_action.search(a_lower))
+        b_negative_refund = bool(negative_refund_action.search(b_lower))
+        a_affirmative_refund = (
+            bool(positive_refund_action.search(a_lower))
+            and not a_negative_refund
+        )
+        b_affirmative_refund = (
+            bool(positive_refund_action.search(b_lower))
+            and not b_negative_refund
+        )
+
+        if (
+            a_negative_refund and b_affirmative_refund
+        ) or (
+            b_negative_refund and a_affirmative_refund
+        ):
+            return True
+
+        # Context-aware checks for domain-specific opposites. Requiring
+        # shared subject context prevents unrelated keywords from conflicting.
+
+        # Urgency matters here only when both prompts concern follow-ups.
+        follow_up = re.compile(r"\bfollow[\s-]?up\b")
+        urgent = re.compile(r"\burgent\b")
+        routine = re.compile(r"\broutine\b")
+        if follow_up.search(a_lower) and follow_up.search(b_lower):
+            if (
+                urgent.search(a_lower) and routine.search(b_lower)
+            ) or (
+                routine.search(a_lower) and urgent.search(b_lower)
+            ):
+                return True
+
+        # Legal status: both prompts must mention a shared legal instrument.
+        legal_subjects = (
+            "nda", "agreement", "contract", "policy",
+            "license", "licence", "subscription",
+        )
+        shared_legal_subject = any(
+            subject in a_lower and subject in b_lower
+            for subject in legal_subjects
+        )
+        active_status = (
+            "in effect", "still active", "remains active",
+            "currently active", "still in force",
+        )
+        expired_status = (
+            "expired", "has expired", "no longer active",
+            "no longer in force", "terminated",
+        )
+        a_active = any(term in a_lower for term in active_status)
+        b_active = any(term in b_lower for term in active_status)
+        a_expired = any(term in a_lower for term in expired_status)
+        b_expired = any(term in b_lower for term in expired_status)
+
+        if shared_legal_subject and (
+            (a_active and not a_expired and b_expired and not b_active)
+            or (b_active and not b_expired and a_expired and not a_active)
+        ):
+            return True
+
+        # Statute/limitation conflicts must mention that subject in both prompts.
+        limitation_context = re.compile(
+            r"\b(?:statute of limitations|limitations? period|limitation period)\b"
+        )
+        passed_status = re.compile(r"\b(?:has |have |had )?passed\b")
+        applies_status = re.compile(
+            r"\b(?:still applies|remains applicable|continues to apply)\b"
+        )
+        if limitation_context.search(a_lower) and limitation_context.search(b_lower):
+            if (
+                passed_status.search(a_lower) and applies_status.search(b_lower)
+            ) or (
+                applies_status.search(a_lower) and passed_status.search(b_lower)
+            ):
+                return True
+
+        # Increasing versus reducing risk only conflicts on a shared risk topic.
+        if "risk" in a_lower and "risk" in b_lower:
+            a_increases = bool(re.search(r"\bincreas\w*\b", a_lower))
+            b_increases = bool(re.search(r"\bincreas\w*\b", b_lower))
+            a_reduces = bool(re.search(r"\b(?:reduc\w*|decreas\w*)\b", a_lower))
+            b_reduces = bool(re.search(r"\b(?:reduc\w*|decreas\w*)\b", b_lower))
+            if (a_increases and b_reduces) or (b_increases and a_reduces):
+                return True
+
+        # Required MFA versus disabling MFA requires authentication context
+        # on both sides, not merely "mandatory" and "disable" anywhere.
+        auth_context = re.compile(
+            r"\b(?:mfa|2fa|multi[- ]factor|multifactor|two[- ]factor|"
+            r"two[- ]step|second[- ]factor|second login verification)\b"
+        )
+        a_auth = bool(auth_context.search(a_lower))
+        b_auth = bool(auth_context.search(b_lower))
+        a_required = bool(re.search(r"\b(?:mandatory|required|must)\b", a_lower))
+        b_required = bool(re.search(r"\b(?:mandatory|required|must)\b", b_lower))
+        a_disabled = bool(re.search(
+            r"\b(?:disable|turn off|deactivate|remove)\b", a_lower
+        ))
+        b_disabled = bool(re.search(
+            r"\b(?:disable|turn off|deactivate|remove)\b", b_lower
+        ))
+
+        if a_auth and b_auth and (
+            (a_required and b_disabled) or (b_required and a_disabled)
+        ):
+            return True
+
         # 1. Direct opposite pairs
         opposite_pairs = [
             ("approve", "deny"),
@@ -1038,6 +1163,7 @@ class CacheOrchestrator:
             ("require", "permit"),
             ("complex", "simple"),
             ("complex", "basic"),
+            # Additional polarity conflicts found by regression evaluation.
         ]
         for w1, w2 in opposite_pairs:
             if (

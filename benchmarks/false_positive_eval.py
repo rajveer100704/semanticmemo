@@ -28,6 +28,17 @@ import argparse
 import json
 import sys
 from pathlib import Path
+
+
+def _portable_report_path(path: Path) -> str:
+    """Return a repository-relative path when the file is inside the repo."""
+    resolved = path.resolve()
+    repo_root = Path(__file__).resolve().parents[1]
+    try:
+        return resolved.relative_to(repo_root).as_posix()
+    except ValueError:
+        # Preserve a usable path for explicitly configured external files.
+        return str(resolved)
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -100,8 +111,8 @@ def score_high_stakes(
     blocked = [pair for pair in cosine_fps if not pair["classifier_hit"]]
 
     return {
-        "data_path": str(data_path),
-        "model_path": str(model_path),
+        "data_path": _portable_report_path(data_path),
+        "model_path": _portable_report_path(model_path),
         "model_name": model_path.stem,
         "cosine_threshold": cosine_threshold,
         "classifier_threshold": service.threshold,
