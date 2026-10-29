@@ -32,6 +32,52 @@ Even with perfect semantic equivalence, caching in real-world multi-tenant agent
 
 ---
 
+## Retrieval Quality & Cache Safety Evaluation
+
+SemanticMemo includes offline evaluation tooling for retrieval ranking and
+high-stakes opposite-action prompts. The results below come from small,
+manually curated closed-corpus fixtures, not production traffic.
+
+### Retrieval relevance benchmark
+
+The expanded fixture contains 42 queries (14 canonical queries and 28 paraphrases),
+42 candidate documents, and 14 intent groups. Both methods use the same candidate
+corpus and relevance labels.
+
+| Metric | Sentence Transformer | TF-IDF baseline |
+| :--- | ---: | ---: |
+| Recall@5 | 97.62% | 70.63% |
+| Precision@5 | 58.57% | 42.38% |
+| MRR@10 | 95.63% | 80.10% |
+| Top-1 intent accuracy | 92.86% | 66.67% |
+| Cross-intent top-1 rate | 7.14% | 33.33% |
+
+The Sentence Transformer uses `sentence-transformers/all-MiniLM-L6-v2`.
+TF-IDF is a deterministic lexical reference. These results characterize this fixture
+only; larger, independently labelled datasets and production workloads may differ.
+
+### High-stakes opposite-action evaluation
+
+A separate hand-authored evaluation contains 28 pairs: 12 equivalent pairs and
+16 opposite-action pairs. It compares cosine similarity at threshold `0.90` with
+the equivalence classifier at threshold `0.95`.
+
+| Metric | Cosine baseline | Equivalence classifier |
+| :--- | ---: | ---: |
+| Precision | 33.3% | 60.0% |
+| Recall | 33.3% | 75.0% |
+| F1 | 33.3% | 66.7% |
+| Opposite-action false positives | 8 / 16 | 6 / 16 |
+
+On this fixture, the classifier blocked four dangerous candidate cache hits accepted
+by the cosine baseline. This adversarial evaluation is not a safety certification
+or a guarantee that every conflicting request will be detected.
+
+Regression tests also cover conflicting actions and unrelated prompts that should
+not be treated as opposites.
+
+---
+
 ## Core Architecture & Execution Pipeline
 
 In SemanticMemo 2.0.0, authorization and resource identity are evaluated **before** vector retrieval, and distributed single-flight guarantees strictly one LLM execution across all worker nodes.
@@ -251,7 +297,7 @@ print(f"Total Rows Migrated: {report.total_migrated}")
 
 SemanticMemo 2.0.0 distinguishes between standard GitHub Actions CI and strict live infrastructure certification:
 
-- **GitHub Actions CI:** Runs on Ubuntu across Python 3.11–3.14, validating the complete repository regression suite (243 tests, 0 failures), Ruff linting/formatting, and Pyright strict type checking. External live tests skip cleanly when Docker containers are absent.
+- **GitHub Actions CI:** Checks Python 3.11 through 3.14 with Ruff formatting and lint, Pyright type checking, and automated tests. In release preparation, the local full suite passed 253 tests with 14 skipped; environment-dependent tests may skip when external services are unavailable.
 - **Certified Live Environment:** Validated against real live PostgreSQL 16, Redis 7, Qdrant 1.13.4, and Kafka 3.7.0 instances on Windows using 3 distinct OS processes:
   - **9/9 Core Live Certification Phases:** PASSED
   - **Lightweight Worker Import Safety Test:** PASSED (Asserts zero loading of `torch`, `scipy`, `sklearn`, `sentence_transformers`)

@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.0.1
+
+### Added
+- Offline retrieval relevance benchmarks for canonical queries and paraphrases.
+- Ranking metrics including Recall@K, Precision@K, MRR@K, top-1 intent accuracy,
+  and cross-intent top-1 rate.
+- TF-IDF lexical baseline comparisons against Sentence Transformer retrieval.
+- Portable JSON benchmark reports and regression tests for ranking behavior.
+
+### Changed
+- Refined opposite-action guard checks for refund polarity, legal status, follow-up
+  urgency, risk changes, and MFA requirements.
+- Added precision regressions for unrelated prompts and same-direction refund denials.
+- Updated README evaluation results and clarified their offline dataset limitations.
+
+### Validation
+- Latest verified local full-suite run: 253 passed, 14 skipped.
+- Repository-wide Ruff lint and formatting checks passed during release preparation.
+- GitHub Actions CI passed for the merged retrieval-evaluation change.
+
 ## 2.0.0
 
 Major architecture evolution: SemanticMemo transforms from a single-process semantic cache library into an authorization-aware, resource-versioned, distributed caching plane for enterprise LLM agents.
