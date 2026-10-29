@@ -1,4 +1,4 @@
-﻿import pytest
+import pytest
 
 from semanticmemo.testing.retrieval_metrics import compute_ranking_metrics
 

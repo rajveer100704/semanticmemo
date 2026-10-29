@@ -1,4 +1,4 @@
-﻿"""Ranking metrics for offline retrieval evaluation."""
+"""Ranking metrics for offline retrieval evaluation."""
 
 from collections.abc import Hashable, Sequence, Set
 
@@ -26,21 +26,13 @@ def compute_ranking_metrics(
     relevant_retrieved = len(set(top_recall) & relevant)
 
     first_relevant_rank = next(
-        (
-            rank
-            for rank, item_id in enumerate(ranked_ids[:mrr_k], start=1)
-            if item_id in relevant
-        ),
+        (rank for rank, item_id in enumerate(ranked_ids[:mrr_k], start=1) if item_id in relevant),
         None,
     )
 
     return {
         "recall_at_k": relevant_retrieved / len(relevant),
         "precision_at_k": relevant_retrieved / recall_k,
-        "mrr_at_k": (
-            1.0 / first_relevant_rank
-            if first_relevant_rank is not None
-            else 0.0
-        ),
+        "mrr_at_k": (1.0 / first_relevant_rank if first_relevant_rank is not None else 0.0),
         "first_relevant_rank": first_relevant_rank,
     }

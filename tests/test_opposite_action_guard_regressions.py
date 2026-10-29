@@ -2,7 +2,6 @@ import pytest
 
 from semanticmemo.orchestrator import CacheOrchestrator
 
-
 CONFLICT_CASES = [
     pytest.param(
         "Schedule the patient for an urgent follow-up appointment.",
@@ -99,8 +98,8 @@ def test_opposite_action_guard_allows_safe_paraphrases(
 ) -> None:
     assert run_guard(prompt_a, prompt_b) is False
 
+
 # Additional precision guardrails for opposite-action detection.
-from semanticmemo.orchestrator import CacheOrchestrator
 
 
 def test_same_direction_refund_denials_are_not_opposite_actions():

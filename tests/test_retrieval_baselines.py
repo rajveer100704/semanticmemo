@@ -1,4 +1,4 @@
-﻿import pytest
+import pytest
 
 from semanticmemo.testing.lexical_baseline import fit_tfidf, rank_tfidf
 

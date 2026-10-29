@@ -1023,17 +1023,13 @@ class CacheOrchestrator:
         a_negative_refund = bool(negative_refund_action.search(a_lower))
         b_negative_refund = bool(negative_refund_action.search(b_lower))
         a_affirmative_refund = (
-            bool(positive_refund_action.search(a_lower))
-            and not a_negative_refund
+            bool(positive_refund_action.search(a_lower)) and not a_negative_refund
         )
         b_affirmative_refund = (
-            bool(positive_refund_action.search(b_lower))
-            and not b_negative_refund
+            bool(positive_refund_action.search(b_lower)) and not b_negative_refund
         )
 
-        if (
-            a_negative_refund and b_affirmative_refund
-        ) or (
+        if (a_negative_refund and b_affirmative_refund) or (
             b_negative_refund and a_affirmative_refund
         ):
             return True
@@ -1045,30 +1041,42 @@ class CacheOrchestrator:
         follow_up = re.compile(r"\bfollow[\s-]?up\b")
         urgent = re.compile(r"\burgent\b")
         routine = re.compile(r"\broutine\b")
-        if follow_up.search(a_lower) and follow_up.search(b_lower):
-            if (
-                urgent.search(a_lower) and routine.search(b_lower)
-            ) or (
-                routine.search(a_lower) and urgent.search(b_lower)
-            ):
-                return True
+        if (
+            follow_up.search(a_lower)
+            and follow_up.search(b_lower)
+            and (
+                (urgent.search(a_lower) and routine.search(b_lower))
+                or (routine.search(a_lower) and urgent.search(b_lower))
+            )
+        ):
+            return True
 
         # Legal status: both prompts must mention a shared legal instrument.
         legal_subjects = (
-            "nda", "agreement", "contract", "policy",
-            "license", "licence", "subscription",
+            "nda",
+            "agreement",
+            "contract",
+            "policy",
+            "license",
+            "licence",
+            "subscription",
         )
         shared_legal_subject = any(
-            subject in a_lower and subject in b_lower
-            for subject in legal_subjects
+            subject in a_lower and subject in b_lower for subject in legal_subjects
         )
         active_status = (
-            "in effect", "still active", "remains active",
-            "currently active", "still in force",
+            "in effect",
+            "still active",
+            "remains active",
+            "currently active",
+            "still in force",
         )
         expired_status = (
-            "expired", "has expired", "no longer active",
-            "no longer in force", "terminated",
+            "expired",
+            "has expired",
+            "no longer active",
+            "no longer in force",
+            "terminated",
         )
         a_active = any(term in a_lower for term in active_status)
         b_active = any(term in b_lower for term in active_status)
@@ -1086,16 +1094,16 @@ class CacheOrchestrator:
             r"\b(?:statute of limitations|limitations? period|limitation period)\b"
         )
         passed_status = re.compile(r"\b(?:has |have |had )?passed\b")
-        applies_status = re.compile(
-            r"\b(?:still applies|remains applicable|continues to apply)\b"
-        )
-        if limitation_context.search(a_lower) and limitation_context.search(b_lower):
-            if (
-                passed_status.search(a_lower) and applies_status.search(b_lower)
-            ) or (
-                applies_status.search(a_lower) and passed_status.search(b_lower)
-            ):
-                return True
+        applies_status = re.compile(r"\b(?:still applies|remains applicable|continues to apply)\b")
+        if (
+            limitation_context.search(a_lower)
+            and limitation_context.search(b_lower)
+            and (
+                (passed_status.search(a_lower) and applies_status.search(b_lower))
+                or (applies_status.search(a_lower) and passed_status.search(b_lower))
+            )
+        ):
+            return True
 
         # Increasing versus reducing risk only conflicts on a shared risk topic.
         if "risk" in a_lower and "risk" in b_lower:
@@ -1116,16 +1124,10 @@ class CacheOrchestrator:
         b_auth = bool(auth_context.search(b_lower))
         a_required = bool(re.search(r"\b(?:mandatory|required|must)\b", a_lower))
         b_required = bool(re.search(r"\b(?:mandatory|required|must)\b", b_lower))
-        a_disabled = bool(re.search(
-            r"\b(?:disable|turn off|deactivate|remove)\b", a_lower
-        ))
-        b_disabled = bool(re.search(
-            r"\b(?:disable|turn off|deactivate|remove)\b", b_lower
-        ))
+        a_disabled = bool(re.search(r"\b(?:disable|turn off|deactivate|remove)\b", a_lower))
+        b_disabled = bool(re.search(r"\b(?:disable|turn off|deactivate|remove)\b", b_lower))
 
-        if a_auth and b_auth and (
-            (a_required and b_disabled) or (b_required and a_disabled)
-        ):
+        if a_auth and b_auth and ((a_required and b_disabled) or (b_required and a_disabled)):
             return True
 
         # 1. Direct opposite pairs

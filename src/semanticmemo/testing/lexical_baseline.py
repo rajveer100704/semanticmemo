@@ -1,4 +1,4 @@
-﻿"""Small, dependency-light TF-IDF baseline for offline retrieval evaluation."""
+"""Small, dependency-light TF-IDF baseline for offline retrieval evaluation."""
 
 from __future__ import annotations
 
@@ -17,10 +17,7 @@ def tfidf_vector(
 ) -> dict[str, float]:
     """Create an L2-normalized TF-IDF vector."""
     counts = Counter(_TOKEN_PATTERN.findall(text.casefold()))
-    weights = {
-        token: float(count) * idf.get(token, default_idf)
-        for token, count in counts.items()
-    }
+    weights = {token: float(count) * idf.get(token, default_idf) for token, count in counts.items()}
     norm = math.sqrt(sum(weight * weight for weight in weights.values()))
     if norm == 0:
         return {}
@@ -36,10 +33,7 @@ def fit_tfidf(
     if any(not document.strip() for document in documents):
         raise ValueError("Documents must not be empty")
 
-    tokenized = [
-        _TOKEN_PATTERN.findall(document.casefold())
-        for document in documents
-    ]
+    tokenized = [_TOKEN_PATTERN.findall(document.casefold()) for document in documents]
     document_frequency: Counter[str] = Counter()
 
     for tokens in tokenized:
@@ -52,10 +46,7 @@ def fit_tfidf(
     }
     default_idf = math.log(1 + document_count) + 1.0
 
-    vectors = [
-        tfidf_vector(document, idf, default_idf)
-        for document in documents
-    ]
+    vectors = [tfidf_vector(document, idf, default_idf) for document in documents]
     return vectors, idf, default_idf
 
 
@@ -75,10 +66,7 @@ def rank_tfidf(
 
     query_vector = tfidf_vector(query, idf, default_idf)
     scores = [
-        sum(
-            weight * document_vector.get(token, 0.0)
-            for token, weight in query_vector.items()
-        )
+        sum(weight * document_vector.get(token, 0.0) for token, weight in query_vector.items())
         for document_vector in document_vectors
     ]
 
