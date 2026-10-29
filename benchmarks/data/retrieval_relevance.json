@@ -1,0 +1,147 @@
+{
+  "dataset_name": "semanticmemo_retrieval_relevance_v1",
+  "dataset_type": "manually_curated_retrieval_evaluation",
+  "labeling_policy": "Each query is relevant to all candidate documents in its assigned intent group. Documents in other groups are non-relevant within this benchmark's closed candidate set. This is a small evaluation fixture, not production traffic.",
+  "groups": [
+    {
+      "id": "order_status",
+      "domain": "customer_support",
+      "query": "Can you estimate when the item I bought will arrive?",
+      "candidates": [
+        "Track the current delivery status of an online order",
+        "Check shipment progress for a recent purchase",
+        "Find the latest shipping update for my package"
+      ]
+    },
+    {
+      "id": "password_reset",
+      "domain": "customer_support",
+      "query": "I cannot sign in because I forgot my login credentials.",
+      "candidates": [
+        "Reset the password for my account",
+        "Recover access after forgetting a login password",
+        "Change the password associated with my user profile"
+      ]
+    },
+    {
+      "id": "subscription_cancel",
+      "domain": "customer_support",
+      "query": "Stop my paid membership from renewing next month.",
+      "candidates": [
+        "Cancel my subscription before the next billing cycle",
+        "Terminate the recurring membership payment",
+        "Turn off automatic renewal for my subscription"
+      ]
+    },
+    {
+      "id": "refund_approve",
+      "domain": "customer_support",
+      "query": "Authorize reimbursement for the customer's returned item.",
+      "candidates": [
+        "Approve the customer's refund request",
+        "Confirm that a refund should be issued to the customer",
+        "Authorize reimbursement for this customer"
+      ]
+    },
+    {
+      "id": "refund_deny",
+      "domain": "customer_support",
+      "query": "Reject the customer's request to get their money back.",
+      "candidates": [
+        "Deny the customer's refund request",
+        "Reject the requested customer refund",
+        "Do not authorize reimbursement for this customer"
+      ]
+    },
+    {
+      "id": "bank_balance",
+      "domain": "finance",
+      "query": "How much money is currently available in my checking account?",
+      "candidates": [
+        "Show the current balance of my bank account",
+        "Check how much money remains in checking",
+        "Retrieve my latest available account balance"
+      ]
+    },
+    {
+      "id": "card_transactions",
+      "domain": "finance",
+      "query": "Show me the latest purchases charged to my credit card.",
+      "candidates": [
+        "List recent credit card transactions",
+        "Review the latest charges posted to my card",
+        "Display my credit card purchase history"
+      ]
+    },
+    {
+      "id": "transfer_savings",
+      "domain": "finance",
+      "query": "Move fifty dollars from my checking account into savings.",
+      "candidates": [
+        "Transfer 50 dollars from checking to savings",
+        "Send $50 into my savings account",
+        "Move fifty dollars between my checking and savings accounts"
+      ]
+    },
+    {
+      "id": "enable_mfa",
+      "domain": "security",
+      "query": "Require staff to verify their identity with a second factor at login.",
+      "candidates": [
+        "Enable multi-factor authentication for employee accounts",
+        "Require MFA when users sign in",
+        "Configure an additional authentication factor for staff"
+      ]
+    },
+    {
+      "id": "disable_mfa",
+      "domain": "security",
+      "query": "Remove the additional identity verification requirement for employee logins.",
+      "candidates": [
+        "Disable multi-factor authentication for employee accounts",
+        "Remove the MFA requirement when users sign in",
+        "Turn off the additional authentication factor for staff"
+      ]
+    },
+    {
+      "id": "ssh_allow",
+      "domain": "security",
+      "query": "Permit secure-shell connections to the production machine.",
+      "candidates": [
+        "Allow SSH access to the production server",
+        "Enable secure shell login on the production host",
+        "Permit SSH connections to the production machine"
+      ]
+    },
+    {
+      "id": "ssh_block",
+      "domain": "security",
+      "query": "Prevent secure-shell connections from reaching the production host.",
+      "candidates": [
+        "Block SSH access to the production server",
+        "Disable secure shell login on the production host",
+        "Deny SSH connections to the production machine"
+      ]
+    },
+    {
+      "id": "meeting_schedule",
+      "domain": "productivity",
+      "query": "Find a time when everyone on the team is available to meet.",
+      "candidates": [
+        "Schedule a meeting at a time that works for the whole team",
+        "Find a shared availability window for a group meeting",
+        "Coordinate a calendar slot that suits all attendees"
+      ]
+    },
+    {
+      "id": "email_summary",
+      "domain": "productivity",
+      "query": "Give me the important takeaways from this email conversation.",
+      "candidates": [
+        "Summarize the key points in this email thread",
+        "Extract the main decisions from the email exchange",
+        "Provide a concise overview of this email conversation"
+      ]
+    }
+  ]
+}

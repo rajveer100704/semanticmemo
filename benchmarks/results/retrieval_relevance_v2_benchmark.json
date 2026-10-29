@@ -1,0 +1,1289 @@
+{
+  "benchmark": "semanticmemo_retrieval_relevance_v2",
+  "dataset_name": "semanticmemo_retrieval_relevance_v2",
+  "dataset_type": "manually_curated_expanded_retrieval_evaluation",
+  "labeling_policy": "Each query is relevant to all candidate documents in its assigned intent group. Documents in other groups are non-relevant within this benchmark's closed candidate set. This is a small evaluation fixture, not production traffic.",
+  "evaluation_mode": "sentence_transformer_embeddings",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "retriever": "SemanticMemo EmbeddingService + InMemoryVectorIndex",
+  "scope": "global; pipeline_version=v2",
+  "intent_group_count": 14,
+  "canonical_query_count": 14,
+  "paraphrase_count": 28,
+  "query_count": 42,
+  "index_size": 42,
+  "search_k": 10,
+  "recall_k": 5,
+  "mrr_k": 10,
+  "summary": {
+    "recall_at_5": 0.97619,
+    "precision_at_5": 0.585714,
+    "mrr_at_10": 0.956349,
+    "top1_intent_accuracy": 0.928571,
+    "cross_intent_top1_rate": 0.071429,
+    "mean_query_latency_ms": 19.45,
+    "p95_query_latency_ms": 25.303
+  },
+  "queries": [
+    {
+      "query_id": "order_status",
+      "intent_id": "order_status",
+      "domain": "customer_support",
+      "query": "Can you estimate when the item I bought will arrive?",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "order_status",
+      "top1_intent_match": true,
+      "query_latency_ms": 20.645,
+      "top_results": [
+        {
+          "intent_group": "order_status",
+          "text": "Track the current delivery status of an online order",
+          "cosine_score": 0.491689
+        },
+        {
+          "intent_group": "order_status",
+          "text": "Check shipment progress for a recent purchase",
+          "cosine_score": 0.475893
+        },
+        {
+          "intent_group": "order_status",
+          "text": "Find the latest shipping update for my package",
+          "cosine_score": 0.425016
+        }
+      ]
+    },
+    {
+      "query_id": "password_reset",
+      "intent_id": "password_reset",
+      "domain": "customer_support",
+      "query": "I cannot sign in because I forgot my login credentials.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "password_reset",
+      "top1_intent_match": true,
+      "query_latency_ms": 21.224,
+      "top_results": [
+        {
+          "intent_group": "password_reset",
+          "text": "Recover access after forgetting a login password",
+          "cosine_score": 0.644876
+        },
+        {
+          "intent_group": "password_reset",
+          "text": "Reset the password for my account",
+          "cosine_score": 0.618604
+        },
+        {
+          "intent_group": "password_reset",
+          "text": "Change the password associated with my user profile",
+          "cosine_score": 0.483863
+        }
+      ]
+    },
+    {
+      "query_id": "subscription_cancel",
+      "intent_id": "subscription_cancel",
+      "domain": "customer_support",
+      "query": "Stop my paid membership from renewing next month.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "subscription_cancel",
+      "top1_intent_match": true,
+      "query_latency_ms": 25.366,
+      "top_results": [
+        {
+          "intent_group": "subscription_cancel",
+          "text": "Terminate the recurring membership payment",
+          "cosine_score": 0.686168
+        },
+        {
+          "intent_group": "subscription_cancel",
+          "text": "Turn off automatic renewal for my subscription",
+          "cosine_score": 0.677145
+        },
+        {
+          "intent_group": "subscription_cancel",
+          "text": "Cancel my subscription before the next billing cycle",
+          "cosine_score": 0.626936
+        }
+      ]
+    },
+    {
+      "query_id": "refund_approve",
+      "intent_id": "refund_approve",
+      "domain": "customer_support",
+      "query": "Authorize reimbursement for the customer's returned item.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "refund_approve",
+      "top1_intent_match": true,
+      "query_latency_ms": 25.92,
+      "top_results": [
+        {
+          "intent_group": "refund_approve",
+          "text": "Authorize reimbursement for this customer",
+          "cosine_score": 0.810259
+        },
+        {
+          "intent_group": "refund_deny",
+          "text": "Do not authorize reimbursement for this customer",
+          "cosine_score": 0.731858
+        },
+        {
+          "intent_group": "refund_approve",
+          "text": "Approve the customer's refund request",
+          "cosine_score": 0.638543
+        }
+      ]
+    },
+    {
+      "query_id": "refund_deny",
+      "intent_id": "refund_deny",
+      "domain": "customer_support",
+      "query": "Reject the customer's request to get their money back.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "refund_deny",
+      "top1_intent_match": true,
+      "query_latency_ms": 26.01,
+      "top_results": [
+        {
+          "intent_group": "refund_deny",
+          "text": "Reject the requested customer refund",
+          "cosine_score": 0.812835
+        },
+        {
+          "intent_group": "refund_deny",
+          "text": "Deny the customer's refund request",
+          "cosine_score": 0.770224
+        },
+        {
+          "intent_group": "refund_approve",
+          "text": "Approve the customer's refund request",
+          "cosine_score": 0.690235
+        }
+      ]
+    },
+    {
+      "query_id": "bank_balance",
+      "intent_id": "bank_balance",
+      "domain": "finance",
+      "query": "How much money is currently available in my checking account?",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "bank_balance",
+      "top1_intent_match": true,
+      "query_latency_ms": 20.715,
+      "top_results": [
+        {
+          "intent_group": "bank_balance",
+          "text": "Check how much money remains in checking",
+          "cosine_score": 0.690139
+        },
+        {
+          "intent_group": "bank_balance",
+          "text": "Show the current balance of my bank account",
+          "cosine_score": 0.529066
+        },
+        {
+          "intent_group": "bank_balance",
+          "text": "Retrieve my latest available account balance",
+          "cosine_score": 0.47716
+        }
+      ]
+    },
+    {
+      "query_id": "card_transactions",
+      "intent_id": "card_transactions",
+      "domain": "finance",
+      "query": "Show me the latest purchases charged to my credit card.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "card_transactions",
+      "top1_intent_match": true,
+      "query_latency_ms": 20.291,
+      "top_results": [
+        {
+          "intent_group": "card_transactions",
+          "text": "Display my credit card purchase history",
+          "cosine_score": 0.738621
+        },
+        {
+          "intent_group": "card_transactions",
+          "text": "List recent credit card transactions",
+          "cosine_score": 0.684356
+        },
+        {
+          "intent_group": "card_transactions",
+          "text": "Review the latest charges posted to my card",
+          "cosine_score": 0.650508
+        }
+      ]
+    },
+    {
+      "query_id": "transfer_savings",
+      "intent_id": "transfer_savings",
+      "domain": "finance",
+      "query": "Move fifty dollars from my checking account into savings.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "transfer_savings",
+      "top1_intent_match": true,
+      "query_latency_ms": 19.335,
+      "top_results": [
+        {
+          "intent_group": "transfer_savings",
+          "text": "Move fifty dollars between my checking and savings accounts",
+          "cosine_score": 0.910715
+        },
+        {
+          "intent_group": "transfer_savings",
+          "text": "Transfer 50 dollars from checking to savings",
+          "cosine_score": 0.822743
+        },
+        {
+          "intent_group": "transfer_savings",
+          "text": "Send $50 into my savings account",
+          "cosine_score": 0.798609
+        }
+      ]
+    },
+    {
+      "query_id": "enable_mfa",
+      "intent_id": "enable_mfa",
+      "domain": "security",
+      "query": "Require staff to verify their identity with a second factor at login.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "enable_mfa",
+      "top1_intent_match": true,
+      "query_latency_ms": 21.394,
+      "top_results": [
+        {
+          "intent_group": "enable_mfa",
+          "text": "Configure an additional authentication factor for staff",
+          "cosine_score": 0.75194
+        },
+        {
+          "intent_group": "disable_mfa",
+          "text": "Turn off the additional authentication factor for staff",
+          "cosine_score": 0.735194
+        },
+        {
+          "intent_group": "enable_mfa",
+          "text": "Enable multi-factor authentication for employee accounts",
+          "cosine_score": 0.613696
+        }
+      ]
+    },
+    {
+      "query_id": "disable_mfa",
+      "intent_id": "disable_mfa",
+      "domain": "security",
+      "query": "Remove the additional identity verification requirement for employee logins.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "disable_mfa",
+      "top1_intent_match": true,
+      "query_latency_ms": 19.826,
+      "top_results": [
+        {
+          "intent_group": "disable_mfa",
+          "text": "Turn off the additional authentication factor for staff",
+          "cosine_score": 0.65367
+        },
+        {
+          "intent_group": "disable_mfa",
+          "text": "Disable multi-factor authentication for employee accounts",
+          "cosine_score": 0.639813
+        },
+        {
+          "intent_group": "disable_mfa",
+          "text": "Remove the MFA requirement when users sign in",
+          "cosine_score": 0.609407
+        }
+      ]
+    },
+    {
+      "query_id": "ssh_allow",
+      "intent_id": "ssh_allow",
+      "domain": "security",
+      "query": "Permit secure-shell connections to the production machine.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "ssh_allow",
+      "top1_intent_match": true,
+      "query_latency_ms": 19.446,
+      "top_results": [
+        {
+          "intent_group": "ssh_allow",
+          "text": "Enable secure shell login on the production host",
+          "cosine_score": 0.730297
+        },
+        {
+          "intent_group": "ssh_allow",
+          "text": "Permit SSH connections to the production machine",
+          "cosine_score": 0.689225
+        },
+        {
+          "intent_group": "ssh_block",
+          "text": "Disable secure shell login on the production host",
+          "cosine_score": 0.685836
+        }
+      ]
+    },
+    {
+      "query_id": "ssh_block",
+      "intent_id": "ssh_block",
+      "domain": "security",
+      "query": "Prevent secure-shell connections from reaching the production host.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "ssh_block",
+      "top1_intent_match": true,
+      "query_latency_ms": 15.948,
+      "top_results": [
+        {
+          "intent_group": "ssh_block",
+          "text": "Disable secure shell login on the production host",
+          "cosine_score": 0.799778
+        },
+        {
+          "intent_group": "ssh_allow",
+          "text": "Enable secure shell login on the production host",
+          "cosine_score": 0.77359
+        },
+        {
+          "intent_group": "ssh_block",
+          "text": "Deny SSH connections to the production machine",
+          "cosine_score": 0.643928
+        }
+      ]
+    },
+    {
+      "query_id": "meeting_schedule",
+      "intent_id": "meeting_schedule",
+      "domain": "productivity",
+      "query": "Find a time when everyone on the team is available to meet.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "meeting_schedule",
+      "top1_intent_match": true,
+      "query_latency_ms": 17.186,
+      "top_results": [
+        {
+          "intent_group": "meeting_schedule",
+          "text": "Schedule a meeting at a time that works for the whole team",
+          "cosine_score": 0.689123
+        },
+        {
+          "intent_group": "meeting_schedule",
+          "text": "Find a shared availability window for a group meeting",
+          "cosine_score": 0.482668
+        },
+        {
+          "intent_group": "meeting_schedule",
+          "text": "Coordinate a calendar slot that suits all attendees",
+          "cosine_score": 0.338233
+        }
+      ]
+    },
+    {
+      "query_id": "email_summary",
+      "intent_id": "email_summary",
+      "domain": "productivity",
+      "query": "Give me the important takeaways from this email conversation.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "email_summary",
+      "top1_intent_match": true,
+      "query_latency_ms": 17.157,
+      "top_results": [
+        {
+          "intent_group": "email_summary",
+          "text": "Provide a concise overview of this email conversation",
+          "cosine_score": 0.659382
+        },
+        {
+          "intent_group": "email_summary",
+          "text": "Extract the main decisions from the email exchange",
+          "cosine_score": 0.482494
+        },
+        {
+          "intent_group": "email_summary",
+          "text": "Summarize the key points in this email thread",
+          "cosine_score": 0.446221
+        }
+      ]
+    },
+    {
+      "query_id": "order_status_variant_1",
+      "intent_id": "order_status",
+      "domain": "customer_support",
+      "query": "When should the package I ordered reach me?",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "order_status",
+      "top1_intent_match": true,
+      "query_latency_ms": 17.223,
+      "top_results": [
+        {
+          "intent_group": "order_status",
+          "text": "Find the latest shipping update for my package",
+          "cosine_score": 0.493517
+        },
+        {
+          "intent_group": "order_status",
+          "text": "Track the current delivery status of an online order",
+          "cosine_score": 0.457997
+        },
+        {
+          "intent_group": "order_status",
+          "text": "Check shipment progress for a recent purchase",
+          "cosine_score": 0.399407
+        }
+      ]
+    },
+    {
+      "query_id": "order_status_variant_2",
+      "intent_id": "order_status",
+      "domain": "customer_support",
+      "query": "Can you tell me the expected delivery date for my purchase?",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "order_status",
+      "top1_intent_match": true,
+      "query_latency_ms": 18.578,
+      "top_results": [
+        {
+          "intent_group": "order_status",
+          "text": "Track the current delivery status of an online order",
+          "cosine_score": 0.519354
+        },
+        {
+          "intent_group": "order_status",
+          "text": "Find the latest shipping update for my package",
+          "cosine_score": 0.499326
+        },
+        {
+          "intent_group": "order_status",
+          "text": "Check shipment progress for a recent purchase",
+          "cosine_score": 0.461097
+        }
+      ]
+    },
+    {
+      "query_id": "password_reset_variant_1",
+      "intent_id": "password_reset",
+      "domain": "customer_support",
+      "query": "I lost the credentials needed to access my profile. How can I regain entry?",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "password_reset",
+      "top1_intent_match": true,
+      "query_latency_ms": 18.733,
+      "top_results": [
+        {
+          "intent_group": "password_reset",
+          "text": "Recover access after forgetting a login password",
+          "cosine_score": 0.604492
+        },
+        {
+          "intent_group": "password_reset",
+          "text": "Change the password associated with my user profile",
+          "cosine_score": 0.552997
+        },
+        {
+          "intent_group": "password_reset",
+          "text": "Reset the password for my account",
+          "cosine_score": 0.543831
+        }
+      ]
+    },
+    {
+      "query_id": "password_reset_variant_2",
+      "intent_id": "password_reset",
+      "domain": "customer_support",
+      "query": "Help me recover account access after forgetting my login password.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "password_reset",
+      "top1_intent_match": true,
+      "query_latency_ms": 17.531,
+      "top_results": [
+        {
+          "intent_group": "password_reset",
+          "text": "Recover access after forgetting a login password",
+          "cosine_score": 0.920224
+        },
+        {
+          "intent_group": "password_reset",
+          "text": "Reset the password for my account",
+          "cosine_score": 0.718764
+        },
+        {
+          "intent_group": "password_reset",
+          "text": "Change the password associated with my user profile",
+          "cosine_score": 0.500921
+        }
+      ]
+    },
+    {
+      "query_id": "subscription_cancel_variant_1",
+      "intent_id": "subscription_cancel",
+      "domain": "customer_support",
+      "query": "I don't want to be billed for this membership again.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "subscription_cancel",
+      "top1_intent_match": true,
+      "query_latency_ms": 16.152,
+      "top_results": [
+        {
+          "intent_group": "subscription_cancel",
+          "text": "Terminate the recurring membership payment",
+          "cosine_score": 0.60598
+        },
+        {
+          "intent_group": "subscription_cancel",
+          "text": "Cancel my subscription before the next billing cycle",
+          "cosine_score": 0.571512
+        },
+        {
+          "intent_group": "subscription_cancel",
+          "text": "Turn off automatic renewal for my subscription",
+          "cosine_score": 0.532051
+        }
+      ]
+    },
+    {
+      "query_id": "subscription_cancel_variant_2",
+      "intent_id": "subscription_cancel",
+      "domain": "customer_support",
+      "query": "Prevent my plan from charging me in the next billing cycle.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "subscription_cancel",
+      "top1_intent_match": true,
+      "query_latency_ms": 17.098,
+      "top_results": [
+        {
+          "intent_group": "subscription_cancel",
+          "text": "Cancel my subscription before the next billing cycle",
+          "cosine_score": 0.658877
+        },
+        {
+          "intent_group": "subscription_cancel",
+          "text": "Turn off automatic renewal for my subscription",
+          "cosine_score": 0.514325
+        },
+        {
+          "intent_group": "refund_deny",
+          "text": "Do not authorize reimbursement for this customer",
+          "cosine_score": 0.460315
+        }
+      ]
+    },
+    {
+      "query_id": "refund_approve_variant_1",
+      "intent_id": "refund_approve",
+      "domain": "customer_support",
+      "query": "The returned product qualifies. Process the customer's money back.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "refund_approve",
+      "top1_intent_match": true,
+      "query_latency_ms": 20.274,
+      "top_results": [
+        {
+          "intent_group": "refund_approve",
+          "text": "Confirm that a refund should be issued to the customer",
+          "cosine_score": 0.569018
+        },
+        {
+          "intent_group": "refund_approve",
+          "text": "Approve the customer's refund request",
+          "cosine_score": 0.55411
+        },
+        {
+          "intent_group": "refund_deny",
+          "text": "Reject the requested customer refund",
+          "cosine_score": 0.544696
+        }
+      ]
+    },
+    {
+      "query_id": "refund_approve_variant_2",
+      "intent_id": "refund_approve",
+      "domain": "customer_support",
+      "query": "Confirm that reimbursement should proceed for the returned purchase.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "refund_approve",
+      "top1_intent_match": true,
+      "query_latency_ms": 18.961,
+      "top_results": [
+        {
+          "intent_group": "refund_approve",
+          "text": "Confirm that a refund should be issued to the customer",
+          "cosine_score": 0.657994
+        },
+        {
+          "intent_group": "refund_approve",
+          "text": "Authorize reimbursement for this customer",
+          "cosine_score": 0.589077
+        },
+        {
+          "intent_group": "refund_approve",
+          "text": "Approve the customer's refund request",
+          "cosine_score": 0.579551
+        }
+      ]
+    },
+    {
+      "query_id": "refund_deny_variant_1",
+      "intent_id": "refund_deny",
+      "domain": "customer_support",
+      "query": "Do not return the customer's payment for this item.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 0.5,
+      "first_relevant_rank": 2,
+      "top1_intent_group": "refund_approve",
+      "top1_intent_match": false,
+      "query_latency_ms": 16.915,
+      "top_results": [
+        {
+          "intent_group": "refund_approve",
+          "text": "Confirm that a refund should be issued to the customer",
+          "cosine_score": 0.633925
+        },
+        {
+          "intent_group": "refund_deny",
+          "text": "Do not authorize reimbursement for this customer",
+          "cosine_score": 0.621464
+        },
+        {
+          "intent_group": "refund_deny",
+          "text": "Reject the requested customer refund",
+          "cosine_score": 0.619838
+        }
+      ]
+    },
+    {
+      "query_id": "refund_deny_variant_2",
+      "intent_id": "refund_deny",
+      "domain": "customer_support",
+      "query": "The reimbursement request should be declined, not processed.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "refund_deny",
+      "top1_intent_match": true,
+      "query_latency_ms": 20.923,
+      "top_results": [
+        {
+          "intent_group": "refund_deny",
+          "text": "Do not authorize reimbursement for this customer",
+          "cosine_score": 0.641332
+        },
+        {
+          "intent_group": "refund_deny",
+          "text": "Reject the requested customer refund",
+          "cosine_score": 0.563499
+        },
+        {
+          "intent_group": "refund_deny",
+          "text": "Deny the customer's refund request",
+          "cosine_score": 0.539998
+        }
+      ]
+    },
+    {
+      "query_id": "bank_balance_variant_1",
+      "intent_id": "bank_balance",
+      "domain": "finance",
+      "query": "What funds do I currently have available in checking?",
+      "recall_at_5": 0.666667,
+      "precision_at_5": 0.4,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "bank_balance",
+      "top1_intent_match": true,
+      "query_latency_ms": 21.066,
+      "top_results": [
+        {
+          "intent_group": "bank_balance",
+          "text": "Check how much money remains in checking",
+          "cosine_score": 0.588195
+        },
+        {
+          "intent_group": "transfer_savings",
+          "text": "Transfer 50 dollars from checking to savings",
+          "cosine_score": 0.425333
+        },
+        {
+          "intent_group": "transfer_savings",
+          "text": "Move fifty dollars between my checking and savings accounts",
+          "cosine_score": 0.379993
+        }
+      ]
+    },
+    {
+      "query_id": "bank_balance_variant_2",
+      "intent_id": "bank_balance",
+      "domain": "finance",
+      "query": "Tell me the money remaining in my current account.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "bank_balance",
+      "top1_intent_match": true,
+      "query_latency_ms": 19.116,
+      "top_results": [
+        {
+          "intent_group": "bank_balance",
+          "text": "Show the current balance of my bank account",
+          "cosine_score": 0.668839
+        },
+        {
+          "intent_group": "bank_balance",
+          "text": "Check how much money remains in checking",
+          "cosine_score": 0.592196
+        },
+        {
+          "intent_group": "bank_balance",
+          "text": "Retrieve my latest available account balance",
+          "cosine_score": 0.584111
+        }
+      ]
+    },
+    {
+      "query_id": "card_transactions_variant_1",
+      "intent_id": "card_transactions",
+      "domain": "finance",
+      "query": "Which transactions have recently appeared on my credit statement?",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "card_transactions",
+      "top1_intent_match": true,
+      "query_latency_ms": 20.04,
+      "top_results": [
+        {
+          "intent_group": "card_transactions",
+          "text": "List recent credit card transactions",
+          "cosine_score": 0.727044
+        },
+        {
+          "intent_group": "card_transactions",
+          "text": "Display my credit card purchase history",
+          "cosine_score": 0.586981
+        },
+        {
+          "intent_group": "card_transactions",
+          "text": "Review the latest charges posted to my card",
+          "cosine_score": 0.356397
+        }
+      ]
+    },
+    {
+      "query_id": "card_transactions_variant_2",
+      "intent_id": "card_transactions",
+      "domain": "finance",
+      "query": "Show purchases that have posted to my card account lately.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "card_transactions",
+      "top1_intent_match": true,
+      "query_latency_ms": 19.698,
+      "top_results": [
+        {
+          "intent_group": "card_transactions",
+          "text": "Display my credit card purchase history",
+          "cosine_score": 0.761205
+        },
+        {
+          "intent_group": "card_transactions",
+          "text": "List recent credit card transactions",
+          "cosine_score": 0.714232
+        },
+        {
+          "intent_group": "card_transactions",
+          "text": "Review the latest charges posted to my card",
+          "cosine_score": 0.568579
+        }
+      ]
+    },
+    {
+      "query_id": "transfer_savings_variant_1",
+      "intent_id": "transfer_savings",
+      "domain": "finance",
+      "query": "Shift  out of checking and into my savings balance.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "transfer_savings",
+      "top1_intent_match": true,
+      "query_latency_ms": 19.221,
+      "top_results": [
+        {
+          "intent_group": "transfer_savings",
+          "text": "Move fifty dollars between my checking and savings accounts",
+          "cosine_score": 0.613962
+        },
+        {
+          "intent_group": "transfer_savings",
+          "text": "Transfer 50 dollars from checking to savings",
+          "cosine_score": 0.532606
+        },
+        {
+          "intent_group": "transfer_savings",
+          "text": "Send $50 into my savings account",
+          "cosine_score": 0.499318
+        }
+      ]
+    },
+    {
+      "query_id": "transfer_savings_variant_2",
+      "intent_id": "transfer_savings",
+      "domain": "finance",
+      "query": "Move fifty dollars to savings, taking it from checking.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "transfer_savings",
+      "top1_intent_match": true,
+      "query_latency_ms": 19.314,
+      "top_results": [
+        {
+          "intent_group": "transfer_savings",
+          "text": "Move fifty dollars between my checking and savings accounts",
+          "cosine_score": 0.831715
+        },
+        {
+          "intent_group": "transfer_savings",
+          "text": "Transfer 50 dollars from checking to savings",
+          "cosine_score": 0.801816
+        },
+        {
+          "intent_group": "transfer_savings",
+          "text": "Send $50 into my savings account",
+          "cosine_score": 0.700821
+        }
+      ]
+    },
+    {
+      "query_id": "enable_mfa_variant_1",
+      "intent_id": "enable_mfa",
+      "domain": "security",
+      "query": "Make a second login verification step mandatory for employees.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 0.333333,
+      "first_relevant_rank": 3,
+      "top1_intent_group": "disable_mfa",
+      "top1_intent_match": false,
+      "query_latency_ms": 24.102,
+      "top_results": [
+        {
+          "intent_group": "disable_mfa",
+          "text": "Disable multi-factor authentication for employee accounts",
+          "cosine_score": 0.617404
+        },
+        {
+          "intent_group": "disable_mfa",
+          "text": "Turn off the additional authentication factor for staff",
+          "cosine_score": 0.613508
+        },
+        {
+          "intent_group": "enable_mfa",
+          "text": "Configure an additional authentication factor for staff",
+          "cosine_score": 0.578995
+        }
+      ]
+    },
+    {
+      "query_id": "enable_mfa_variant_2",
+      "intent_id": "enable_mfa",
+      "domain": "security",
+      "query": "Turn on two-step sign-in checks for every staff account.",
+      "recall_at_5": 0.666667,
+      "precision_at_5": 0.4,
+      "mrr_at_10": 0.333333,
+      "first_relevant_rank": 3,
+      "top1_intent_group": "disable_mfa",
+      "top1_intent_match": false,
+      "query_latency_ms": 21.083,
+      "top_results": [
+        {
+          "intent_group": "disable_mfa",
+          "text": "Turn off the additional authentication factor for staff",
+          "cosine_score": 0.602724
+        },
+        {
+          "intent_group": "disable_mfa",
+          "text": "Disable multi-factor authentication for employee accounts",
+          "cosine_score": 0.567004
+        },
+        {
+          "intent_group": "enable_mfa",
+          "text": "Configure an additional authentication factor for staff",
+          "cosine_score": 0.558937
+        }
+      ]
+    },
+    {
+      "query_id": "disable_mfa_variant_1",
+      "intent_id": "disable_mfa",
+      "domain": "security",
+      "query": "Let employees sign in without the extra verification step.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "disable_mfa",
+      "top1_intent_match": true,
+      "query_latency_ms": 19.127,
+      "top_results": [
+        {
+          "intent_group": "disable_mfa",
+          "text": "Turn off the additional authentication factor for staff",
+          "cosine_score": 0.6543
+        },
+        {
+          "intent_group": "disable_mfa",
+          "text": "Disable multi-factor authentication for employee accounts",
+          "cosine_score": 0.63003
+        },
+        {
+          "intent_group": "disable_mfa",
+          "text": "Remove the MFA requirement when users sign in",
+          "cosine_score": 0.614386
+        }
+      ]
+    },
+    {
+      "query_id": "disable_mfa_variant_2",
+      "intent_id": "disable_mfa",
+      "domain": "security",
+      "query": "Remove the second-factor login rule from staff accounts.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "disable_mfa",
+      "top1_intent_match": true,
+      "query_latency_ms": 18.669,
+      "top_results": [
+        {
+          "intent_group": "disable_mfa",
+          "text": "Turn off the additional authentication factor for staff",
+          "cosine_score": 0.705319
+        },
+        {
+          "intent_group": "disable_mfa",
+          "text": "Disable multi-factor authentication for employee accounts",
+          "cosine_score": 0.632443
+        },
+        {
+          "intent_group": "enable_mfa",
+          "text": "Configure an additional authentication factor for staff",
+          "cosine_score": 0.623624
+        }
+      ]
+    },
+    {
+      "query_id": "ssh_allow_variant_1",
+      "intent_id": "ssh_allow",
+      "domain": "security",
+      "query": "Open remote SSH login to the production host.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "ssh_allow",
+      "top1_intent_match": true,
+      "query_latency_ms": 18.499,
+      "top_results": [
+        {
+          "intent_group": "ssh_allow",
+          "text": "Allow SSH access to the production server",
+          "cosine_score": 0.734008
+        },
+        {
+          "intent_group": "ssh_block",
+          "text": "Block SSH access to the production server",
+          "cosine_score": 0.659051
+        },
+        {
+          "intent_group": "ssh_allow",
+          "text": "Permit SSH connections to the production machine",
+          "cosine_score": 0.628518
+        }
+      ]
+    },
+    {
+      "query_id": "ssh_allow_variant_2",
+      "intent_id": "ssh_allow",
+      "domain": "security",
+      "query": "Make secure-shell access permitted on the production server.",
+      "recall_at_5": 0.666667,
+      "precision_at_5": 0.4,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "ssh_allow",
+      "top1_intent_match": true,
+      "query_latency_ms": 15.935,
+      "top_results": [
+        {
+          "intent_group": "ssh_allow",
+          "text": "Enable secure shell login on the production host",
+          "cosine_score": 0.792723
+        },
+        {
+          "intent_group": "ssh_block",
+          "text": "Disable secure shell login on the production host",
+          "cosine_score": 0.785162
+        },
+        {
+          "intent_group": "ssh_allow",
+          "text": "Allow SSH access to the production server",
+          "cosine_score": 0.71077
+        }
+      ]
+    },
+    {
+      "query_id": "ssh_block_variant_1",
+      "intent_id": "ssh_block",
+      "domain": "security",
+      "query": "Cut off SSH login to the live production machine.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "ssh_block",
+      "top1_intent_match": true,
+      "query_latency_ms": 17.931,
+      "top_results": [
+        {
+          "intent_group": "ssh_block",
+          "text": "Block SSH access to the production server",
+          "cosine_score": 0.664557
+        },
+        {
+          "intent_group": "ssh_block",
+          "text": "Deny SSH connections to the production machine",
+          "cosine_score": 0.590091
+        },
+        {
+          "intent_group": "ssh_allow",
+          "text": "Allow SSH access to the production server",
+          "cosine_score": 0.583295
+        }
+      ]
+    },
+    {
+      "query_id": "ssh_block_variant_2",
+      "intent_id": "ssh_block",
+      "domain": "security",
+      "query": "Prohibit remote secure-shell access to the server.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "ssh_block",
+      "top1_intent_match": true,
+      "query_latency_ms": 17.53,
+      "top_results": [
+        {
+          "intent_group": "ssh_block",
+          "text": "Disable secure shell login on the production host",
+          "cosine_score": 0.756746
+        },
+        {
+          "intent_group": "ssh_allow",
+          "text": "Enable secure shell login on the production host",
+          "cosine_score": 0.706226
+        },
+        {
+          "intent_group": "ssh_block",
+          "text": "Block SSH access to the production server",
+          "cosine_score": 0.630028
+        }
+      ]
+    },
+    {
+      "query_id": "meeting_schedule_variant_1",
+      "intent_id": "meeting_schedule",
+      "domain": "productivity",
+      "query": "Coordinate a meeting time that fits everyone's calendar.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "meeting_schedule",
+      "top1_intent_match": true,
+      "query_latency_ms": 18.898,
+      "top_results": [
+        {
+          "intent_group": "meeting_schedule",
+          "text": "Coordinate a calendar slot that suits all attendees",
+          "cosine_score": 0.7232
+        },
+        {
+          "intent_group": "meeting_schedule",
+          "text": "Schedule a meeting at a time that works for the whole team",
+          "cosine_score": 0.646163
+        },
+        {
+          "intent_group": "meeting_schedule",
+          "text": "Find a shared availability window for a group meeting",
+          "cosine_score": 0.487553
+        }
+      ]
+    },
+    {
+      "query_id": "meeting_schedule_variant_2",
+      "intent_id": "meeting_schedule",
+      "domain": "productivity",
+      "query": "Identify overlapping free time across all teammates for a meeting.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "meeting_schedule",
+      "top1_intent_match": true,
+      "query_latency_ms": 19.847,
+      "top_results": [
+        {
+          "intent_group": "meeting_schedule",
+          "text": "Schedule a meeting at a time that works for the whole team",
+          "cosine_score": 0.622387
+        },
+        {
+          "intent_group": "meeting_schedule",
+          "text": "Find a shared availability window for a group meeting",
+          "cosine_score": 0.46208
+        },
+        {
+          "intent_group": "meeting_schedule",
+          "text": "Coordinate a calendar slot that suits all attendees",
+          "cosine_score": 0.396487
+        }
+      ]
+    },
+    {
+      "query_id": "email_summary_variant_1",
+      "intent_id": "email_summary",
+      "domain": "productivity",
+      "query": "Pull out the main points from the email thread.",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "email_summary",
+      "top1_intent_match": true,
+      "query_latency_ms": 16.78,
+      "top_results": [
+        {
+          "intent_group": "email_summary",
+          "text": "Summarize the key points in this email thread",
+          "cosine_score": 0.676323
+        },
+        {
+          "intent_group": "email_summary",
+          "text": "Extract the main decisions from the email exchange",
+          "cosine_score": 0.571035
+        },
+        {
+          "intent_group": "email_summary",
+          "text": "Provide a concise overview of this email conversation",
+          "cosine_score": 0.521332
+        }
+      ]
+    },
+    {
+      "query_id": "email_summary_variant_2",
+      "intent_id": "email_summary",
+      "domain": "productivity",
+      "query": "What key outcomes and decisions are contained in these messages?",
+      "recall_at_5": 1.0,
+      "precision_at_5": 0.6,
+      "mrr_at_10": 1.0,
+      "first_relevant_rank": 1,
+      "top1_intent_group": "email_summary",
+      "top1_intent_match": true,
+      "query_latency_ms": 17.189,
+      "top_results": [
+        {
+          "intent_group": "email_summary",
+          "text": "Provide a concise overview of this email conversation",
+          "cosine_score": 0.538439
+        },
+        {
+          "intent_group": "email_summary",
+          "text": "Extract the main decisions from the email exchange",
+          "cosine_score": 0.468081
+        },
+        {
+          "intent_group": "email_summary",
+          "text": "Summarize the key points in this email thread",
+          "cosine_score": 0.333468
+        }
+      ]
+    }
+  ]
+}
